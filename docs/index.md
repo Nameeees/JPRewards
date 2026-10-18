@@ -84,5 +84,5 @@ the documentation never drift apart.
 | [Verification]({{ '/VERIFICATION.html' | relative_url }}) | English | Tests, servers and artifact hash. |
 | [QA checklist]({{ '/QA_CHECKLIST.html' | relative_url }}) | English | The list used before every release. |
 | [SpigotMC pack]({{ '/SPIGOTMC_PAGE.html' | relative_url }}) | English | Resource description and image order. |
-| [README]({{ '/README.html' | relative_url }}) | English | The full feature list and configuration reference. |
+| [README](https://github.com/Nameeees/JPRewards/blob/main/README.md) | English | The full feature list and configuration reference. |
 | [README (español)](https://github.com/Nameeees/JPRewards/blob/main/README.es.md) | Spanish | La misma información en español. |
