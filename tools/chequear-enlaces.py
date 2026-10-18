@@ -13,7 +13,7 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 ENLACE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
-IGNORAR = ("http://", "https://", "mailto:", "#", "tel:")
+IGNORAR = ("http://", "https://", "mailto:", "#", "tel:", "{{", "{%")
 
 
 def main():

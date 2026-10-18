@@ -66,7 +66,7 @@ title: Documentation
 
 | | |
 | --- | --- |
-| ![What you get]({{ '/assets/features.png' | relative_url }}) | ![Commands]({{ '/assets/commands.png' | relative_url }}) |
+| ![What you get](assets/features.png) | ![Commands](assets/commands.png) |
 
 Every image on this site is generated from code by the scripts in
 [`docs/assets/`](https://github.com/Nameeees/JPRewards/tree/main/docs/assets), so the artwork and
