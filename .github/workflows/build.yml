@@ -53,8 +53,10 @@ jobs:
           JAR=$(ls target/JPRewards-*.jar | head -n 1)
           test -n "$JAR"
           unzip -l "$JAR" | grep -E 'plugin.yml|config.yml|messages_es.yml|messages_en.yml|menus.yml|recompensas/'
-          unzip -p "$JAR" plugin.yml | grep -E '^version: [0-9]'
-          if unzip -l "$JAR" | grep -qE 'messages.yml|com/tuserver'; then
+          # The version is quoted in plugin.yml, so accept both forms.
+          unzip -p "$JAR" plugin.yml | grep -E "^version: '?[0-9]"
+          unzip -p "$JAR" plugin.yml | grep -E '^commands:' -A 2
+          if unzip -l "$JAR" | grep -qE 'messages\.yml|com/tuserver'; then
             echo "The jar contains files from older versions"; exit 1
           fi
 
