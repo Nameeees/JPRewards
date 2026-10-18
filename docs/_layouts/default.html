@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title and page.title != site.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} · Minecraft rewards plugin{% endif %}</title>
+  <meta name="description" content="{{ site.description | strip_newlines }}">
+  <link rel="icon" href="{{ '/assets/icon.png' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/estilo.css' | relative_url }}">
+  <meta property="og:title" content="{{ site.title }}">
+  <meta property="og:description" content="{{ site.description | strip_newlines }}">
+  <meta property="og:image" content="{{ '/assets/banner.png' | absolute_url }}">
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <header class="barra">
+    <a class="marca" href="{{ '/' | relative_url }}">
+      <img src="{{ '/assets/icon.png' | relative_url }}" alt="" width="34" height="34">
+      <span>JPRewards</span>
+    </a>
+    <nav>
+      <a href="{{ '/COMMANDS.html' | relative_url }}">Commands</a>
+      <a href="{{ '/PLACEHOLDERS.html' | relative_url }}">Placeholders</a>
+      <a href="{{ '/FAQ.html' | relative_url }}">FAQ</a>
+      <a href="{{ '/CONFIGURACION.es.html' | relative_url }}">Configuración</a>
+      <a href="{{ '/VERIFICATION.html' | relative_url }}">Verification</a>
+      <a class="boton" href="https://github.com/Nameeees/JPRewards">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer>
+    <div>
+      <strong>JPRewards</strong> · v2.0.0 · MIT · Spigot &amp; Paper 1.8 → latest
+    </div>
+    <nav>
+      <a href="https://github.com/Nameeees/JPRewards">Source</a>
+      <a href="https://github.com/Nameeees/JPRewards/releases">Download</a>
+      <a href="https://github.com/Nameeees/JPRewards/issues/new/choose">Report a bug</a>
+      <a href="https://www.spigotmc.org/resources/">SpigotMC</a>
+    </nav>
+  </footer>
+</body>
+</html>

@@ -2,19 +2,22 @@ title: JPRewards
 description: >-
   Daily, weekly, monthly and streak rewards with fully configurable head menus
   for Minecraft 1.8 to the latest version. One jar, no dependencies.
-theme: jekyll-theme-cayman
-show_downloads: false
+url: https://nameeees.github.io
+baseurl: /JPRewards
+
+# Sin tema externo: la web usa el diseno propio de _layouts y assets/css.
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
 plugins:
   - jekyll-relative-links
+
 relative_links:
   enabled: true
   collections: true
-include:
-  - COMMANDS.md
-  - PLACEHOLDERS.md
-  - FAQ.md
-  - TEMPLATE.md
-  - CONFIGURACION.es.md
-  - VERIFICATION.md
-  - QA_CHECKLIST.md
-  - SPIGOTMC_PAGE.md
+
+exclude:
+  - _config.yml
