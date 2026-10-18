@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest an option, a command or a change.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a request, please check that it is not already possible through
+        `config.yml`, `menus.yml` or `recompensas/*.yml`: most of the plugin is configurable.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like
+      description: Describe the feature in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is useful
+      description: The problem it solves on your server.
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: How you imagine it in the configuration
+      description: Optional. A YAML sketch helps a lot.
+      render: yaml
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the documentation and the existing issues.
+          required: true
+        - label: This is not a question about my own configuration (those go in the discussion thread).
+          required: true

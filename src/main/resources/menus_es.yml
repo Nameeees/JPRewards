@@ -1,0 +1,538 @@
+# ============================================================================
+#  JPRewards - menus.yml
+# ----------------------------------------------------------------------------
+#  TODO el aspecto de los menus se define aqui: titulos, texturas, botones,
+#  estados, paginacion y navegacion. No hace falta tocar el plugin.
+#  Every menu title, texture, button, state, pagination and navigation lives
+#  here. No code changes needed.
+#
+#  ESTRUCTURA DE UN MENU / MENU STRUCTURE
+#    menu-xxx:
+#      titulo: '...'            texto del inventario (acepta {pagina},{paginas})
+#      filas: 1-6               alto del cofre
+#      slot-inicial: 10         donde empiezan los items automaticos (ciclos)
+#      slots: [10, 11, 12]      (opcional) slots exactos para esos items
+#      navegacion: {volver-slot, cerrar-slot}
+#      paginacion: {anterior-slot, siguiente-slot, info-slot}
+#      botones: { ... }
+#
+#  CAMPOS DE UN BOTON / BUTTON FIELDS
+#    slot / slots         posicion (o lista: [10, 11] o '10-16')
+#    material             material moderno; en 1.8 el plugin usa el equivalente
+#    textura              value base64 de una cabeza (minecraft-heads.com)
+#    textura-jugador      cabeza de un jugador por nombre (en vez de textura)
+#    cantidad             1-64
+#    nombre / lore        textos con & y {placeholders}; admite {preview}
+#    brillo               true = efecto encantado sin encantamiento visible
+#    encantamientos:      { SHARPNESS: 3, UNBREAKING: 1 }
+#    item-flags:          [HIDE_ATTRIBUTES, HIDE_ENCHANTS]
+#    custom-model-data    1.14+ (se ignora en versiones antiguas)
+#    irrompible           true = unbreakable (1.11+) o durabilidad oculta
+#    icono-recompensa     true = en 'hoy'/'disponible' usa la cabeza del premio
+#    permiso              permiso necesario para verlo/usarlo
+#    ocultar-sin-permiso  true = si no tiene el permiso, el boton no se ve
+#    accion / accion-<estado>   una accion o varias separadas por ';'
+#
+#  ESTADOS / STATES (se eligen solos segun los datos del jugador)
+#    diaria:   hoy | reclamado | bloqueado
+#    semanal:  disponible | reclamado | bloqueado
+#    mensual:  disponible | bloqueado | reclamado
+#    rachas:   disponible | bloqueado | reclamado
+#    principal: disponible | reclamada | bloqueada | completada | nada
+#  Para cada estado puedes definir: nombre-<estado>, lore-<estado>,
+#  textura-<estado>, brillo-<estado> y accion-<estado>.
+#
+#  ACCIONES / ACTIONS
+#    open:<menu> | close | none
+#    claim:daily | claim:weekly | claim:monthly | claim:streaks
+#    claim:all | claim:milestone:<id> | claim:streak:<id>
+#    command:<cmd> | player-command:<cmd> | message:<clave de messages> | sound:<nombre>
+#    (varias a la vez separadas por ';' -- se ejecutan en orden)
+#
+#  PLACEHOLDERS / PLACEHOLDERS
+#    {jugador} {uuid} {mundo} {dia} {dias} {racha} {mejor} {total}
+#    {semana} {semanas} {racha_semanal} {mejor_semanal} {total_semanal}
+#    {dias_mes} {dias_mes_total} {hitos} {hitos_total} {hitos_disponibles}
+#    {bonus} {bonus_total} {bonus_disponibles} {pendientes} {tiempo}
+#    {tiempo_largo} {tiempo_semanal} {hora} {moneda} {premio} {estado}
+#    {cantidad} {faltan} {racha_minima} {hito} {vacio} {pagina} {paginas}
+#    {barra_mes} {barra_ciclo} {barra_racha} {barra_racha_semanal}
+#    {version} {servidor} {almacenamiento} {modulos}
+#    Y cualquier %placeholder% de PlaceholderAPI si esta instalado.
+#
+#  Las texturas incluidas vienen de minecraft-heads.com (uso libre).
+# ============================================================================
+
+config-version: 2
+
+# ---- Piezas compartidas por todos los menus --------------------------------
+comun:
+  marco:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjZkZDg5MTlmZThmNzUwN2I0NjQxYmYzYWE3MmIwNTZlMDg1N2NjMjAyYThlNWViNjZjOWMyMWFhNzNjMzg3NiJ9fX0='
+    nombre: ' '
+    # borde (solo el marco) | todas (todo el cofre) | lista de slots
+    slots: borde
+  volver:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&c◀ Volver'
+    lore:
+      - '&7Regresa al menu anterior.'
+      - ''
+      - '&c» Clic para volver'
+    accion: 'open:menu-principal'
+  cerrar:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ=='
+    nombre: '&c&l✖ Cerrar'
+    lore:
+      - '&7Cierra este menu.'
+      - ''
+      - '&c» Clic para cerrar'
+    accion: 'close'
+  # Botones de pagina (el plugin les pone la accion de cambiar de pagina).
+  pagina-anterior:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&e« Pagina anterior'
+    lore:
+      - '&7Estas en la pagina &f{pagina}&7/&f{paginas}&7.'
+  pagina-siguiente:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&ePagina siguiente »'
+    lore:
+      - '&7Estas en la pagina &f{pagina}&7/&f{paginas}&7.'
+  pagina-info:
+    material: PAPER
+    nombre: '&7Pagina &f{pagina}&7/&f{paginas}'
+    lore:
+      - '&8Usa las flechas para moverte.'
+  # Plantillas de la vista previa de premios que inserta {preview}.
+  preview:
+    encabezado: '&8Premios:'
+    vacia: '&7▪ &8(sin premios definidos)'
+    sin-permiso: '&7▪ &cSolo para rangos con permiso especial'
+    rango-mejor: '&7▪ &8Con rango: &7premios mejores'
+
+# ---- Menu principal (hub) --------------------------------------------------
+menu-principal:
+  titulo: '&d&l✦ Recompensas ✦'
+  filas: 5
+  navegacion:
+    volver-slot: 0        # 0 = no mostrar volver
+    cerrar-slot: 44
+  botones:
+    diaria:
+      slot: 20
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-reclamada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-disponible: '&a&l✦ Recompensa diaria &8[&aDISPONIBLE&8]'
+      nombre-reclamada: '&7&lRecompensa diaria &8[&7RECLAMADA&8]'
+      nombre-bloqueada: '&7&lRecompensa diaria &8[&8APAGADA&8]'
+      lore-disponible:
+        - '&7Te toca el &fdia {dia} &7de &f{dias}&7.'
+        - '&7Racha: &f{racha} &7dia(s) &8(mejor &f{mejor}&8).'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar ahora'
+      lore-reclamada:
+        - '&7Ya reclamaste la recompensa de hoy.'
+        - '&7Vuelve en &f{tiempo} &8(a las &f{hora}&8).'
+        - '&7Racha actual: &f{racha} &7dia(s).'
+        - ''
+        - '&8» Reclamada, vuelve manana'
+      lore-bloqueada:
+        - '&7Este modulo esta desactivado en el servidor.'
+      brillo-disponible: true
+      accion: 'claim:daily'
+      icono-recompensa: true
+    semanal:
+      slot: 22
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-reclamada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      nombre-disponible: '&a&l✦ Recompensa semanal &8[&aDISPONIBLE&8]'
+      nombre-reclamada: '&7&lRecompensa semanal &8[&7RECLAMADA&8]'
+      nombre-bloqueada: '&7&lRecompensa semanal &8[&8APAGADA&8]'
+      lore-disponible:
+        - '&7Te toca la &fsemana {semana} &7de &f{semanas}&7.'
+        - '&7Racha semanal: &f{racha_semanal} &7semana(s).'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar ahora'
+      lore-reclamada:
+        - '&7Ya reclamaste la recompensa de esta semana.'
+        - '&7Vuelve en &f{tiempo_semanal}&7.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Reclamada, vuelve la semana que viene'
+      lore-bloqueada:
+        - '&7Este modulo esta desactivado en el servidor.'
+      brillo-disponible: true
+      accion: 'claim:weekly'
+      icono-recompensa: true
+    mensual:
+      slot: 24
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-completada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&l✦ Recompensa mensual &8[&a{hitos_disponibles} LISTO(S)&8]'
+      nombre-bloqueada: '&d&lRecompensa mensual'
+      nombre-completada: '&7&lRecompensa mensual &8[&7COMPLETADA&8]'
+      lore-disponible:
+        - '&7Dias reclamados este mes: &f{dias_mes}&7.'
+        - '&7Hitos listos: &f{hitos_disponibles}&7.'
+        - ''
+        - '&a» Clic para abrir los hitos'
+      lore-bloqueada:
+        - '&7Reclama tu diaria cada dia para desbloquear'
+        - '&7los hitos mensuales.'
+        - '&7Dias reclamados este mes: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - ''
+        - '&d» Clic para ver los hitos'
+      lore-completada:
+        - '&7Todos los hitos del mes estan reclamados.'
+        - '&7Dias reclamados: &f{dias_mes}&7.'
+        - ''
+        - '&8» Clic para revisar los hitos'
+      brillo-disponible: true
+      accion: 'open:menu-mensual'
+    rachas:
+      slot: 30
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      textura-completada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&l✦ Bonus de racha &8[&a{bonus_disponibles} LISTO(S)&8]'
+      nombre-bloqueada: '&d&lBonus de racha'
+      nombre-completada: '&7&lBonus de racha &8[&7COMPLETADOS&8]'
+      lore-disponible:
+        - '&7Bonus listos: &f{bonus_disponibles}&7.'
+        - ''
+        - '&a» Clic para reclamarlos'
+      lore-bloqueada:
+        - '&7Reclama cada dia seguido para desbloquear'
+        - '&7los bonus por racha.'
+        - '&7Racha actual: &f{racha} &7dia(s).'
+        - '&7{barra_racha}'
+        - ''
+        - '&d» Clic para ver los bonus'
+      lore-completada:
+        - '&7Ya reclamaste todos los bonus de esta racha.'
+        - ''
+        - '&8» Clic para verlos'
+      brillo-disponible: true
+      accion: 'open:menu-rachas'
+    racha:
+      slot: 32
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lTu racha: &f{racha} &7dia(s)'
+      lore:
+        - '&7Racha diaria: &f{racha} &8(mejor &f{mejor}&8)'
+        - '&7{barra_racha}'
+        - '&7Racha semanal: &f{racha_semanal} &8(mejor &f{mejor_semanal}&8)'
+        - '&7{barra_racha_semanal}'
+        - ''
+        - '&8No la pierdas: reclama cada dia.'
+      accion: 'none'
+    reclamar-todo:
+      slot: 34
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-nada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-disponible: '&a&l✦ Reclamar todo &8[&a{cantidad}&8]'
+      nombre-nada: '&7&lReclamar todo &8[&7NADA PENDIENTE&8]'
+      lore-disponible:
+        - '&7Tienes &f{cantidad} &7recompensa(s) lista(s).'
+        - ''
+        - '&a» Clic para reclamarlas todas'
+      lore-nada:
+        - '&7No hay nada pendiente ahora mismo.'
+        - '&7Vuelve en &f{tiempo}&7.'
+      brillo-disponible: true
+      accion: 'claim:all'
+    info:
+      slot: 40
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg0ODM0NjE0YzhhMWI0OGY5ZDQ3OWVhYjhiY2EzYWM3NDNlZjE2MTdlNTY2YWQxNzYyMjk4ZWE1ZjBkMWE3ZiJ9fX0='
+      nombre: '&d&lComo funciona'
+      lore:
+        - '&7Tu progreso, rachas y reinicios.'
+        - '&7Dias del mes: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - ''
+        - '&d» Clic para abrir'
+      accion: 'open:menu-info'
+
+# ---- Ciclo diario ----------------------------------------------------------
+# Los dias del ciclo se colocan solos desde 'slot-inicial' (7 por fila) y se
+# reparten en paginas si no caben.
+menu-diario:
+  titulo: '&d&l✦ Ciclo diario ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    dia:
+      material: PLAYER_HEAD
+      textura-hoy: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-hoy: '&a&lDia {dia} &8[&aHOY&8]'
+      nombre-reclamado: '&7&lDia {dia} &8[&7RECLAMADO&8]'
+      nombre-bloqueado: '&7&lDia {dia}'
+      lore-hoy:
+        - '&7Esta es tu recompensa de hoy.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar'
+      lore-reclamado:
+        - '&7Ya reclamada.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Vuelve manana'
+      lore-bloqueado:
+        - '&7Llega hasta este dia reclamando cada jornada.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Bloqueado'
+      brillo-hoy: true
+      accion-hoy: 'claim:daily'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Ciclo semanal ---------------------------------------------------------
+menu-semanal:
+  titulo: '&d&l✦ Ciclo semanal ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    semana:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      nombre-disponible: '&a&lSemana {semana} &8[&aESTA SEMANA&8]'
+      nombre-reclamado: '&7&lSemana {semana} &8[&7RECLAMADA&8]'
+      nombre-bloqueado: '&7&lSemana {semana}'
+      lore-disponible:
+        - '&7Esta es tu recompensa de esta semana.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar'
+      lore-reclamado:
+        - '&7Ya reclamada.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Vuelve la semana que viene'
+      lore-bloqueado:
+        - '&7Se desbloquea al llegar esta semana del ciclo.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Bloqueado'
+      brillo-disponible: true
+      accion-disponible: 'claim:weekly'
+      accion: 'none'
+      icono-recompensa: true
+    racha:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lRacha semanal: &f{racha_semanal}'
+      lore:
+        - '&7Mejor racha: &f{mejor_semanal} &7semana(s).'
+        - '&7Semanas reclamadas: &f{total_semanal}&7.'
+        - '&7{barra_racha_semanal}'
+        - '&7La proxima semana empieza en &f{tiempo_semanal}&7.'
+      accion: 'none'
+
+# ---- Hitos del mes ---------------------------------------------------------
+menu-mensual:
+  titulo: '&d&l✦ Recompensa mensual ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    progreso:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYThhOGMyZmUzMGVmOTQwOGZjOTYyYWUwYzVlZGU5YjQ3OGI5MjU1ZDIyZWNjMTMxYTliZTZlYmE1YzFlZDRiNCJ9fX0='
+      nombre: '&d&lProgreso del mes'
+      lore:
+        - '&7Dias reclamados: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - '&7Hitos reclamados: &f{hitos}&7/&f{hitos_total}&7.'
+        - '&7Listos para reclamar: &f{hitos_disponibles}&7.'
+        - ''
+        - '&8Los hitos se reinician al cambiar de mes.'
+      accion: 'none'
+    hito:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&lHito: {dias} dias &8[&aLISTO&8]'
+      nombre-bloqueado: '&7&lHito: {dias} dias &8[&7BLOQUEADO&8]'
+      nombre-reclamado: '&7&lHito: {dias} dias &8[&7RECLAMADO&8]'
+      lore-disponible:
+        - '&7Has reclamado &f{dias_mes} &7dia(s) este mes.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar este hito'
+      lore-bloqueado:
+        - '&7Necesitas &f{dias} &7dia(s) reclamados.'
+        - '&7Te faltan &f{faltan}&7.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Bloqueado todavia'
+      lore-reclamado:
+        - '&7Hito conseguido este mes.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Ya reclamado'
+      brillo-disponible: true
+      accion-disponible: 'claim:monthly'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Bonus de racha --------------------------------------------------------
+menu-rachas:
+  titulo: '&d&l✦ Bonus de racha ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    progreso:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lTus rachas'
+      lore:
+        - '&7Racha diaria: &f{racha} &8(mejor &f{mejor}&8)'
+        - '&7{barra_racha}'
+        - '&7Racha semanal: &f{racha_semanal} &8(mejor &f{mejor_semanal}&8)'
+        - '&7{barra_racha_semanal}'
+        - ''
+        - '&8Los bonus se reclaman una vez por racha.'
+      accion: 'none'
+    bonus:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&lRacha de {racha_minima} &8[&aLISTO&8]'
+      nombre-bloqueado: '&7&lRacha de {racha_minima} &8[&7FALTAN {faltan}&8]'
+      nombre-reclamado: '&7&lRacha de {racha_minima} &8[&7RECLAMADO&8]'
+      lore-disponible:
+        - '&7Tipo: &f{tipo}'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Clic para reclamar este bonus'
+      lore-bloqueado:
+        - '&7Necesitas una racha de &f{racha_minima} &7{tipo}(s).'
+        - '&7Te faltan &f{faltan}&7.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Bloqueado todavia'
+      lore-reclamado:
+        - '&7Ya lo reclamaste en esta racha.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Si pierdes la racha, vuelve a estar disponible'
+      brillo-disponible: true
+      accion-disponible: 'claim:streaks'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Informacion -----------------------------------------------------------
+menu-info:
+  titulo: '&d&l✦ Como funciona ✦'
+  filas: 3
+  navegacion:
+    volver-slot: 18
+    cerrar-slot: 26
+  botones:
+    racha:
+      slot: 11
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lTu racha'
+      lore:
+        - '&7Racha actual: &f{racha} &7dia(s).'
+        - '&7Mejor racha: &f{mejor} &7dia(s).'
+        - '&7{barra_racha}'
+        - ''
+        - '&8Reclama cada dia para subirla'
+      accion: 'none'
+    totales:
+      slot: 13
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre: '&d&lTus totales'
+      lore:
+        - '&7Recompensas diarias: &f{total}&7.'
+        - '&7Semanas reclamadas: &f{total_semanal}&7.'
+        - '&7Dias del mes: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7Hitos: &f{hitos}&7/&f{hitos_total}&7. Bonus: &f{bonus}&7/&f{bonus_total}&7.'
+      accion: 'none'
+    reinicios:
+      slot: 15
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYThhOGMyZmUzMGVmOTQwOGZjOTYyYWUwYzVlZGU5YjQ3OGI5MjU1ZDIyZWNjMTMxYTliZTZlYmE1YzFlZDRiNCJ9fX0='
+      nombre: '&d&lProximos reinicios'
+      lore:
+        - '&7La diaria vuelve en &f{tiempo} &8(a las &f{hora}&8).'
+        - '&7La semanal vuelve en &f{tiempo_semanal}&7.'
+        - '&7Los hitos y su progreso se reinician al cambiar de mes.'
+        - '&7{barra_mes}'
+        - ''
+        - '&8Horarios en config.yml -> reinicio.hora'
+      accion: 'none'

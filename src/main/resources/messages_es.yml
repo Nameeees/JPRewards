@@ -1,0 +1,184 @@
+# ============================================================================
+#  JPRewards - messages_es.yml
+# ----------------------------------------------------------------------------
+#  TODOS los textos que ve el jugador en el chat viven aqui.
+#  All player-facing chat texts live here.
+#
+#  Formato: codigos legacy con & (compatible 1.8 - ultima version) y
+#  &#RRGGBB para colores hexadecimales (se ven en 1.16+).
+#  Format: legacy & codes (1.8+) and &#RRGGBB hex colours (1.16+).
+#
+#  {prefijo} se puede usar en cualquier mensaje. Si no aparece, el plugin
+#  agrega el prefijo delante automaticamente.
+#  {prefijo} can be used in any message; otherwise the prefix is added.
+#
+#  Los mensajes con un texto vacio ("") NO se envian: dejalo asi para
+#  silenciar algo sin borrar la clave.
+#  Empty messages ("") are not sent: useful to silence something.
+#
+#  Si borras una clave, el plugin usa la del archivo en ingles incluido en el
+#  .jar (nunca muestra un hueco). /rewards validate lista las que falten.
+# ============================================================================
+
+config-version: 2
+
+# Prefijo de todo el plugin (no lo repitas dentro de cada mensaje).
+prefijo: '&8[&d&lJPRewards&8] &7» &f'
+
+# ---- Generales -------------------------------------------------------------
+general:
+  solo-jugadores: '&cEste comando es solo para jugadores en partida.'
+  sin-permiso: '&cNo tienes permiso para hacer eso.'
+  jugador-desconocido: '&cNo se encontro al jugador &f{jugador}&c. Debe haber jugado aqui alguna vez.'
+  jugador-desconectado: '&c&f{jugador} &cno esta conectado; para entregar un premio tiene que estarlo.'
+  error: '&cAlgo salio mal. Avisa a un administrador y revisa la consola.'
+  modulo-desactivado: '&eEl sistema de &f{modulo} &eesta desactivado en este servidor.'
+  inventario-lleno: '&eTu inventario esta lleno: &f{cantidad} &epremio(s) se guardaron y los recibiras al volver a entrar.'
+  inventario-soltado: '&eTu inventario esta lleno: &f{cantidad} &epremio(s) cayeron al suelo a tus pies.'
+  bloqueado: '&cTodavia no puedes reclamar esto.'
+  pendientes-recibidos: '&aRecibiste &f{cantidad} &apremio(s) que habian quedado pendientes.'
+  nada-para-reclamar: '&7No tienes ninguna recompensa lista para reclamar ahora mismo.'
+  reclamar-todo: '&aReclamaste &f{cantidad} &arecompensa(s) de una vez. &7Vuelve manana para la siguiente.'
+  autoreclamado: '&aTu recompensa diaria se reclamo automaticamente.'
+  actualizacion: '&eHay una version nueva de JPRewards: &f{version} &7(usas la &f{actual}&7). Descargala en SpigotMC.'
+
+# ---- Comando ---------------------------------------------------------------
+comando:
+  ayuda-encabezado: '&8&m--------&r &d&lJPRewards &7v{version} &8&m--------'
+  ayuda-jugador:
+    - '&7» &f/rewards &8- &7abre el menu principal.'
+    - '&7» &f/rewards daily &8- &7tu ciclo diario.'
+    - '&7» &f/rewards weekly &8- &7el ciclo de semanas.'
+    - '&7» &f/rewards monthly &8- &7los hitos del mes.'
+    - '&7» &f/rewards streaks &8- &7los bonus por racha.'
+    - '&7» &f/rewards claim [daily|weekly|monthly|streaks|all] &8- &7reclama sin abrir el menu.'
+    - '&7» &f/rewards top [streak|total|weeks|milestones|bonuses] &8- &7el ranking del servidor.'
+    - '&7» &f/rewards info &8- &7como funciona.'
+  ayuda-admin:
+    - '&7» &f/rewards status &8- &7estado del plugin y del almacenamiento.'
+    - '&7» &f/rewards validate &8- &7revisa TODOS los archivos y explica los errores.'
+    - '&7» &f/rewards reload [all|config|messages|menus|rewards]'
+    - '&7» &f/rewards data <player> &8- &7informe completo de un jugador (datos)'
+  ayuda-gestion:
+    - '&7» &f/rewards give <player> <daily|weekly|monthly|streaks> [key] &8- &7entrega un premio (pruebas).'
+    - '&7» &f/rewards test <daily|weekly|monthly|streaks> [key] &8- &7muestra que se entregaria, sin entregarlo.'
+    - '&7» &f/rewards reset <player|*> [daily|weekly|monthly|streaks|all] &8- &7reinicia datos.'
+    - '&7» &f/rewards set <player> <field> <value> &8- &7fija contadores.'
+    - '&7» &f/rewards migrate confirm &8- &7copia los datos entre YAML y MySQL.'
+  ayuda-pie: '&8Tip: &7todas las opciones estan comentadas en &fconfig.yml&7, &fmenus.yml &7y &frecompensas/&7, y &f/rewards validate &7las revisa por ti.'
+  desconocido: '&cNo conozco el subcomando &f{entrada}&c. Usa &f/rewards help&c.'
+  reclamar-tipos: '&7Usa: &f/rewards claim <{tipos}>&7.'
+
+  # ---- Estado (/rewards status) ----
+  estado-titulo: '&8&m--------&r &d&lEstado de JPRewards &8&m--------'
+  estado-lineas:
+    - '&7» Version: &f{version} &7· servidor &f{servidor}'
+    - '&7» Idioma: &f{idioma} &7· almacenamiento: &f{tipo_almacenamiento}'
+    - '&7» Destino de los datos: &f{almacenamiento}'
+    - '&7» En memoria: &f{cargados} &7jugador(es) · autoguardado cada &f{autoguardado}s'
+    - '&7» Cargado: &f{dias} &7dias · &f{semanas} &7semanas · &f{hitos} &7hitos · &f{bonus} &7bonus'
+    - '&7» Carpeta: &f{ruta}'
+  estado-actualizacion: '&eHay una version nueva disponible: &f{version}&e.'
+  estado-problemas: '&eHay &f{cantidad} &eaviso(s) de configuracion: ejecuta &f/rewards validate&e.'
+
+  # ---- Validar (/rewards validate) ----
+  validar-titulo: '&8&m--------&r &d&lRevision de archivos &8&m--------'
+  validar-error: '&c✖ &f{texto}'
+  validar-aviso: '&e• &f{texto}'
+  validar-correcto: '&a✔ &f{texto}'
+  validar-ok: '&aTodo correcto: &f{avisos} &aaviso(s) menor(es) y ningun error.'
+  validar-resumen: '&eRevision terminada: &c{errores} error(es) &ey &f{avisos} &eaviso(s). Arriba esta el detalle.'
+
+  # ---- Recarga ----
+  recargado: '&aRecargado (&f{archivos}&a). Los menus abiertos se cerraron para aplicar los cambios.'
+  recarga-destinos: '&cDestino invalido. Usa: &f/rewards reload <{destinos}>&c.'
+
+  # ---- Datos de un jugador ----
+  datos-uso: '&7Usa: &f/rewards data <player>&7.'
+  datos-titulo: '&8&m--------&r &d&l{jugador} &8&m--------'
+  datos-lineas:
+    - '&7» UUID: &f{uuid}'
+    - '&7» Diaria: racha &f{racha} &7(mejor &f{mejor}&7) · total &f{total} &7· le toca el dia &f{proximo}'
+    - '&7» Semanal: racha &f{racha_semanal} &7(mejor &f{mejor_semanal}&7) · total &f{total_semanal} &7· le toca la semana &f{semana}'
+    - '&7» Mes: &f{dias_mes} &7dia(s) · hitos &f{hitos}&7/&f{hitos_total}'
+    - '&7» Rachas: bonus reclamados &f{bonus}&7/&f{bonus_total}'
+    - '&7» Items pendientes: &f{pendientes}'
+    - '&7» Primer reclamo: &f{primero} &7· ultimo: &f{ultimo}'
+
+  # ---- Dar / test ----
+  dar-uso: '&7Usa: &f/rewards give <player> <daily|weekly|monthly|streaks> [key]&7.'
+  dar-hecho: '&aEntregado el premio &f{tipo} &8(clave &f{clave}&8) &aa &f{jugador}&a.'
+  dar-desconocido: '&cNo existe el premio &f{tipo} &ccon la clave &f{clave}&c. Revisa recompensas/*.yml.'
+  test-uso: '&7Usa: &f/rewards test <daily|weekly|monthly|streaks> [key]&7.'
+  test-titulo: '&8&m--------&r &d&lSimulacro &8({tipo} {clave}) &8&m--------'
+  test-vacio: '&cEsa entrada no entrega nada (ni comandos, ni items, ni experiencia).'
+  test-comando: '&7» Comando: &f{texto}'
+  test-item: '&7» Item: &f{texto}'
+  test-experiencia: '&7» Experiencia: &f{texto}'
+  test-mensaje: '&7» Mensaje: &f{texto}'
+  test-sonido: '&7» Sonido: &f{texto}'
+  test-broadcast: '&7» Anuncio: &f{texto}'
+  test-pie: '&8Nada de esto se entrego: es solo una simulacion.'
+
+  # ---- Reset / set ----
+  reset-uso: '&7Usa: &f/rewards reset <player|*> [daily|weekly|monthly|streaks|all]&7.'
+  reset-hecho: '&aDatos de &f{jugador} &areiniciados &8(&f{tipo}&8)&a.'
+  reset-todos: '&aDatos reiniciados &8(&f{tipo}&8) &ade &f{cantidad} &ajugador(es).'
+  reset-tipo-invalido: '&cTipo invalido. Usa: &f{tipos}&c.'
+  set-uso: '&7Usa: &f/rewards set <player> <field> <value>&7. Campos: &f{campos}&7.'
+  set-campo-invalido: '&cCampo invalido. Campos: &f{campos}&c.'
+  set-hecho: '&a&f{jugador}&a: &f{campo} &a= &f{valor}&a.'
+  numero-invalido: '&c&f{valor} &cno es un numero valido.'
+
+  # ---- Ranking ----
+  top-calculando: '&7Calculando el ranking...'
+  top-titulo: '&8&m--------&r &d&lTop {tipo} &8({cantidad}) &8&m--------'
+  top-linea: '&7» &f#{puesto} &d{jugador} &8- &f{valor}'
+  top-vacio: '&7Todavia no hay datos para ese ranking.'
+  top-tipos: '&7Rankings disponibles: &f{tipos}&7.'
+
+  # ---- Migracion ----
+  migrar-uso: '&eEsto copia TODOS los datos al otro almacenamiento y puede tardar. Usa &f/rewards migrate confirm&e.'
+  migrar-inicio: '&7Migrando de &f{origen} &7a &f{destino}&7... (puede tardar; no apagues el servidor)'
+  migrar-fin: '&aMigracion terminada: &f{copiados} &acopiado(s), &f{omitidos} &aomitido(s), &f{errores} &aerror(es).'
+  migrar-recordatorio: '&7El plugin ya esta usando &f{destino}&7. Los jugadores conectados veran sus datos nuevos al reconectar.'
+  migrar-error: '&cNo se pudo leer el almacen de origen: &f{error}'
+
+# ---- Recompensas -----------------------------------------------------------
+recompensa:
+  sin-permiso-entrada: '&cNecesitas un rango con permiso especial para reclamar &f{recompensa}&c.'
+
+diaria:
+  reclamada: '&aRecompensa del &fdia {dia} &areclamada &8(&f{premio}&8)&a. &7Racha: &f{racha} &7dia(s).'
+  ya-reclamada: '&eYa reclamaste tu diaria de hoy. Vuelve en &f{tiempo}&e.'
+  racha-perdida: '&cPerdiste tu racha de &f{racha} &cdias por faltar un dia. &7Empieza de nuevo.'
+
+semanal:
+  reclamada: '&aRecompensa de la &fsemana {semana} &areclamada &8(&f{premio}&8)&a. &7Racha: &f{racha_semanal} &7semana(s).'
+  ya-reclamada: '&eYa reclamaste tu recompensa semanal. Vuelve en &f{tiempo_semanal}&e.'
+  racha-perdida: '&cPerdiste tu racha de &f{racha_semanal} &csemanas. &7Empieza de nuevo.'
+
+mensual:
+  hito-reclamado: '&aHito de &f{dias} dias &adel mes reclamado &8(&f{premio}&8)&a.'
+  hito-bloqueado: '&eTe faltan &f{faltan} &edia(s) con la diaria reclamada para ese hito.'
+  hito-ya-reclamado: '&7Ya reclamaste el hito de &f{dias} dias&7 este mes.'
+  nada-disponible: '&7No tienes ningun hito del mes listo para reclamar.'
+
+rachas:
+  bonus-reclamado: '&aBonus de racha de &f{racha_minima} &areclamado &8(&f{premio}&8)&a.'
+  bonus-bloqueado: '&eEse bonus se desbloquea con una racha de &f{racha_minima}&e; llevas &f{racha}&e.'
+  bonus-ya-reclamado: '&7Ya reclamaste el bonus de &f{racha_minima} &7en esta racha.'
+  nada-disponible: '&7No tienes ningun bonus de racha listo para reclamar.'
+  ayuda: '&7Los bonus de racha se reclaman una vez por racha: si pierdes la racha, vuelven a estar disponibles.'
+
+# ---- Avisos al entrar ------------------------------------------------------
+avisos:
+  diaria: '&d¡Tu recompensa diaria esta lista! &7Usa &f/rewards&7.'
+  semanal: '&d¡Tu recompensa semanal esta lista! &7Usa &f/rewards&7.'
+  hitos: '&dTienes &f{cantidad} &dhito(s) del mes por reclamar.'
+  rachas: '&dTienes &f{cantidad} &dbonus de racha por reclamar.'
+
+# ---- Titulos de pantalla ---------------------------------------------------
+titulos:
+  reclamar-arriba: '&d&lRECOMPENSAS'
+  reclamar-abajo: '&fHas recibido: &d{premio}'

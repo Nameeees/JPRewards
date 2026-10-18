@@ -1,0 +1,538 @@
+# ============================================================================
+#  JPRewards - menus.yml  (English)
+# ----------------------------------------------------------------------------
+#  EVERY part of the menus is defined here: titles, textures, buttons, states,
+#  pagination and navigation. No code changes are ever needed.
+#  A Spanish copy of this file ships as menus_es.yml: point
+#  config.yml -> menus.archivo at it (or at your own translated copy) to switch.
+#
+#  MENU STRUCTURE
+#    menu-xxx:
+#      titulo: '...'            inventory title (accepts {pagina}, {paginas})
+#      filas: 1-6               chest height
+#      slot-inicial: 10         where the automatic items (cycles) start
+#      slots: [10, 11, 12]      (optional) exact slots for those items
+#      navegacion: {volver-slot, cerrar-slot}
+#      paginacion: {anterior-slot, siguiente-slot, info-slot}
+#      botones: { ... }
+#
+#  BUTTON FIELDS
+#    slot / slots         position (or a list: [10, 11] or '10-16')
+#    material             modern material name; on 1.8 the legacy equivalent is used
+#    textura              a head texture value (base64, from minecraft-heads.com)
+#    textura-jugador      a player's head by name (instead of textura)
+#    cantidad             1-64
+#    nombre / lore        texts with & colours and {placeholders}; {preview} allowed
+#    brillo               true = enchanted glow without a visible enchantment
+#    encantamientos:      { SHARPNESS: 3, UNBREAKING: 1 }
+#    item-flags:          [HIDE_ATTRIBUTES, HIDE_ENCHANTS]
+#    custom-model-data    1.14+ (ignored on older versions)
+#    irrompible           true = unbreakable (1.11+) or hidden durability
+#    icono-recompensa     true = use the reward's own head when available
+#    permiso              permission required to see and use the button
+#    ocultar-sin-permiso  true = hide the button when the permission is missing
+#    accion / accion-<estado>   one action, or several separated by ';'
+#
+#  STATES (chosen automatically from the player's data)
+#    daily:   hoy | reclamado | bloqueado
+#    weekly:  disponible | reclamado | bloqueado
+#    monthly: disponible | bloqueado | reclamado
+#    streaks: disponible | bloqueado | reclamado
+#    main:    disponible | reclamada | bloqueada | completada | nada
+#  For each state you can define: nombre-<estado>, lore-<estado>,
+#  textura-<estado>, brillo-<estado> and accion-<estado>.
+#
+#  ACTIONS
+#    open:<menu> | close | none
+#    claim:daily | claim:weekly | claim:monthly | claim:streaks
+#    claim:all | claim:milestone:<id> | claim:streak:<id>
+#    command:<cmd> | player-command:<cmd> | message:<messages key> | sound:<name>
+#    (several at once separated by ';' -- they run in order)
+#
+#  PLACEHOLDERS
+#    {jugador} {uuid} {mundo} {dia} {dias} {racha} {mejor} {total}
+#    {semana} {semanas} {racha_semanal} {mejor_semanal} {total_semanal}
+#    {dias_mes} {dias_mes_total} {hitos} {hitos_total} {hitos_disponibles}
+#    {bonus} {bonus_total} {bonus_disponibles} {pendientes} {tiempo}
+#    {tiempo_largo} {tiempo_semanal} {hora} {moneda} {premio} {estado}
+#    {cantidad} {faltan} {racha_minima} {hito} {pagina} {paginas}
+#    {barra_mes} {barra_ciclo} {barra_racha} {barra_racha_semanal}
+#    {version} {servidor} {almacenamiento} {modulos}
+#    and any %placeholder% from PlaceholderAPI if it is installed.
+#
+#  The bundled textures come from minecraft-heads.com (free to use).
+# ============================================================================
+
+config-version: 2
+
+# ---- Shared by every menu ---------------------------------------------------
+comun:
+  marco:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjZkZDg5MTlmZThmNzUwN2I0NjQxYmYzYWE3MmIwNTZlMDg1N2NjMjAyYThlNWViNjZjOWMyMWFhNzNjMzg3NiJ9fX0='
+    nombre: ' '
+    # borde (frame only) | todas (the whole chest) | a list of slots
+    slots: borde
+  volver:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&c◀ Back'
+    lore:
+      - '&7Go back to the previous menu.'
+      - ''
+      - '&c» Click to go back'
+    accion: 'open:menu-principal'
+  cerrar:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ=='
+    nombre: '&c&l✖ Close'
+    lore:
+      - '&7Close this menu.'
+      - ''
+      - '&c» Click to close'
+    accion: 'close'
+  # Page buttons (the plugin adds the page-changing action itself).
+  pagina-anterior:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&e« Previous page'
+    lore:
+      - '&7You are on page &f{pagina}&7/&f{paginas}&7.'
+  pagina-siguiente:
+    material: PLAYER_HEAD
+    textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    nombre: '&eNext page »'
+    lore:
+      - '&7You are on page &f{pagina}&7/&f{paginas}&7.'
+  pagina-info:
+    material: PAPER
+    nombre: '&7Page &f{pagina}&7/&f{paginas}'
+    lore:
+      - '&8Use the arrows to move around.'
+  # Templates for the reward preview that {preview} inserts.
+  preview:
+    encabezado: '&8Rewards:'
+    vacia: '&7▪ &8(no rewards defined)'
+    sin-permiso: '&7▪ &cRequires a rank with the special permission'
+    rango-mejor: '&7▪ &8With a rank: &7better rewards'
+
+# ---- Main menu (hub) -------------------------------------------------------
+menu-principal:
+  titulo: '&d&l✦ Rewards ✦'
+  filas: 5
+  navegacion:
+    volver-slot: 0        # 0 = no mostrar volver
+    cerrar-slot: 44
+  botones:
+    diaria:
+      slot: 20
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-reclamada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-disponible: '&a&l✦ Daily reward &8[&aAVAILABLE&8]'
+      nombre-reclamada: '&7&lDaily reward &8[&7CLAIMED&8]'
+      nombre-bloqueada: '&7&lDaily reward &8[&8DISABLED&8]'
+      lore-disponible:
+        - '&7Today is day &f{dia} &7of &f{dias}&7.'
+        - '&7Streak: &f{racha} &7day(s) &8(best &f{mejor}&8).'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim now'
+      lore-reclamada:
+        - '&7You already claimed today''s reward.'
+        - '&7Come back in &f{tiempo} &8(at &f{hora}&8).'
+        - '&7Current streak: &f{racha} &7day(s).'
+        - ''
+        - '&8» Claimed, come back tomorrow'
+      lore-bloqueada:
+        - '&7This module is disabled on this server.'
+      brillo-disponible: true
+      accion: 'claim:daily'
+      icono-recompensa: true
+    semanal:
+      slot: 22
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-reclamada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      nombre-disponible: '&a&l✦ Weekly reward &8[&aAVAILABLE&8]'
+      nombre-reclamada: '&7&lWeekly reward &8[&7CLAIMED&8]'
+      nombre-bloqueada: '&7&lWeekly reward &8[&8DISABLED&8]'
+      lore-disponible:
+        - '&7This week is &f{semana} &7of &f{semanas}&7.'
+        - '&7Weekly streak: &f{racha_semanal} &7week(s).'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim now'
+      lore-reclamada:
+        - '&7You already claimed this week''s reward.'
+        - '&7Come back in &f{tiempo_semanal}&7.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Claimed, come back next week'
+      lore-bloqueada:
+        - '&7This module is disabled on this server.'
+      brillo-disponible: true
+      accion: 'claim:weekly'
+      icono-recompensa: true
+    mensual:
+      slot: 24
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-completada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&l✦ Monthly reward &8[&a{hitos_disponibles} READY&8]'
+      nombre-bloqueada: '&d&lMonthly reward'
+      nombre-completada: '&7&lMonthly reward &8[&7COMPLETED&8]'
+      lore-disponible:
+        - '&7Days claimed this month: &f{dias_mes}&7.'
+        - '&7Milestones ready: &f{hitos_disponibles}&7.'
+        - ''
+        - '&a» Click to open the milestones'
+      lore-bloqueada:
+        - '&7Claim the daily reward every day to unlock'
+        - '&7the monthly milestones.'
+        - '&7Days claimed this month: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - ''
+        - '&d» Click to see the milestones'
+      lore-completada:
+        - '&7Every milestone of this month is claimed.'
+        - '&7Days claimed: &f{dias_mes}&7.'
+        - ''
+        - '&8» Click to review the milestones'
+      brillo-disponible: true
+      accion: 'open:menu-mensual'
+    rachas:
+      slot: 30
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      textura-bloqueada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      textura-completada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&l✦ Streak bonus &8[&a{bonus_disponibles} READY&8]'
+      nombre-bloqueada: '&d&lStreak bonus'
+      nombre-completada: '&7&lStreak bonus &8[&7COMPLETED&8]'
+      lore-disponible:
+        - '&7Bonuses ready: &f{bonus_disponibles}&7.'
+        - ''
+        - '&a» Click to claim them'
+      lore-bloqueada:
+        - '&7Claim every day in a row to unlock'
+        - '&7the streak bonuses.'
+        - '&7Current streak: &f{racha} &7day(s).'
+        - '&7{barra_racha}'
+        - ''
+        - '&d» Click to see the bonuses'
+      lore-completada:
+        - '&7You already claimed every bonus of this streak.'
+        - ''
+        - '&8» Click to see them'
+      brillo-disponible: true
+      accion: 'open:menu-rachas'
+    racha:
+      slot: 32
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lYour streak: &f{racha} &7day(s)'
+      lore:
+        - '&7Daily streak: &f{racha} &8(best &f{mejor}&8)'
+        - '&7{barra_racha}'
+        - '&7Weekly streak: &f{racha_semanal} &8(best &f{mejor_semanal}&8)'
+        - '&7{barra_racha_semanal}'
+        - ''
+        - '&8Do not lose it: claim every day.'
+      accion: 'none'
+    reclamar-todo:
+      slot: 34
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-nada: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-disponible: '&a&l✦ Claim everything &8[&a{cantidad}&8]'
+      nombre-nada: '&7&lClaim everything &8[&7NOTHING PENDING&8]'
+      lore-disponible:
+        - '&7You have &f{cantidad} &7reward(s) ready.'
+        - ''
+        - '&a» Click to claim them all'
+      lore-nada:
+        - '&7There is nothing pending right now.'
+        - '&7Come back in &f{tiempo}&7.'
+      brillo-disponible: true
+      accion: 'claim:all'
+    info:
+      slot: 40
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg0ODM0NjE0YzhhMWI0OGY5ZDQ3OWVhYjhiY2EzYWM3NDNlZjE2MTdlNTY2YWQxNzYyMjk4ZWE1ZjBkMWE3ZiJ9fX0='
+      nombre: '&d&lHow it works'
+      lore:
+        - '&7Your progress, streaks and resets.'
+        - '&7Days of the month: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - ''
+        - '&d» Click to open'
+      accion: 'open:menu-info'
+
+# ---- Daily cycle -----------------------------------------------------------
+# The cycle days are laid out automatically from 'slot-inicial' (7 per row) and
+# split into pages when they do not fit.
+menu-diario:
+  titulo: '&d&l✦ Daily cycle ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    dia:
+      material: PLAYER_HEAD
+      textura-hoy: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre-hoy: '&a&lDay {dia} &8[&aTODAY&8]'
+      nombre-reclamado: '&7&lDay {dia} &8[&7CLAIMED&8]'
+      nombre-bloqueado: '&7&lDay {dia}'
+      lore-hoy:
+        - '&7This is today''s reward.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim'
+      lore-reclamado:
+        - '&7Already claimed.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Come back tomorrow'
+      lore-bloqueado:
+        - '&7Reach this day by claiming every day.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Locked'
+      brillo-hoy: true
+      accion-hoy: 'claim:daily'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Weekly cycle ----------------------------------------------------------
+menu-semanal:
+  titulo: '&d&l✦ Weekly cycle ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    semana:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      nombre-disponible: '&a&lWeek {semana} &8[&aTHIS WEEK&8]'
+      nombre-reclamado: '&7&lWeek {semana} &8[&7CLAIMED&8]'
+      nombre-bloqueado: '&7&lWeek {semana}'
+      lore-disponible:
+        - '&7This is this week''s reward.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim'
+      lore-reclamado:
+        - '&7Already claimed.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Come back next week'
+      lore-bloqueado:
+        - '&7It unlocks when you reach this week of the cycle.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Locked'
+      brillo-disponible: true
+      accion-disponible: 'claim:weekly'
+      accion: 'none'
+      icono-recompensa: true
+    racha:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lWeekly streak: &f{racha_semanal}'
+      lore:
+        - '&7Best streak: &f{mejor_semanal} &7week(s).'
+        - '&7Weeks claimed: &f{total_semanal}&7.'
+        - '&7{barra_racha_semanal}'
+        - '&7The next week starts in &f{tiempo_semanal}&7.'
+      accion: 'none'
+
+# ---- Monthly milestones ----------------------------------------------------
+menu-mensual:
+  titulo: '&d&l✦ Monthly reward ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    progreso:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYThhOGMyZmUzMGVmOTQwOGZjOTYyYWUwYzVlZGU5YjQ3OGI5MjU1ZDIyZWNjMTMxYTliZTZlYmE1YzFlZDRiNCJ9fX0='
+      nombre: '&d&lMonthly progress'
+      lore:
+        - '&7Dias reclamados: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7{barra_mes}'
+        - '&7Milestones claimed: &f{hitos}&7/&f{hitos_total}&7.'
+        - '&7Ready to claim: &f{hitos_disponibles}&7.'
+        - ''
+        - '&8Milestones reset when the month changes.'
+      accion: 'none'
+    hito:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&lMilestone: {dias} days &8[&aREADY&8]'
+      nombre-bloqueado: '&7&lMilestone: {dias} days &8[&7LOCKED&8]'
+      nombre-reclamado: '&7&lMilestone: {dias} days &8[&7CLAIMED&8]'
+      lore-disponible:
+        - '&7You claimed &f{dias_mes} &7day(s) this month.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim this milestone'
+      lore-bloqueado:
+        - '&7You need &f{dias} &7day(s) claimed.'
+        - '&7You are &f{faltan}&7 short.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Still locked'
+      lore-reclamado:
+        - '&7Milestone reached this month.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Already claimed'
+      brillo-disponible: true
+      accion-disponible: 'claim:monthly'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Streak bonuses --------------------------------------------------------
+menu-rachas:
+  titulo: '&d&l✦ Streak bonuses ✦'
+  filas: 5
+  slot-inicial: 10
+  navegacion:
+    volver-slot: 37
+    cerrar-slot: 43
+  paginacion:
+    anterior-slot: 39
+    info-slot: 40
+    siguiente-slot: 41
+  botones:
+    progreso:
+      slot: 4
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lYour streaks'
+      lore:
+        - '&7Daily streak: &f{racha} &8(best &f{mejor}&8)'
+        - '&7{barra_racha}'
+        - '&7Weekly streak: &f{racha_semanal} &8(best &f{mejor_semanal}&8)'
+        - '&7{barra_racha_semanal}'
+        - ''
+        - '&8Bonuses can be claimed once per streak.'
+      accion: 'none'
+    bonus:
+      material: PLAYER_HEAD
+      textura-disponible: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y1NDhkNDIyZGUyZDhhMWU0YjdkODcwZTVhYjEyMmEzYmQxZDFkODdhOWRlZmMyNTUzMDI3MzYxOGQwNmM4In19fQ=='
+      textura-bloqueado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmVjYjYyYzYzYjI1NzVlYzhkYjc3MWM1N2M4YjU2MDUxNWJiNTA0MTkwMjM4YTk2MWU2ZTI0M2VmNTYwMmVkNCJ9fX0='
+      textura-reclamado: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWVmZDRjZmE5MTQzMzk4ZTExZWJjZTNmYjJlY2JiZjU2YTA3M2UzNTYzZjZlZjZhY2FlNGNiNzM5N2U1ODhiMiJ9fX0='
+      nombre-disponible: '&a&lStreak of {racha_minima} &8[&aREADY&8]'
+      nombre-bloqueado: '&7&lStreak of {racha_minima} &8[&7{faltan} TO GO&8]'
+      nombre-reclamado: '&7&lStreak of {racha_minima} &8[&7CLAIMED&8]'
+      lore-disponible:
+        - '&7Type: &f{tipo}'
+        - ''
+        - '{preview}'
+        - ''
+        - '&a» Click to claim this bonus'
+      lore-bloqueado:
+        - '&7You need a &f{racha_minima} &7{tipo} streak.'
+        - '&7You are &f{faltan}&7 short.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» Still locked'
+      lore-reclamado:
+        - '&7You already claimed it in this streak.'
+        - ''
+        - '{preview}'
+        - ''
+        - '&8» If you lose the streak it becomes available again'
+      brillo-disponible: true
+      accion-disponible: 'claim:streaks'
+      accion: 'none'
+      icono-recompensa: true
+
+# ---- Information -----------------------------------------------------------
+menu-info:
+  titulo: '&d&l✦ How it works ✦'
+  filas: 3
+  navegacion:
+    volver-slot: 18
+    cerrar-slot: 26
+  botones:
+    racha:
+      slot: 11
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+      nombre: '&d&lYour streak'
+      lore:
+        - '&7Current streak: &f{racha} &7day(s).'
+        - '&7Best streak: &f{mejor} &7day(s).'
+        - '&7{barra_racha}'
+        - ''
+        - '&8Claim every day to keep it growing'
+      accion: 'none'
+    totales:
+      slot: 13
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+      nombre: '&d&lYour totals'
+      lore:
+        - '&7Daily rewards: &f{total}&7.'
+        - '&7Weeks claimed: &f{total_semanal}&7.'
+        - '&7Days of the month: &f{dias_mes}&7/&f{dias_mes_total}&7.'
+        - '&7Milestones: &f{hitos}&7/&f{hitos_total}&7. Bonuses: &f{bonus}&7/&f{bonus_total}&7.'
+      accion: 'none'
+    reinicios:
+      slot: 15
+      material: PLAYER_HEAD
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYThhOGMyZmUzMGVmOTQwOGZjOTYyYWUwYzVlZGU5YjQ3OGI5MjU1ZDIyZWNjMTMxYTliZTZlYmE1YzFlZDRiNCJ9fX0='
+      nombre: '&d&lUpcoming resets'
+      lore:
+        - '&7The daily reward returns in &f{tiempo} &8(at &f{hora}&8).'
+        - '&7The weekly reward returns in &f{tiempo_semanal}&7.'
+        - '&7Milestones and their progress reset when the month changes.'
+        - '&7{barra_mes}'
+        - ''
+        - '&8Schedules in config.yml -> reinicio.hora'
+      accion: 'none'

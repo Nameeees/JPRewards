@@ -1,0 +1,183 @@
+# ============================================================================
+#  JPRewards - recompensas/diarias.yml  (English)
+# ----------------------------------------------------------------------------
+#  DAILY reward cycle. The key of each entry is the day number (1..N).
+#  N adjusts itself; set config.yml -> diaria.dias-del-ciclo to force it.
+#  A Spanish copy ships as diarias_es.yml (point diaria.archivo at it to use it).
+#
+#  FIELDS
+#    icono.textura / icono.material   menu head or material
+#    permiso: ''                      entry exclusive to a permission
+#    nombre: '...'                    name shown in messages and titles
+#    lore: [...]                      HOW IT LOOKS (use {preview} in menus.yml)
+#    comandos: [...]                  WHAT IT GIVES, run from the console
+#    items: [...]                     WHAT IT GIVES, as direct items
+#    experiencia / niveles            direct XP (config: entrega.experiencia-directa)
+#    mensajes: [...]                  extra chat lines when claimed
+#    efectos: {...}                   sound, particle, fireworks, title, broadcast
+#    rangos: {...}                    per-rank variants (the first match wins)
+#
+#  Commands run from the CONSOLE with {jugador}, {uuid}, {mundo} and {premio}.
+#  Examples: eco give {jugador} 100 | give {jugador} diamond 2 | xp add {jugador} 50 points
+# ============================================================================
+
+config-version: 2
+
+dias:
+
+  '1':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQwMDVlYmJmOTgxN2Q2OTI4ZGU4YmM1ZjdkMWMzODkyNzYwMjBhYzg3NjQ3ZDI4YWI4Zjk5ZWIzOWZmZGU3NiJ9fX0='
+    permiso: ''
+    lore:
+      - '&7▪ &f50 &7{moneda}'
+      - '&7▪ &f10 &7experience'
+    comandos:
+      - 'eco give {jugador} 50'
+    experiencia: 10
+
+  '2':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY1NzViYjU0YTJlOTEzM2FhYTEzMTBhMTQ2NDJmNzhhMDE0ZmNjOTM2MDc3NDE3MTY2M2QzNGRiMjM2Y2NjNCJ9fX0='
+    lore:
+      - '&7▪ &f75 &7{moneda}'
+      - '&7▪ &f4x &fBread'
+    comandos:
+      - 'eco give {jugador} 75'
+    # Direct items: short form ('MATERIAL amount') or full form.
+    items:
+      - 'BREAD 4'
+
+  '3':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTk2MGQ2ZmZhZjQ0ZThhZmNiZGY4YjI5YTc3ZDg0Y2UyMmM3MWQwMGM2NGJmZDk5YWYzNDBhNjk1MzViZmQ3In19fQ=='
+    lore:
+      - '&7▪ &f100 &7{moneda}'
+      - '&7▪ &f8x &fIron ingot'
+    comandos:
+      - 'eco give {jugador} 100'
+    items:
+      - 'IRON_INGOT 8'
+
+  '4':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWVlZmE0Y2QyYTU1OGU0YTgxMmUyZWE3NTQxZTYyNzUwYjk2YmExZDgyYzFkYTlmZDVmMmUzZmI5MzA4YzYzNSJ9fX0='
+    lore:
+      - '&7▪ &f150 &7{moneda}'
+      - '&7▪ &f2x &6Golden apples'
+    comandos:
+      - 'eco give {jugador} 150'
+    items:
+      # Full form: any Minecraft item option.
+      - material: GOLDEN_APPLE
+        cantidad: 2
+      # An item with a name, lore and enchantments.
+    mensajes:
+      - '&7Tip: &fuse /rewards&7 to see all your progress.'
+    efectos:
+      sonido: ENTITY_EXPERIENCE_ORB_PICKUP
+
+  '5':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQ4OTY5YzU2MmI3MTFlZGQxOTJmMTU3NjIxOTk5MDk1ZDM3MmNjNzhkOTEwZTY5MjA3ZjY2ODQ5OWNjNmRmYyJ9fX0='
+    lore:
+      - '&7▪ &f200 &7{moneda}'
+      - '&7▪ &f1x &bDiamond'
+      - '&8Half of the cycle'
+    comandos:
+      - 'eco give {jugador} 200'
+    items:
+      - material: DIAMOND
+        cantidad: 1
+        nombre: '&bDiamond of day 5'
+        lore:
+          - '&7Reward for not missing a day.'
+    efectos:
+      particula: HAPPY_VILLAGER
+      particulas: 12
+
+  '6':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODg5NTQ1YTJkY2U0ZTY2MGM0NGI1NTFmOTM5NmE3ZDcyZTJiZDNmZGUwNTE2M2QzMGM0MDNkOWE2NjhmNTZiNSJ9fX0='
+    lore:
+      - '&7▪ &f250 &7{moneda}'
+      - '&7▪ &f3x &6Golden apples'
+      - '&7▪ &bEnchanted diamond sword'
+    comandos:
+      - 'eco give {jugador} 250'
+    items:
+      - material: DIAMOND_SWORD
+        cantidad: 1
+        nombre: '&bDay 6 blade'
+        encantamientos:
+          SHARPNESS: 2
+          UNBREAKING: 1
+        item-flags: [HIDE_ATTRIBUTES]
+        # On 1.8 these names are translated automatically (SHARPNESS -> DAMAGE_ALL).
+      - material: GOLDEN_APPLE
+        cantidad: 3
+
+  # Day 7 shows the PER-RANK VARIANTS (rangos:).
+  # A player with mvip gets (and SEES) the MVIP version; with vip, the VIP one;
+  # with no rank at all, the base version above. Put the HIGHEST ranks
+  # FIRST: the first variant whose permission the player has wins.
+  '7':
+    nombre: '&d&lFull cycle chest'
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0MDcxNmFhNjlmZDA3YTQ1MGE4N2VkOTY3YTU4MTdlNjNhYjM0OGNlZGYzNDYwZWVjY2VlNTc5NWY2NGQwZSJ9fX0='
+    lore:
+      - '&7▪ &f500 &7{moneda}'
+      - '&7▪ &f100 &7experience'
+      - '&7▪ &f3x &bDiamond'
+      - '&7▪ &f5x &6Golden apples'
+      - '&8Full cycle'
+    comandos:
+      - 'eco give {jugador} 500'
+    items:
+      - 'DIAMOND 3'
+      - 'GOLDEN_APPLE 5'
+    experiencia: 100
+    efectos:
+      sonido: ENTITY_PLAYER_LEVELUP
+      particula: FIREWORK
+      fuegos: true
+      accion-bar: '&aDaily cycle completed!'
+      mensajes:
+        - '&dYou completed the daily cycle! &7Come back tomorrow to start another one.'
+    rangos:
+      mvip:
+        permiso: 'jprewards.rewards.mvip'
+        nombre: '&6Full cycle chest &6&lMVIP'
+        icono:
+          textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM0YTU5MmE3OTM5N2E4ZGYzOTk3YzQzMDkxNjk0ZmMyZmI3NmM4ODNhNzZjY2U4OWYwMjI3ZTVjOWYxZGZlIn19fQ=='
+        lore:
+          - '&8Reward for rank &6&lMVIP'
+          - '&7▪ &f2500 &7{moneda}'
+          - '&7▪ &f250 &7experience'
+          - '&7▪ &f6x &bDiamond'
+          - '&7▪ &f2x &bDiamond block'
+        comandos:
+          - 'eco give {jugador} 2500'
+        items:
+          - 'DIAMOND 6'
+          - 'DIAMOND_BLOCK 2'
+        experiencia: 250
+        efectos:
+          fuegos: true
+      vip:
+        permiso: 'jprewards.rewards.vip'
+        nombre: '&dFull cycle chest &d&lVIP'
+        icono:
+          textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTVkZmEyODRhYTE1MzI0ZTUxNzg1NjFmODAzZjU5NzYyMjhkOTUxMTU1ODNhYjAzMTI2NmFlMjRlZTFhOTlkMSJ9fX0='
+        lore:
+          - '&8Reward for rank &d&lVIP'
+          - '&7▪ &f1200 &7{moneda}'
+          - '&7▪ &f140 &7experience'
+          - '&7▪ &f4x &bDiamond'
+          - '&7▪ &f1x &bDiamond block'
+        comandos:
+          - 'eco give {jugador} 1200'
+        items:
+          - 'DIAMOND 4'
+          - 'DIAMOND_BLOCK 1'
+        experiencia: 140

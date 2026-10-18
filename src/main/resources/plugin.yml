@@ -1,0 +1,87 @@
+# ============================================================
+#  JPRewards - plugin.yml
+#  Source of truth for commands and permissions.
+#  Every visible text lives in messages_<language>.yml, menus.yml
+#  and recompensas/*.yml (nothing is hardcoded in the code).
+#
+#  api-version 1.13: modern servers read this value, 1.8 - 1.12
+#  ignore it. Materials, sounds and titles are resolved at runtime
+#  by the plugin itself (see util/Compat.java), so one jar runs on
+#  1.8 through the latest version.
+# ============================================================
+
+name: JPRewards
+version: '${version}'
+main: me.jp.jprewards.JPRewards
+api-version: '1.13'
+authors: [JP]
+description: Daily, weekly, monthly and streak rewards with fully configurable head menus (1.8 - latest).
+website: 'https://www.spigotmc.org/resources/'
+# PlaceholderAPI is optional: without it the plugin works exactly the
+# same, it only stops resolving %...% placeholders inside its texts.
+softdepend: [PlaceholderAPI]
+
+commands:
+  rewards:
+    description: Opens the rewards menu and manages the plugin.
+    usage: /rewards [help|daily|weekly|monthly|streaks|info|claim|top]
+    # English aliases. 'recompensas' is kept only for servers upgrading from
+    # 1.x (where it was the command name); remove it if you do not need it.
+    aliases: [jprewards, rec, reward, recompensas]
+
+permissions:
+  # ---- Players ---------------------------------------------------
+  jprewards.use:
+    description: Allows opening the rewards menus and using /rewards.
+    default: true
+  jprewards.claim.daily:
+    description: Allows claiming the daily reward.
+    default: true
+  jprewards.claim.weekly:
+    description: Allows claiming the weekly reward.
+    default: true
+  jprewards.claim.monthly:
+    description: Allows claiming the monthly milestones.
+    default: true
+  jprewards.claim.streak:
+    description: Allows claiming the streak bonuses.
+    default: true
+  jprewards.notify:
+    description: Receives the join notice when rewards are available.
+    default: true
+  jprewards.autoclaim:
+    description: Claims the daily reward automatically on join (when auto-claim is enabled).
+    default: false
+  # ---- Utilities --------------------------------------------------
+  jprewards.top:
+    description: Allows viewing the server leaderboard with /rewards top.
+    default: true
+  jprewards.update:
+    description: Receives a chat notice when a new version is available.
+    default: op
+  # ---- Administration ---------------------------------------------
+  jprewards.admin:
+    description: Allows /rewards reload, validate, status, data and top.
+    default: op
+  jprewards.admin.manage:
+    description: Allows give, test, reset and set for any player.
+    default: op
+  jprewards.admin.migrate:
+    description: Allows migrating the data between YAML and the database.
+    default: op
+  jprewards.*:
+    description: Grants every permission above.
+    default: op
+    children:
+      jprewards.use: true
+      jprewards.claim.daily: true
+      jprewards.claim.weekly: true
+      jprewards.claim.monthly: true
+      jprewards.claim.streak: true
+      jprewards.notify: true
+      jprewards.autoclaim: true
+      jprewards.top: true
+      jprewards.update: true
+      jprewards.admin: true
+      jprewards.admin.manage: true
+      jprewards.admin.migrate: true

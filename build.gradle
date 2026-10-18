@@ -1,0 +1,61 @@
+// ============================================================
+// JPRewards - build.gradle (Groovy)
+// Equivalente a pom.xml: se compila contra la API de Spigot 1.8.8
+// emitiendo bytecode Java 8, para que el MISMO jar funcione de 1.8
+// a la ultima version.
+//
+//   gradle build   ->  build/libs/JPRewards-<version>.jar
+// ============================================================
+
+plugins {
+    id 'java'
+}
+
+group = 'me.jp'
+version = '2.0.0'
+description = 'Daily, weekly, monthly and streak rewards with fully configurable head menus (1.8 - latest).'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://repo.extendedclip.com/releases/' }
+}
+
+dependencies {
+    // API antigua pero completa: todo lo usado en el codigo existe en 1.8.8.
+    compileOnly('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT') {
+        // bungeecord-chat 1.8-SNAPSHOT ya no esta publicado en repos
+        // publicos y NO se necesita para compilar: el action bar se
+        // envia por reflexion (ver util/Compat).
+        exclude group: 'net.md-5', module: 'bungeecord-chat'
+    }
+    // PlaceholderAPI: solo para compilar el hook. No se empaqueta.
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Bytecode Java 8: compatible con cualquier servidor 1.8+ (Java 8 o superior).
+    options.release = 8
+    // El aviso "source/target 8 is obsolete" es esperado (queremos Java 8).
+    options.compilerArgs.add('-Xlint:-options')
+}
+
+processResources {
+    filesMatching('plugin.yml') {
+        expand(version: project.version)
+    }
+}
+
+jar {
+    archiveFileName = "JPRewards-${version}.jar"
+    // Build reproducible: sin sellos de tiempo variables dentro del jar.
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}

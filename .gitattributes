@@ -1,0 +1,20 @@
+# Normalise line endings in the repository; the working tree decides for scripts.
+* text=auto eol=lf
+
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Binary assets: never touch them.
+*.jar  binary
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.ico  binary
+
+# Keep the generated artwork out of the language statistics.
+docs/assets/*.png linguist-generated=true
+docs/assets/icons/*.png linguist-generated=true
+
+# Diffs that read well.
+CHANGELOG.md merge=union

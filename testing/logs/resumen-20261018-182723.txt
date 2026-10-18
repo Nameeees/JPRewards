@@ -1,0 +1,138 @@
+﻿------------------------------------------------------------------------
+ JPRewards - ciclo de pruebas
+------------------------------------------------------------------------
+fecha        : 2026-10-18 18:27:23
+raiz         : C:\Users\Usuario\Downloads\Plugins\JPRewards
+servidores   : C:\Users\Usuario\Downloads\Plugins\JPRewards\.test-servers
+logs         : C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\logs
+timeout      : 180 s por servidor
+
+java 8       : C:\Users\Usuario\Downloads\Plugins\JPRewards\.test-servers\tools\jdk8\jdk8u504-b01\bin\java.exe
+java moderno : C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin\java.exe
+
+JPRewards    : no se compila (-SkipBuild)
+harness      : no se compila (-SkipBuild)
+harness      : OK -> C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\harness\target\Harness.jar
+
+------------------------------------------------------------------------
+ SERVIDOR: Paper 1.8.8 (JDK 8)  (paper-1.8.8)
+------------------------------------------------------------------------
+[paper-1.8.8] plugins\JPRewards borrado (los archivos por defecto se prueban de cero)
+[paper-1.8.8] copiados JPRewards-2.0.0.jar y Harness.jar en plugins\
+[paper-1.8.8] arrancando: C:\Users\Usuario\Downloads\Plugins\JPRewards\.test-servers\tools\jdk8\jdk8u504-b01\bin\java.exe -Xms512M -Xmx1024M -Dfile.encoding=UTF-8 -jar paper-1.8.8.jar nogui
+[paper-1.8.8] log: C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\logs\paper-1.8.8-20261018-182723.log
+
+[paper-1.8.8] salida del harness (43 lineas):
+  HARNESS INFO: harness de JPRewards 1.0.0
+  HARNESS INFO: servidor=git-PaperSpigot-445 (MC: 1.8.8)
+  HARNESS INFO: bukkit=1.8.8-R0.1-SNAPSHOT
+  HARNESS INFO: java=1.8.0_504 de Temurin
+  HARNESS INFO: carpeta de trabajo=C:\Users\Usuario\Downloads\Plugins\JPRewards\.test-servers\paper-1.8.8\.
+  HARNESS INFO: mundo=world tipo=FLAT altura-en-0,0=4 (en un mundo FLAT ronda 4)
+  HARNESS INFO: [harness] ejecutando las comprobaciones
+  CHECK OK: JPRewards activado (version 2.0.0, clase me.jp.jprewards.JPRewards)
+  CHECK OK: comando /rewards registrado (plugin JPRewards)
+  CHECK OK: el alias /rec esta registrado
+  CHECK OK: setExecutor aplicado (me.jp.jprewards.command.ComandoRecompensas)
+  CHECK OK: setTabCompleter aplicado (me.jp.jprewards.command.ComandoRecompensas)
+  CHECK OK: los 13 archivos por defecto se crearon en plugins\JPRewards (config.yml, messages_en/es.yml, menus.yml, menus_es.yml y los cuatro recompensas/*.yml con sus presets _es.yml)
+  CHECK OK: los YAML se leen con YamlConfiguration sin excepciones y sin claves duplicadas (13 de 13 archivos)
+  CHECK OK: los 13 archivos gestionados tienen config-version >= 2
+  HARNESS INFO: [harness] jugador de pruebas para los comandos: HarnessPlayer
+  CHECK OK: comando /rewards info sin excepciones
+  CHECK OK: comando /rewards validate sin excepciones
+  CHECK OK: comando /rewards help sin excepciones
+  CHECK OK: comando /rewards top sin excepciones
+  CHECK OK: comando /rewards status sin excepciones
+  CHECK OK: comando /rewards data HarnessPlayer sin excepciones
+  CHECK OK: comando /rewards give HarnessPlayer daily sin excepciones
+  CHECK OK: comando /rewards reload sin excepciones
+  CHECK OK: comando /rewards test daily sin excepciones
+  CHECK OK: comando /rewards set HarnessPlayer streak 3 sin excepciones
+  CHECK OK: comando /rewards reset HarnessPlayer daily sin excepciones
+  CHECK OK: el alias heredado /recompensas sigue funcionando
+  CHECK OK: acciones de menus.yml: 11/11 (nombres nuevos e heredados) se normalizan a lo mismo
+  CHECK OK: reclamo diario: un dia ya reclamado no se puede volver a reclamar (antes=si, despues=no)
+  CHECK OK: no hay ningun permiso que permita saltarse el bloqueo y reclamar dos veces
+  CHECK OK: el plugin sigue activo despues de los comandos
+  HARNESS INFO: [harness] DatosCodec.aTexto -> nombre: HarnessPlayer | ultimo-dia: 20000 | racha: 12 | mejor-racha: 15 | total: 40 | ultima-semana: 2900 | racha-semanal: 3 | mejor-racha-semanal: 4 | total-semanal: 11 | mes: 202610 | dias-mes: 9 | hitos-reclamados: | - mes-9 | hitos-historicos: 5 | bonus-reclamados: | - racha-7 | racha-bonus: 1 | primer-reclamo: 1700000000000 | ultimo-reclamo: 1700000000000 | pendientes: | - ==: org.bukkit.i...
+  CHECK OK: DatosCodec: ida y vuelta correcta con racha 12, total 40, diasMes 9, 1 hito, 1 bonus y 2 items pendientes
+  CHECK OK: AlmacenYaml: guardar y volver a cargar devuelve los mismos datos (archivo 11111111-2222-3333-4444-555555555555.yml, 472 bytes)
+  HARNESS INFO: [harness] fusion: opcion del usuario idioma = harness-valor
+  HARNESS INFO: [harness] fusion: resultado (14346 chars) config-version: 2 |  | # config.yml de juguete del harness (no es el del plugin) | idioma: harness-valor |  |  | # --- NEW in this version: debug (check this option) --- | debug: false |  | # ============================================================================ | #  MODULOS / MODULES | # ---------------------------------------------------------------------------- | #  Activa o desactiva cada sistema de recompensas por separado. | #  Enable or disable each reward system independently. | # ============================================================================ |  | # --- NEW in th...
+  CHECK OK: fusion de config: se respeto idioma=harness-valor, aparecieron 16 secciones, config-version=2, YAML valido sin claves duplicadas (copia .bak: si)
+  CHECK OK: mensajes: messages_es.yml define prefijo y las secciones general, comando, diaria, semanal, mensual, rachas, recompensa y titulos
+  CHECK OK: estabilidad del scheduler: tarea repetida durante 3 s (3 latidos), JPRewards sigue activo y sin excepciones en el log
+  HARNESS INFO: [harness] apagando el servidor (Bukkit.shutdown)
+  HARNESS RESULT checks=29 failures=0 skipped=0
+  HARNESS PASS
+
+[paper-1.8.8] resumen: exit=0 timeout=False checks=29 ok=29 failed=0 skipped=0
+[paper-1.8.8] veredicto: PASA
+
+------------------------------------------------------------------------
+ SERVIDOR: Spigot 1.21.1 (Java 21)  (spigot-1.21.1)
+------------------------------------------------------------------------
+[spigot-1.21.1] plugins\JPRewards borrado (los archivos por defecto se prueban de cero)
+[spigot-1.21.1] copiados JPRewards-2.0.0.jar y Harness.jar en plugins\
+[spigot-1.21.1] arrancando: C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot\bin\java.exe -Xms512M -Xmx1024M -Dfile.encoding=UTF-8 -jar spigot-1.21.1.jar nogui
+[spigot-1.21.1] log: C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\logs\spigot-1.21.1-20261018-182723.log
+
+[spigot-1.21.1] salida del harness (43 lineas):
+  HARNESS INFO: harness de JPRewards 1.0.0
+  HARNESS INFO: servidor=4344-Spigot-a759b62-19bf846 (MC: 1.21.1)
+  HARNESS INFO: bukkit=1.21.1-R0.1-SNAPSHOT
+  HARNESS INFO: java=21.0.11 de Eclipse Adoptium
+  HARNESS INFO: carpeta de trabajo=C:\Users\Usuario\Downloads\Plugins\JPRewards\.test-servers\spigot-1.21.1\.
+  HARNESS INFO: mundo=world tipo=FLAT altura-en-0,0=-61 (en un mundo FLAT ronda 4)
+  HARNESS INFO: [harness] ejecutando las comprobaciones
+  CHECK OK: JPRewards activado (version 2.0.0, clase me.jp.jprewards.JPRewards)
+  CHECK OK: comando /rewards registrado (plugin JPRewards)
+  CHECK OK: el alias /rec esta registrado
+  CHECK OK: setExecutor aplicado (me.jp.jprewards.command.ComandoRecompensas)
+  CHECK OK: setTabCompleter aplicado (me.jp.jprewards.command.ComandoRecompensas)
+  CHECK OK: los 13 archivos por defecto se crearon en plugins\JPRewards (config.yml, messages_en/es.yml, menus.yml, menus_es.yml y los cuatro recompensas/*.yml con sus presets _es.yml)
+  CHECK OK: los YAML se leen con YamlConfiguration sin excepciones y sin claves duplicadas (13 de 13 archivos)
+  CHECK OK: los 13 archivos gestionados tienen config-version >= 2
+  HARNESS INFO: [harness] jugador de pruebas para los comandos: HarnessPlayer
+  CHECK OK: comando /rewards info sin excepciones
+  CHECK OK: comando /rewards validate sin excepciones
+  CHECK OK: comando /rewards help sin excepciones
+  CHECK OK: comando /rewards top sin excepciones
+  CHECK OK: comando /rewards status sin excepciones
+  CHECK OK: comando /rewards data HarnessPlayer sin excepciones
+  CHECK OK: comando /rewards give HarnessPlayer daily sin excepciones
+  CHECK OK: comando /rewards reload sin excepciones
+  CHECK OK: comando /rewards test daily sin excepciones
+  CHECK OK: comando /rewards set HarnessPlayer streak 3 sin excepciones
+  CHECK OK: comando /rewards reset HarnessPlayer daily sin excepciones
+  CHECK OK: el alias heredado /recompensas sigue funcionando
+  CHECK OK: acciones de menus.yml: 11/11 (nombres nuevos e heredados) se normalizan a lo mismo
+  CHECK OK: reclamo diario: un dia ya reclamado no se puede volver a reclamar (antes=si, despues=no)
+  CHECK OK: no hay ningun permiso que permita saltarse el bloqueo y reclamar dos veces
+  CHECK OK: el plugin sigue activo despues de los comandos
+  HARNESS INFO: [harness] DatosCodec.aTexto -> nombre: HarnessPlayer | ultimo-dia: 20000 | racha: 12 | mejor-racha: 15 | total: 40 | ultima-semana: 2900 | racha-semanal: 3 | mejor-racha-semanal: 4 | total-semanal: 11 | mes: 202610 | dias-mes: 9 | hitos-reclamados: | - mes-9 | hitos-historicos: 5 | bonus-reclamados: | - racha-7 | racha-bonus: 1 | primer-reclamo: 1700000000000 | ultimo-reclamo: 1700000000000 | pendientes: | - ==: org.bukkit.i...
+  CHECK OK: DatosCodec: ida y vuelta correcta con racha 12, total 40, diasMes 9, 1 hito, 1 bonus y 2 items pendientes
+  CHECK OK: AlmacenYaml: guardar y volver a cargar devuelve los mismos datos (archivo 11111111-2222-3333-4444-555555555555.yml, 492 bytes)
+  HARNESS INFO: [harness] fusion: opcion del usuario idioma = harness-valor
+  HARNESS INFO: [harness] fusion: resultado (14346 chars) config-version: 2 |  | # config.yml de juguete del harness (no es el del plugin) | idioma: harness-valor |  |  | # --- NEW in this version: debug (check this option) --- | debug: false |  | # ============================================================================ | #  MODULOS / MODULES | # ---------------------------------------------------------------------------- | #  Activa o desactiva cada sistema de recompensas por separado. | #  Enable or disable each reward system independently. | # ============================================================================ |  | # --- NEW in th...
+  CHECK OK: fusion de config: se respeto idioma=harness-valor, aparecieron 16 secciones, config-version=2, YAML valido sin claves duplicadas (copia .bak: si)
+  CHECK OK: mensajes: messages_es.yml define prefijo y las secciones general, comando, diaria, semanal, mensual, rachas, recompensa y titulos
+  CHECK OK: estabilidad del scheduler: tarea repetida durante 3 s (3 latidos), JPRewards sigue activo y sin excepciones en el log
+  HARNESS INFO: [harness] apagando el servidor (Bukkit.shutdown)
+  HARNESS RESULT checks=29 failures=0 skipped=0
+  HARNESS PASS
+
+[spigot-1.21.1] resumen: exit=0 timeout=False checks=29 ok=29 failed=0 skipped=0
+[spigot-1.21.1] veredicto: PASA
+
+------------------------------------------------------------------------
+ RESUMEN FINAL
+------------------------------------------------------------------------
+paper-1.8.8      PASA   checks=29  ok=29  failed=0   skipped=0   exit=0
+                 log: C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\logs\paper-1.8.8-20261018-182723.log
+spigot-1.21.1    PASA   checks=29  ok=29  failed=0   skipped=0   exit=0
+                 log: C:\Users\Usuario\Downloads\Plugins\JPRewards\testing\logs\spigot-1.21.1-20261018-182723.log
+
+fallos totales: 0
+RESULTADO: TODO PASA

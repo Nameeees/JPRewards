@@ -1,0 +1,113 @@
+# ============================================================================
+#  JPRewards - recompensas/semanales.yml
+# ----------------------------------------------------------------------------
+#  Ciclo de la recompensa SEMANAL. La clave es el numero de bloque (1..N).
+#  Se reclama UNA vez por semana: la semana empieza el dia configurado en
+#  config.yml -> semanal.dia-inicio, a la hora de reinicio.hora.
+#  Weekly reward cycle: one claim per week, starting on semanal.dia-inicio.
+
+#  Los premios semanales conviene que sean claramente mejores que los
+#  diarios: son el motivo para entrar cada semana.
+#  Mismos campos que diarias.yml (lore, comandos, items, efectos, rangos...).
+# ============================================================================
+
+config-version: 2
+
+semanas:
+
+  '1':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTk2MGQ2ZmZhZjQ0ZThhZmNiZGY4YjI5YTc3ZDg0Y2UyMmM3MWQwMGM2NGJmZDk5YWYzNDBhNjk1MzViZmQ3In19fQ=='
+    lore:
+      - '&7▪ &f750 &7{moneda}'
+      - '&7▪ &f1x &bDiamante'
+    comandos:
+      - 'eco give {jugador} 750'
+    items:
+      - 'DIAMOND 1'
+    experiencia: 75
+
+  '2':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQ4OTY5YzU2MmI3MTFlZGQxOTJmMTU3NjIxOTk5MDk1ZDM3MmNjNzhkOTEwZTY5MjA3ZjY2ODQ5OWNjNmRmYyJ9fX0='
+    lore:
+      - '&7▪ &f1000 &7{moneda}'
+      - '&7▪ &f2x &bDiamante'
+      - '&7▪ &f5x &6Manzana dorada'
+    comandos:
+      - 'eco give {jugador} 1000'
+    items:
+      - 'DIAMOND 2'
+      - 'GOLDEN_APPLE 5'
+    experiencia: 100
+
+  '3':
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDM0MDcxNmFhNjlmZDA3YTQ1MGE4N2VkOTY3YTU4MTdlNjNhYjM0OGNlZGYzNDYwZWVjY2VlNTc5NWY2NGQwZSJ9fX0='
+    lore:
+      - '&7▪ &f1500 &7{moneda}'
+      - '&7▪ &f3x &bDiamante'
+      - '&7▪ &f1x &bBloque de diamante'
+    comandos:
+      - 'eco give {jugador} 1500'
+    items:
+      - 'DIAMOND 3'
+      - 'DIAMOND_BLOCK 1'
+    efectos:
+      particula: HAPPY_VILLAGER
+      particulas: 15
+
+  '4':
+    nombre: '&d&lCofre de la semana completa'
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTVkZmEyODRhYTE1MzI0ZTUxNzg1NjFmODAzZjU5NzYyMjhkOTUxMTU1ODNhYjAzMTI2NmFlMjRlZTFhOTlkMSJ9fX0='
+    lore:
+      - '&7▪ &f2500 &7{moneda}'
+      - '&7▪ &f5x &bDiamante'
+      - '&7▪ &f2x &bBloque de diamante'
+      - '&8Semana completa del ciclo'
+    comandos:
+      - 'eco give {jugador} 2500'
+    items:
+      - 'DIAMOND 5'
+      - 'DIAMOND_BLOCK 2'
+      - 'GOLDEN_APPLE 10'
+    experiencia: 250
+    efectos:
+      sonido: ENTITY_PLAYER_LEVELUP
+      fuegos: true
+      # Anuncio a TODO el servidor (dejalo vacio o quita la linea para no anunciar).
+      broadcast: '&d{jugador} &7ha completado el ciclo semanal de recompensas!'
+    rangos:
+      mvip:
+        permiso: 'jprewards.rewards.mvip'
+        nombre: '&6Semana completa &6&lMVIP'
+        icono:
+          textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM0YTU5MmE3OTM5N2E4ZGYzOTk3YzQzMDkxNjk0ZmMyZmI3NmM4ODNhNzZjY2U4OWYwMjI3ZTVjOWYxZGZlIn19fQ=='
+        lore:
+          - '&8Semana completa del rango &6&lMVIP'
+          - '&7▪ &f6000 &7{moneda}'
+          - '&7▪ &f12x &bDiamante'
+          - '&7▪ &f5x &bBloque de diamante'
+        comandos:
+          - 'eco give {jugador} 6000'
+        items:
+          - 'DIAMOND 12'
+          - 'DIAMOND_BLOCK 5'
+        experiencia: 400
+      vip:
+        permiso: 'jprewards.rewards.vip'
+        nombre: '&dSemana completa &d&lVIP'
+        icono:
+          textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE2OTZlMTUyMzYzYWQ0NzdlZDZjYjVhNTE4YmZlYTg0YjAzNjE0OGZlY2FjMDU4MWYzMmM1YjUzOTY5NTgifX19'
+        lore:
+          - '&8Semana completa del rango &d&lVIP'
+          - '&7▪ &f4000 &7{moneda}'
+          - '&7▪ &f8x &bDiamante'
+          - '&7▪ &f3x &bBloque de diamante'
+        comandos:
+          - 'eco give {jugador} 4000'
+        items:
+          - 'DIAMOND 8'
+          - 'DIAMOND_BLOCK 3'
+        experiencia: 320

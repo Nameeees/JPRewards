@@ -1,0 +1,12 @@
+# ============================================================
+#  JPRewards - harness de pruebas (SOLO testing)
+#  No se publica ni se empaqueta en el jar de JPRewards.
+#  api-version se ignora en 1.8 y lo usan los servidores modernos.
+# ============================================================
+name: JPRewardsHarness
+version: 1.0.0
+main: me.jp.testing.HarnessPlugin
+api-version: '1.13'
+authors: [JP]
+description: Harness de comprobaciones de JPRewards (solo para servidores de prueba).
+load: POSTWORLD

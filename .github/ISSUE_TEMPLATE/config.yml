@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Nameeees/JPRewards/blob/main/README.md
+    about: Installation, commands, permissions, configuration and placeholders.
+  - name: Configuration guide (Spanish)
+    url: https://github.com/Nameeees/JPRewards/blob/main/docs/CONFIGURACION.es.md
+    about: Guia de configuracion paso a paso en espanol.
+  - name: SpigotMC discussion thread
+    url: https://www.spigotmc.org/resources/
+    about: Questions, setup help and general support.

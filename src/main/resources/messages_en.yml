@@ -1,0 +1,160 @@
+# ============================================================================
+#  JPRewards - messages_en.yml
+# ----------------------------------------------------------------------------
+#  All player-facing chat texts. Copy this file (or messages_es.yml) and
+#  translate it to create your own language, then set 'idioma' in config.yml.
+#
+#  Format: legacy & codes (1.8 - latest) and &#RRGGBB hex colours (1.16+).
+#  {prefijo} can be used in any message; otherwise the prefix is added.
+#  Empty messages ("") are not sent: useful to silence something.
+#  Missing keys fall back to this file, so a translation can be partial.
+# ============================================================================
+
+config-version: 2
+
+prefijo: '&8[&d&lJPRewards&8] &7» &f'
+
+general:
+  solo-jugadores: '&cThis command is for players in game only.'
+  sin-permiso: '&cYou do not have permission to do that.'
+  jugador-desconocido: '&cPlayer &f{jugador} &cwas not found. They must have played here before.'
+  jugador-desconectado: '&c&f{jugador} &cis not online; they must be online to receive a reward.'
+  error: '&cSomething went wrong. Tell an administrator and check the console.'
+  modulo-desactivado: '&eThe &f{modulo} &ereward system is disabled on this server.'
+  inventario-lleno: '&eYour inventory is full: &f{cantidad} &ereward(s) were stored and will be given on your next login.'
+  inventario-soltado: '&eYour inventory is full: &f{cantidad} &ereward(s) dropped at your feet.'
+  bloqueado: '&cYou cannot claim this yet.'
+  pendientes-recibidos: '&aYou received &f{cantidad} &apending reward(s).'
+  nada-para-reclamar: '&7You have nothing to claim right now.'
+  reclamar-todo: '&aYou claimed &f{cantidad} &areward(s) at once. &7Come back tomorrow for the next one.'
+  autoreclamado: '&aYour daily reward was claimed automatically.'
+  actualizacion: '&eA new JPRewards version is available: &f{version} &7(you run &f{actual}&7). Get it on SpigotMC.'
+
+comando:
+  ayuda-encabezado: '&8&m--------&r &d&lJPRewards &7v{version} &8&m--------'
+  ayuda-jugador:
+    - '&7» &f/rewards &8- &7opens the main menu.'
+    - '&7» &f/rewards daily &8- &7your daily cycle.'
+    - '&7» &f/rewards weekly &8- &7the weekly cycle.'
+    - '&7» &f/rewards monthly &8- &7monthly milestones.'
+    - '&7» &f/rewards streaks &8- &7streak bonuses.'
+    - '&7» &f/rewards claim [daily|weekly|monthly|streaks|all] &8- &7claim without opening the menu.'
+    - '&7» &f/rewards top [streak|total|weeks|milestones|bonuses] &8- &7server leaderboard.'
+    - '&7» &f/rewards info &8- &7how it works.'
+  ayuda-admin:
+    - '&7» &f/rewards status &8- &7plugin and storage status. &8(admin)'
+    - '&7» &f/rewards validate &8- &7checks EVERY file and explains the errors. &8(admin)'
+    - '&7» &f/rewards reload [config|mensajes|menus|recompensas|todo] &8(admin)'
+    - '&7» &f/rewards data <player> &8- &7full report for one player. &8(admin)'
+  ayuda-gestion:
+    - '&7» &f/rewards give <player> <daily|weekly|monthly|streaks> [key] &8- &7deliver a reward (testing). &8(admin)'
+    - '&7» &f/rewards test <daily|weekly|monthly|streaks> [key] &8- &7show what would be delivered. &8(admin)'
+    - '&7» &f/rewards reset <player|*> [daily|weekly|monthly|streaks|all] &8- &7reset data. &8(admin)'
+    - '&7» &f/rewards set <player> <field> <value> &8- &7set counters. &8(admin)'
+    - '&7» &f/rewards migrate confirm &8- &7copy data between YAML and MySQL. &8(admin)'
+  ayuda-pie: '&8Tip: &7every option is commented in &fconfig.yml&7, &fmenus.yml &7and &frecompensas/&7, and &f/rewards validate &7checks them for you.'
+  desconocido: '&cUnknown subcommand &f{entrada}&c. Try &f/rewards help&c.'
+  reclamar-tipos: '&7Usage: &f/rewards claim <{tipos}>&7.'
+
+  estado-titulo: '&8&m--------&r &d&lJPRewards status &8&m--------'
+  estado-lineas:
+    - '&7» Version: &f{version} &7· server &f{servidor}'
+    - '&7» Language: &f{idioma} &7· storage: &f{tipo_almacenamiento}'
+    - '&7» Data target: &f{almacenamiento}'
+    - '&7» In memory: &f{cargados} &7player(s) · autosave every &f{autoguardado}s'
+    - '&7» Loaded: &f{dias} &7days · &f{semanas} &7weeks · &f{hitos} &7milestones · &f{bonus} &7bonuses'
+    - '&7» Folder: &f{ruta}'
+  estado-actualizacion: '&eA new version is available: &f{version}&e.'
+  estado-problemas: '&eThere are &f{cantidad} &econfig warning(s): run &f/rewards validate&e.'
+
+  validar-titulo: '&8&m--------&r &d&lFile check &8&m--------'
+  validar-error: '&c✖ &f{texto}'
+  validar-aviso: '&e• &f{texto}'
+  validar-correcto: '&a✔ &f{texto}'
+  validar-ok: '&aAll good: &f{avisos} &aminor warning(s) and no errors.'
+  validar-resumen: '&eCheck finished: &c{errores} error(s) &eand &f{avisos} &ewarning(s). Details above.'
+
+  recargado: '&aReloaded (&f{archivos}&a). Open menus were closed to apply the changes.'
+  recarga-destinos: '&cInvalid target. Use: &f/rewards reload <{destinos}>&c.'
+
+  datos-uso: '&7Usage: &f/rewards data <player>&7.'
+  datos-titulo: '&8&m--------&r &d&l{jugador} &8&m--------'
+  datos-lineas:
+    - '&7» UUID: &f{uuid}'
+    - '&7» Daily: streak &f{racha} &7(best &f{mejor}&7) · total &f{total} &7· next day &f{proximo}'
+    - '&7» Weekly: streak &f{racha_semanal} &7(best &f{mejor_semanal}&7) · total &f{total_semanal} &7· next week &f{semana}'
+    - '&7» Month: &f{dias_mes} &7day(s) · milestones &f{hitos}&7/&f{hitos_total}'
+    - '&7» Streaks: bonuses claimed &f{bonus}&7/&f{bonus_total}'
+    - '&7» Pending items: &f{pendientes}'
+    - '&7» First claim: &f{primero} &7· last: &f{ultimo}'
+
+  dar-uso: '&7Usage: &f/rewards give <player> <daily|weekly|monthly|streaks> [key]&7.'
+  dar-hecho: '&aDelivered the &f{tipo} &8(key &f{clave}&8) &areward to &f{jugador}&a.'
+  dar-desconocido: '&cThere is no &f{tipo} &creward with key &f{clave}&c. Check recompensas/*.yml.'
+  test-uso: '&7Usage: &f/rewards test <daily|weekly|monthly|streaks> [key]&7.'
+  test-titulo: '&8&m--------&r &d&lDry run &8({tipo} {clave}) &8&m--------'
+  test-vacio: '&cThat entry delivers nothing (no commands, no items, no XP).'
+  test-comando: '&7» Command: &f{texto}'
+  test-item: '&7» Item: &f{texto}'
+  test-experiencia: '&7» Experience: &f{texto}'
+  test-mensaje: '&7» Message: &f{texto}'
+  test-sonido: '&7» Sound: &f{texto}'
+  test-broadcast: '&7» Broadcast: &f{texto}'
+  test-pie: '&8Nothing was delivered: this is only a dry run.'
+
+  reset-uso: '&7Usage: &f/rewards reset <player|*> [daily|weekly|monthly|streaks|all]&7.'
+  reset-hecho: '&aData of &f{jugador} &areset &8(&f{tipo}&8)&a.'
+  reset-todos: '&aReset &8(&f{tipo}&8) &afor &f{cantidad} &aplayer(s).'
+  reset-tipo-invalido: '&cInvalid type. Use: &f{tipos}&c.'
+  set-uso: '&7Usage: &f/rewards set <player> <field> <value>&7. Fields: &f{campos}&7.'
+  set-campo-invalido: '&cInvalid field. Fields: &f{campos}&c.'
+  set-hecho: '&a&f{jugador}&a: &f{campo} &a= &f{valor}&a.'
+  numero-invalido: '&c&f{valor} &cis not a valid number.'
+
+  top-calculando: '&7Calculating the leaderboard...'
+  top-titulo: '&8&m--------&r &d&lTop {tipo} &8({cantidad}) &8&m--------'
+  top-linea: '&7» &f#{puesto} &d{jugador} &8- &f{valor}'
+  top-vacio: '&7No data for that leaderboard yet.'
+  top-tipos: '&7Available leaderboards: &f{tipos}&7.'
+
+  migrar-uso: '&eThis copies ALL data to the other storage and may take a while. Use &f/rewards migrate confirm&e.'
+  migrar-inicio: '&7Migrating from &f{origen} &7to &f{destino}&7... (this may take a while; do not stop the server)'
+  migrar-fin: '&aMigration finished: &f{copiados} &acopied, &f{omitidos} &askipped, &f{errores} &aerror(s).'
+  migrar-recordatorio: '&7The plugin is already using &f{destino}&7. Online players will see the new data on reconnect.'
+  migrar-error: '&cCould not read the source storage: &f{error}'
+
+recompensa:
+  sin-permiso-entrada: '&cYou need a rank with the special permission to claim &f{recompensa}&c.'
+
+diaria:
+  reclamada: '&aDay &f{dia} &areward claimed &8(&f{premio}&8)&a. &7Streak: &f{racha} &7day(s).'
+  ya-reclamada: '&eYou already claimed today''s reward. Come back in &f{tiempo}&e.'
+  racha-perdida: '&cYou lost your &f{racha} &cday streak by skipping a day. &7Starting over.'
+
+semanal:
+  reclamada: '&aWeek &f{semana} &areward claimed &8(&f{premio}&8)&a. &7Streak: &f{racha_semanal} &7week(s).'
+  ya-reclamada: '&eYou already claimed your weekly reward. Come back in &f{tiempo_semanal}&e.'
+  racha-perdida: '&cYou lost your &f{racha_semanal} &cweek streak. &7Starting over.'
+
+mensual:
+  hito-reclamado: '&aMonthly milestone of &f{dias} days &aclaimed &8(&f{premio}&8)&a.'
+  hito-bloqueado: '&eYou need &f{faltan} &emore day(s) with the daily claimed for that milestone.'
+  hito-ya-reclamado: '&7You already claimed the &f{dias} days &7milestone this month.'
+  nada-disponible: '&7No monthly milestone is ready to claim.'
+
+rachas:
+  bonus-reclamado: '&aStreak bonus of &f{racha_minima} &aclaimed &8(&f{premio}&8)&a.'
+  bonus-bloqueado: '&eThat bonus unlocks at a &f{racha_minima} &estreak; you are at &f{racha}&e.'
+  bonus-ya-reclamado: '&7You already claimed the &f{racha_minima} &7bonus in this streak.'
+  nada-disponible: '&7No streak bonus is ready to claim.'
+  ayuda: '&7Streak bonuses can be claimed once per streak: if you lose the streak they become available again.'
+
+avisos:
+  diaria: '&dYour daily reward is ready! &7Use &f/rewards&7.'
+  semanal: '&dYour weekly reward is ready! &7Use &f/rewards&7.'
+  hitos: '&dYou have &f{cantidad} &dmonthly milestone(s) to claim.'
+  rachas: '&dYou have &f{cantidad} &dstreak bonus(es) to claim.'
+
+titulos:
+  reclamar-arriba: '&d&lREWARDS'
+  reclamar-abajo: '&fYou received: &d{premio}'

@@ -1,0 +1,41 @@
+# Salida de build (Maven y Gradle)
+build/
+target/
+out/
+bin/
+.gradle/
+
+# Servidores de prueba locales (Paper 1.8.8 y moderno + JDK)
+.test-servers/
+
+# Artefactos de las herramientas de prueba
+testing/harness/target/
+testing/harness/classes/
+testing/harness/*.jar
+testing/logs/*
+testing/bot/node_modules/
+testing/bot/package-lock.json
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# Sistema
+Thumbs.db
+.DS_Store
+
+# Copias generadas por el plugin o el flujo de trabajo
+*.bak
+*.log
+
+# Dependencia descargada por la comprobacion de SQL (tools/sql-check)
+tools/sql-check/h2.jar
+
+# Excepcion (va al final a proposito: la ultima regla que coincide es la que
+# gana). Se versionan los logs de la ejecucion final del harness como evidencia
+# de la verificacion; docs/VERIFICATION.md los enlaza.
+!testing/logs/paper-1.8.8-20261018-182723.log
+!testing/logs/spigot-1.21.1-20261018-182723.log
+!testing/logs/resumen-20261018-182723.txt

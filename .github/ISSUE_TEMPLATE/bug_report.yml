@@ -1,0 +1,74 @@
+name: Bug report
+description: Something does not work as expected.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in every field: most reports
+        are solved faster with the output of `/rewards validate` and `/rewards status`.
+  - type: input
+    id: plugin
+    attributes:
+      label: JPRewards version
+      description: The version shown by `/rewards status` or in the jar file name.
+      placeholder: "2.0.0"
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Server software and version
+      description: For example "Paper 1.21.1 build 132" or "Spigot 1.8.8".
+      placeholder: "Paper 1.21.1"
+    validations:
+      required: true
+  - type: input
+    id: java
+    attributes:
+      label: Java version
+      description: The output of `java -version`.
+      placeholder: "Temurin 21.0.2"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: What did you do, what did you expect and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run /rewards ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: validate
+    attributes:
+      label: Output of /rewards validate
+      description: Run it in game or from the console and paste the result.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console log
+      description: The lines from the server start and from the moment of the problem.
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: other
+    attributes:
+      label: Other plugins
+      description: PlaceholderAPI, Vault, a permissions plugin, a menu plugin... anything relevant.
+    validations:
+      required: false

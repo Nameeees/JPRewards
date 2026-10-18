@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JPRewards - harness de pruebas.
+
+  Plugin SOLO para pruebas: nunca se publica ni se empaqueta en el jar de
+  JPRewards. Se compila aparte, contra la API de Spigot 1.8.8 (provided) y
+  con bytecode Java 8, para que el mismo jar funcione en el servidor 1.8.8
+  y en el servidor moderno.
+
+  El harness NO depende de las clases de JPRewards: las busca por reflexion,
+  asi que compila aunque el plugin este a medio escribir.
+
+  Uso:
+    mvn -q -f testing/harness/pom.xml clean package     ->  testing/harness/target/Harness.jar
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.jp.testing</groupId>
+    <artifactId>jprewards-harness</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>jprewards-harness</name>
+    <description>Harness de pruebas de JPRewards (solo testing)</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>8</maven.compiler.release>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- API de Spigot 1.8.8: la base mas antigua soportada por JPRewards. -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.md-5</groupId>
+                    <artifactId>bungeecord-chat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- target/Harness.jar (nombre fijo: lo copia testing/run-tests.ps1) -->
+        <finalName>Harness</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>8</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

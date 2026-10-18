@@ -1,0 +1,315 @@
+# ============================================================================
+#  JPRewards - config.yml
+# ----------------------------------------------------------------------------
+#  Un solo .jar para Minecraft 1.8 hasta la ultima version.
+#  One jar for Minecraft 1.8 through the latest version.
+#
+#  Edita los VALORES, no las claves.
+#  Edit the VALUES, not the keys.
+#
+#  Los textos visibles NO estan aqui: viven en messages_<idioma>.yml (chat),
+#  menus.yml (menus) y recompensas/*.yml (premios).
+#  Visible texts are NOT here: they live in messages_<language>.yml, menus.yml
+#  and recompensas/*.yml.
+#
+#  config-version: solo lo sube el plugin al actualizar el archivo.
+#  config-version: only the plugin raises it when updating the file.
+# ============================================================================
+
+config-version: 2
+
+# ---- Idioma / Language -----------------------------------------------------
+# Idioma por defecto: INGLES. | Default language: ENGLISH.
+# Archivo de textos que se usa: messages_<idioma>.yml.
+# Vienen incluidos 'en' (ingles) y 'es' (espanol); puedes copiar uno y
+# traducirlo para crear tu propio idioma (por ejemplo 'pt').
+# Texts file used: messages_<language>.yml. Bundled: en, es.
+#
+# Para pasar TODO el plugin a espanol (chat, menus y ejemplos de premios):
+#   1) idioma: es
+#   2) menus.archivo: 'menus_es.yml'
+#   3) diaria.archivo: 'recompensas/diarias_es.yml'   (y los otros tres)
+# To switch EVERYTHING to Spanish: idioma: es, menus_es.yml and the
+# recompensas/*_es.yml presets (they are included in the jar).
+idioma: en
+
+# ---- Depuracion / Debug ----------------------------------------------------
+# true = la consola explica con detalle lo que hace el plugin (util al
+# configurar; deja false en produccion).
+# true = verbose console output (useful while configuring).
+debug: false
+
+# ============================================================================
+#  MODULOS / MODULES
+# ----------------------------------------------------------------------------
+#  Activa o desactiva cada sistema de recompensas por separado.
+#  Enable or disable each reward system independently.
+# ============================================================================
+modulos:
+  diaria: true      # recompensa de cada dia / daily reward
+  semanal: true     # recompensa de cada semana / weekly reward
+  mensual: true     # hitos del mes / monthly milestones
+  rachas: true      # bonus al alcanzar N dias seguidos / streak bonuses
+
+# ============================================================================
+#  REINICIO DEL DIA / DAY RESET
+# ============================================================================
+reinicio:
+  # Hora local (0-23) en la que empieza un dia nuevo para todos.
+  # Local hour (0-23) when a new day starts for everyone.
+  # 0 = medianoche clasica. La diaria, la racha y los dias del mes usan
+  # este corte. | 0 = classic midnight. Daily, streak and monthly counters
+  # use this cut-off.
+  hora: 0
+
+# ============================================================================
+#  RECOMPENSA DIARIA / DAILY REWARD
+# ============================================================================
+diaria:
+  # Archivo con los dias del ciclo (claves numericas 1..N).
+  # File with the cycle days (numeric keys 1..N).
+  archivo: 'recompensas/diarias.yml'
+  # Cuantos dias tiene el ciclo. 0 = automatico (los que haya en el archivo).
+  # Cycle length in days. 0 = automatic (as many as the file defines).
+  dias-del-ciclo: 0
+  # true  = quien se salta un dia vuelve a racha 1.
+  # false = la racha se mantiene aunque se salten dias.
+  # true = skipping a day resets the streak to 1. false = streak is kept.
+  perder-racha-al-faltar: true
+
+# ============================================================================
+#  RECOMPENSA SEMANAL / WEEKLY REWARD
+# ============================================================================
+semanal:
+  archivo: 'recompensas/semanales.yml'
+  # Cuantos bloques tiene el ciclo. 0 = automatico.
+  # Cycle length in weeks. 0 = automatic.
+  semanas-del-ciclo: 0
+  # Dia en el que empieza la semana (a la hora de reinicio.hora).
+  # Acepta espanol e ingles: lunes/monday, martes/tuesday...
+  # Week start day (at reinicio.hora). Spanish or English names accepted.
+  dia-inicio: lunes
+  # true = no reclamar una semana devuelve la racha semanal a 1.
+  # true = missing a week resets the weekly streak to 1.
+  perder-racha-al-faltar: true
+
+# ============================================================================
+#  RECOMPENSA MENSUAL Y BONUS DE RACHA / MONTHLY & STREAK
+# ============================================================================
+mensual:
+  # Hitos que se desbloquean acumulando dias reclamados en el mes.
+  # Milestones unlocked by claiming days within the month.
+  archivo: 'recompensas/mensuales.yml'
+
+rachas:
+  # Bonus al alcanzar N dias (o semanas) seguidos: se reclaman una vez por
+  # racha. | Bonuses for reaching N days/weeks in a row, once per streak.
+  archivo: 'recompensas/rachas.yml'
+
+# ============================================================================
+#  ENTREGA DE PREMIOS / REWARD DELIVERY
+# ============================================================================
+entrega:
+  # Avisar al jugador cuando un item no cabe en su inventario.
+  # Warn the player when an item does not fit in their inventory.
+  avisar-inventario-lleno: true
+  # true  = los items que no caben se guardan y se entregan al volver a entrar.
+  # false = se sueltan en el suelo junto al jugador.
+  # true = items that do not fit are stored and given on next join.
+  # false = dropped on the ground next to the player.
+  guardar-pendientes: true
+  # Permitir que un premio de experiencia (experiencia/niveles en
+  # recompensas/*.yml) se entregue directamente. Ponlo en false si prefieres
+  # dar la XP por comando.
+  # Allow direct XP rewards defined in recompensas/*.yml.
+  experiencia-directa: true
+
+# ============================================================================
+#  AVISOS / NOTIFICATIONS
+# ============================================================================
+avisos:
+  al-entrar:
+    # Aviso al entrar si tiene algo por reclamar.
+    # Join notice when something can be claimed.
+    diaria: true
+    semanal: true
+    hitos: true
+    rachas: true
+    # Segundos de espera tras entrar antes de enviar el aviso.
+    # Seconds to wait after joining before sending the notice.
+    retraso-segundos: 3
+    # Como se muestran los avisos: 'actionbar' (encima de la barra rapida,
+    # con degradacion a chat si la version no lo soporta) o 'chat'.
+    # How notices are shown: 'actionbar' (falls back to chat) or 'chat'.
+    tipo: 'actionbar'
+
+  auto-reclamar:
+    # true = reclama la diaria automaticamente al entrar. Desactivado por
+    # defecto: revisa que permisos quieres darle antes de activarlo.
+    # true = automatically claims the daily reward on join (off by default).
+    activado: false
+    # Segundos de espera antes del reclamo automatico.
+    # Seconds to wait before the automatic claim.
+    retraso-segundos: 5
+    # true = solo lo hacen los jugadores con el permiso jprewards.autoclaim.
+    # true = only players with the jprewards.autoclaim permission.
+    pedir-permiso: true
+
+# ============================================================================
+#  MENUS
+# ============================================================================
+menus:
+  # Archivo de menus (titulos, texturas, botones y estados).
+  # Menus file (titles, textures, buttons and states).
+  # Puedes tener varios (menus.yml, menus_en.yml...) y cambiar cual se usa.
+  # You can keep several (menus.yml, menus_en.yml...) and switch which one is used.
+  archivo: 'menus.yml'
+  # Pseudo-gradiente en los titulos: alterna los colores por caracter para
+  # simular un degradado tambien en 1.8.
+  # Title pseudo-gradient: alternates colours per character (works on 1.8).
+  gradiente-titulos: true
+  gradiente-colores:
+    - '&d'
+    - '&5'
+  # true = al reclamar desde un menu, el menu se cierra (util para servidores
+  # que quieren que el jugador vea los mensajes sin la ventana abierta).
+  # true = close the menu after claiming from it.
+  cerrar-al-reclamar: false
+  # Sonido al hacer clic en un slot decorativo (sin accion).
+  # Click sound on decorative (action-less) slots.
+  sonido-al-hacer-clic: true
+
+# ============================================================================
+#  SONIDOS / SOUNDS
+# ============================================================================
+sonidos:
+  activado: true
+  # Volumen (0.0 - 1.0) y tono (0.5 - 2.0) por defecto.
+  # Default volume (0.0 - 1.0) and pitch (0.5 - 2.0).
+  volumen: 0.7
+  tono: 1.4
+  # Nombres modernos (1.9+). En 1.8 el plugin prueba el equivalente antiguo
+  # automaticamente; si un nombre no existe, simplemente no suena.
+  # Modern names (1.9+). On 1.8 the plugin tries the legacy equivalent.
+  abrir-menu: BLOCK_CHEST_OPEN
+  clic: UI_BUTTON_CLICK
+  exito: ENTITY_PLAYER_LEVELUP
+  error: ENTITY_VILLAGER_NO
+  aviso: ENTITY_EXPERIENCE_ORB_PICKUP
+
+# ============================================================================
+#  EFECTOS / EFFECTS
+# ============================================================================
+efectos:
+  # Titulo de pantalla al reclamar (se puede desactivar por premio).
+  # Screen title when claiming (each reward can override it).
+  titulos: true
+  # Particulas configuradas en los premios.
+  # Particles configured per reward.
+  particulas: true
+  # Fuegos artificiales al reclamar CUALQUIER premio (los premios pueden
+  # activar los suyos con efectos.fuegos: true).
+  # Fireworks on every claim (rewards can enable their own).
+  fuegos-artificiales: false
+  fuegos-colores: [AQUA, FUCHSIA, YELLOW]
+  fuegos-potencia: 1
+
+# ============================================================================
+#  BARRA DE PROGRESO / PROGRESS BAR
+# ----------------------------------------------------------------------------
+#  Se usa en el placeholder {barra_mes} (y {barra_ciclo}, {barra_racha}...).
+#  Used by the {barra_mes} placeholder (and {barra_ciclo}, {barra_racha}...).
+# ============================================================================
+barra-progreso:
+  largo: 20
+  lleno: '|'
+  vacio: '|'
+  color-lleno: '&a'
+  color-vacio: '&7'
+
+# ============================================================================
+#  RANKING / LEADERBOARD
+# ============================================================================
+top:
+  # Cuantos jugadores muestra /rewards top (1-50).
+  # How many players /rewards top lists (1-50).
+  cantidad: 10
+
+# ============================================================================
+#  ECONOMIA / ECONOMY
+# ============================================================================
+economia:
+  # Nombre de la moneda para el placeholder {moneda}. El dinero se entrega
+  # con comandos en recompensas/*.yml (eco give, cmi money add...), asi que
+  # no hace falta Vault.
+  # Currency name for the {moneda} placeholder. Money is given through
+  # commands in recompensas/*.yml, so Vault is not needed.
+  moneda: monedas
+
+# ============================================================================
+#  ALMACENAMIENTO / STORAGE
+# ============================================================================
+almacenamiento:
+  # 'yaml'  = archivos en la carpeta del plugin (sencillo y facil de respaldar)
+  # 'mysql' = base de datos (para redes de servidores con varios lobbies)
+  # 'yaml'  = files inside the plugin folder (simple, easy to back up)
+  # 'mysql' = database (for networks with several servers)
+  # Cambiar de uno a otro NO pierde datos: usa /rewards migrate confirm
+  # Switching between them does NOT lose data: use /rewards migrate confirm
+  tipo: yaml
+  # Carpeta dentro de plugins/JPRewards con los datos YAML.
+  # Folder inside plugins/JPRewards holding the YAML data.
+  carpeta: datos
+  # 'por-jugador' = un archivo <uuid>.yml por jugador (comodo de revisar)
+  # 'unico'       = todo en datos/datos.yml (menos archivos)
+  # 'por-jugador' = one <uuid>.yml per player / 'unico' = a single datos.yml
+  modo: por-jugador
+  # Cada cuantos segundos se guardan los datos que hayan cambiado.
+  # Como maximo se pierde ese tiempo si el servidor se cae de golpe.
+  # 0 = solo se guarda al salir, al reclamar y al apagar.
+  # Autosave interval in seconds. 0 = only on quit, claim and shutdown.
+  autoguardado-segundos: 300
+  # Guardar en cuanto se reclama (recomendado: es lo que evita perder un
+  # premio si el servidor se cae justo despues).
+  # Save right after each claim (recommended).
+  guardar-al-reclamar: true
+
+  mysql:
+    # Solo se usa si almacenamiento.tipo es 'mysql'.
+    # Only used when almacenamiento.tipo is 'mysql'.
+    host: '127.0.0.1'
+    puerto: 3306
+    base-de-datos: 'jprewards'
+    usuario: 'root'
+    contrasena: ''
+    # Tablas creadas automaticamente: <prefijo>jugadores
+    # Tables created automatically: <prefix>jugadores
+    prefijo-tablas: 'jprewards_'
+    # Parametros extra de la URL JDBC (sintaxis de MySQL).
+    # Extra JDBC URL parameters (MySQL syntax).
+    propiedades: 'useSSL=false&characterEncoding=utf8'
+    # Vacio = se construye con host/puerto/base-de-datos/propiedades.
+    # Empty = built from host/port/database/properties.
+    url-jdbc: ''
+    # Vacio = se prueban com.mysql.cj.jdbc.Driver, com.mysql.jdbc.Driver y
+    # org.mariadb.jdbc.Driver (Spigot y Paper ya traen uno, no hace falta
+    # nada mas). | Empty = tries the drivers shipped with the server.
+    clase-driver: ''
+    # Reintentos al abrir la base de datos al arrancar.
+    # Connection attempts on startup.
+    reintentos: 2
+
+# ============================================================================
+#  ACTUALIZACIONES / UPDATES
+# ============================================================================
+actualizaciones:
+  # Aviso de version nueva usando la API publica de SpigotMC (solo consulta
+  # el numero de version del recurso; no envia ningun dato del servidor).
+  # Update notice using the public SpigotMC API (only fetches the version).
+  activado: false
+  # ID del recurso en SpigotMC (el numero de la URL). 0 = desactivado.
+  # SpigotMC resource id (the number in the URL). 0 = disabled.
+  id-recurso: 0
+  # Avisar a los administradores conectados (permiso jprewards.update).
+  # Notify online admins (jprewards.update permission).
+  avisar-admins: true

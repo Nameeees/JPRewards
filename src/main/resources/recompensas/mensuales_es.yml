@@ -1,0 +1,114 @@
+# ============================================================================
+#  JPRewards - recompensas/mensuales.yml
+# ----------------------------------------------------------------------------
+#  HITOS DEL MES: se desbloquean acumulando dias con la diaria reclamada
+#  DENTRO del mes actual. Al cambiar de mes el progreso y los hitos
+#  reclamados se reinician solos (lo historico se conserva en /top hitos).
+#  Monthly milestones: unlocked by claiming the daily reward within the month.
+
+#  La clave de cada hito es su id (aparece en el menu y en las acciones).
+#  'dias-requeridos' es lo unico obligatorio ademas del premio.
+#  Mismos campos que diarias.yml (lore, comandos, items, efectos, rangos...).
+
+#  Febrero tiene 28 dias: manten los hitos alcanzables en cualquier mes.
+# ============================================================================
+
+config-version: 2
+
+hitos:
+
+  hito-5:
+    dias-requeridos: 5
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMThmMzRhNWE2YjZhOTRlNzI4MjNkNmVkNGJmYTBiMmIzMmU4M2Y4N2VjZjg2MmNkN2ZkZTE4NzA5ZmJhZjc3NCJ9fX0='
+    lore:
+      - '&7▪ &f300 &7{moneda}'
+      - '&7▪ &f30 &7experiencia'
+    comandos:
+      - 'eco give {jugador} 300'
+    experiencia: 30
+
+  hito-10:
+    dias-requeridos: 10
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE2OTZlMTUyMzYzYWQ0NzdlZDZjYjVhNTE4YmZlYTg0YjAzNjE0OGZlY2FjMDU4MWYzMmM1YjUzOTY5NTgifX19'
+    lore:
+      - '&7▪ &f600 &7{moneda}'
+      - '&7▪ &f1x &bDiamante'
+    comandos:
+      - 'eco give {jugador} 600'
+    items:
+      - 'DIAMOND 1'
+    experiencia: 60
+
+  hito-15:
+    dias-requeridos: 15
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTVkZmEyODRhYTE1MzI0ZTUxNzg1NjFmODAzZjU5NzYyMjhkOTUxMTU1ODNhYjAzMTI2NmFlMjRlZTFhOTlkMSJ9fX0='
+    lore:
+      - '&7▪ &f1000 &7{moneda}'
+      - '&7▪ &f2x &bDiamante'
+      - '&7▪ &f1x &6Manzana dorada encantada'
+    comandos:
+      - 'eco give {jugador} 1000'
+    items:
+      - 'DIAMOND 2'
+      - material: ENCHANTED_GOLDEN_APPLE
+        cantidad: 1
+    experiencia: 100
+    efectos:
+      particula: HAPPY_VILLAGER
+      particulas: 20
+
+  hito-25:
+    nombre: '&6&lMes completo'
+    dias-requeridos: 25
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM0YTU5MmE3OTM5N2E4ZGYzOTk3YzQzMDkxNjk0ZmMyZmI3NmM4ODNhNzZjY2U4OWYwMjI3ZTVjOWYxZGZlIn19fQ=='
+    lore:
+      - '&7▪ &f2500 &7{moneda}'
+      - '&7▪ &f250 &7experiencia'
+      - '&7▪ &f1x &bBloque de diamante'
+      - '&8Mes casi perfecto'
+    comandos:
+      - 'eco give {jugador} 2500'
+    items:
+      - material: DIAMOND_BLOCK
+        cantidad: 1
+        nombre: '&bBloque del mes'
+        lore:
+          - '&7Recompensa por 25 dias reclamados.'
+      - 'GOLDEN_APPLE 5'
+    experiencia: 250
+    efectos:
+      sonido: ENTITY_PLAYER_LEVELUP
+      fuegos: true
+      broadcast: '&6{jugador} &7ha completado el mes de recompensas!'
+    rangos:
+      mvip:
+        permiso: 'jprewards.rewards.mvip'
+        lore:
+          - '&8Mes completo del rango &6&lMVIP'
+          - '&7▪ &f6000 &7{moneda}'
+          - '&7▪ &f4x &bBloque de diamante'
+          - '&7▪ &f1x &fLlave mensual &7(por comando)'
+        comandos:
+          - 'eco give {jugador} 6000'
+          # Ejemplo con el plugin de cofres de tu servidor:
+          - 'crates give {jugador} mensual 2'
+        items:
+          - 'DIAMOND_BLOCK 4'
+        experiencia: 500
+      vip:
+        permiso: 'jprewards.rewards.vip'
+        lore:
+          - '&8Mes completo del rango &d&lVIP'
+          - '&7▪ &f4000 &7{moneda}'
+          - '&7▪ &f2x &bBloque de diamante'
+          - '&7▪ &f1x &fLlave mensual &7(por comando)'
+        comandos:
+          - 'eco give {jugador} 4000'
+          - 'crates give {jugador} mensual 1'
+        items:
+          - 'DIAMOND_BLOCK 2'
+        experiencia: 350

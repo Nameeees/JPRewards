@@ -1,0 +1,100 @@
+# ============================================================================
+#  JPRewards - recompensas/rachas.yml
+# ----------------------------------------------------------------------------
+#  BONUS POR RACHA: se desbloquean al alcanzar N dias (o semanas) SEGUIDOS.
+#  Se reclaman UNA vez por racha; si el jugador pierde la racha, vuelven a
+#  estar disponibles.
+#  STREAK BONUSES: unlocked by reaching N days (or weeks) in a row. They can
+#  be claimed once per streak; losing the streak makes them available again.
+
+#  CAMPOS / FIELDS
+#    tipo: diaria | semanal   sobre que racha se cuenta (por defecto diaria)
+#    racha-minima: N          dias o semanas seguidos necesarios
+#    (el resto de campos son los mismos que en diarias.yml)
+
+#  Este modulo se puede desactivar en config.yml -> modulos.rachas.
+# ============================================================================
+
+config-version: 2
+
+bonus:
+
+  # A los 7 dias seguidos (una semana completa sin fallar).
+  racha-7:
+    tipo: diaria
+    racha-minima: 7
+    nombre: '&eSemana perfecta'
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTQ4OTY5YzU2MmI3MTFlZGQxOTJmMTU3NjIxOTk5MDk1ZDM3MmNjNzhkOTEwZTY5MjA3ZjY2ODQ5OWNjNmRmYyJ9fX0='
+    lore:
+      - '&7▪ &f1000 &7{moneda}'
+      - '&7▪ &e1x &6Llave de voto &7(por comando)'
+      - '&8Recompensa por 7 dias seguidos'
+    comandos:
+      - 'eco give {jugador} 1000'
+    items:
+      - 'DIAMOND 2'
+    experiencia: 100
+    efectos:
+      particula: HAPPY_VILLAGER
+      particulas: 15
+      accion-bar: '&e¡Racha de 7 dias conseguida!'
+
+  # A los 30 dias seguidos: el gran premio de constancia.
+  racha-30:
+    tipo: diaria
+    racha-minima: 30
+    nombre: '&6&lMes perfecto'
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM0YTU5MmE3OTM5N2E4ZGYzOTk3YzQzMDkxNjk0ZmMyZmI3NmM4ODNhNzZjY2U4OWYwMjI3ZTVjOWYxZGZlIn19fQ=='
+    lore:
+      - '&7▪ &f10000 &7{moneda}'
+      - '&7▪ &f10x &bDiamante'
+      - '&7▪ &f1x &f&lLlave legendaria &7(por comando)'
+      - '&830 dias seguidos sin fallar'
+    comandos:
+      - 'eco give {jugador} 10000'
+      - 'crates give {jugador} legendaria 1'
+    items:
+      - 'DIAMOND 10'
+      - 'DIAMOND_BLOCK 3'
+    experiencia: 1000
+    efectos:
+      sonido: ENTITY_PLAYER_LEVELUP
+      fuegos: true
+      broadcast: '&6{jugador} &7ha conseguido una racha de &630 dias&7!'
+    # Variantes por rango: los mismos permisos que en los otros archivos.
+    rangos:
+      mvip:
+        permiso: 'jprewards.rewards.mvip'
+        lore:
+          - '&8Racha de 30 dias del rango &6&lMVIP'
+          - '&7▪ &f25000 &7{moneda}'
+          - '&7▪ &f25x &bDiamante'
+          - '&7▪ &f2x &f&lLlave legendaria'
+        comandos:
+          - 'eco give {jugador} 25000'
+          - 'crates give {jugador} legendaria 2'
+        items:
+          - 'DIAMOND 25'
+        experiencia: 2000
+
+  # Bonus de racha SEMANAL: 4 semanas seguidas reclamando.
+  racha-semanal-4:
+    tipo: semanal
+    racha-minima: 4
+    nombre: '&dMes de semanas perfectas'
+    icono:
+      textura: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWE2OTZlMTUyMzYzYWQ0NzdlZDZjYjVhNTE4YmZlYTg0YjAzNjE0OGZlY2FjMDU4MWYzMmM1YjUzOTY5NTgifX19'
+    lore:
+      - '&7▪ &f5000 &7{moneda}'
+      - '&7▪ &f5x &bDiamante'
+      - '&84 semanas seguidas reclamando'
+    comandos:
+      - 'eco give {jugador} 5000'
+    items:
+      - 'DIAMOND 5'
+    experiencia: 400
+    efectos:
+      fuegos: true
+      broadcast: '&d{jugador} &7ha reclamado 4 semanas seguidas!'

@@ -1,0 +1,101 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Java 8 guarantees the bytecode level; Java 21 proves it also builds on
+        # what most servers run today.
+        java: ['8', '21']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+
+      - name: Build
+        run: mvn -B clean package
+
+      - name: Bytecode is Java 8 (major 52)
+        run: |
+          JAR=$(ls target/JPRewards-*.jar | head -n 1)
+          unzip -o -q "$JAR" -d /tmp/jarcheck
+          MAJOR=$(javap -verbose -cp /tmp/jarcheck me.jp.jprewards.JPRewards \
+            | awk '/major version/ {print $3}')
+          echo "major version: $MAJOR"
+          test "$MAJOR" = "52"
+
+      - name: Validate the YAML resources
+        run: |
+          python3 -m pip install --quiet pyyaml
+          python3 tools/validar-recursos.py
+
+      - name: Check the documentation links
+        run: python3 tools/chequear-enlaces.py
+
+      - name: Verify the jar contents
+        run: |
+          JAR=$(ls target/JPRewards-*.jar | head -n 1)
+          test -n "$JAR"
+          unzip -l "$JAR" | grep -E 'plugin.yml|config.yml|messages_es.yml|messages_en.yml|menus.yml|recompensas/'
+          unzip -p "$JAR" plugin.yml | grep -E '^version: [0-9]'
+          if unzip -l "$JAR" | grep -qE 'messages.yml|com/tuserver'; then
+            echo "The jar contains files from older versions"; exit 1
+          fi
+
+      - name: Artwork generators still run
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 docs/assets/generate_infographics.py
+          python3 docs/assets/generate_banner_icon.py
+          python3 docs/assets/generate_cta.py
+          git checkout -- docs/assets
+
+      - name: Upload the jar
+        if: matrix.java == '8'
+        uses: actions/upload-artifact@v4
+        with:
+          name: JPRewards
+          path: target/JPRewards-*.jar
+
+  release:
+    name: Attach the jar to the release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+          cache: maven
+
+      - name: Build
+        run: mvn -B clean package
+
+      - name: Create the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/JPRewards-*.jar
+          generate_release_notes: true
