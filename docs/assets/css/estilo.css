@@ -67,6 +67,7 @@ body::before {
   flex-wrap: wrap;
 }
 .marca {
+  border-bottom: 0;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -79,6 +80,7 @@ body::before {
 .marca img { border-radius: 9px; }
 .barra nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .barra nav a {
+  border-bottom: 0;
   color: var(--apagado);
   text-decoration: none;
   font-size: 14.5px;
@@ -198,6 +200,7 @@ tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .015); }
 .acciones { display: flex; gap: 12px; flex-wrap: wrap; }
 .acciones a {
   border: 0;
+  border-bottom: 0;
   padding: 12px 20px;
   border-radius: 12px;
   font-weight: 600;
@@ -227,11 +230,13 @@ tbody tr:nth-child(even) td { background: rgba(255, 255, 255, .015); }
   padding: 20px;
 }
 .tarjeta h3 { margin: 0 0 8px; font-size: 17px; color: #fff; }
+.tarjeta h3 a { border-bottom: 0; }
 .tarjeta p { margin: 0; font-size: 14.5px; color: var(--apagado); }
 .tarjeta a { border: 0; }
 
 .pastillas { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 4px; padding: 0; list-style: none; }
 .pastillas li {
+  border-bottom: 0;
   margin: 0;
   padding: 6px 13px;
   font-size: 13.5px;
