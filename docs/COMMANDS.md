@@ -3,7 +3,7 @@
 Everything is under a single command, `/rewards`, with English subcommands and English aliases.
 Nothing else is registered, so there are no clashes with other plugins.
 
-| | |
+| Setting | Value |
 | --- | --- |
 | Root command | `/rewards` |
 | Aliases | `jprewards`, `rec`, `reward` (and `recompensas`, kept only for servers upgrading from 1.x) |

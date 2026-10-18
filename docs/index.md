@@ -64,9 +64,10 @@ title: Documentation
 
 ## What it looks like
 
-| | |
-| --- | --- |
-| ![What you get](assets/features.png) | ![Commands](assets/commands.png) |
+<div class="rejilla">
+  <img src="assets/features.png" alt="What you get">
+  <img src="assets/commands.png" alt="Commands">
+</div>
 
 Every image on this site is generated from code by the scripts in
 [`docs/assets/`](https://github.com/Nameeees/JPRewards/tree/main/docs/assets), so the artwork and

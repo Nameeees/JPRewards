@@ -137,7 +137,7 @@ harmless list of message keys that 2.0.0 no longer uses.
 statements of `storage/AlmacenSql.java` against an in-memory database in MySQL
 compatibility mode (H2 2.2.224) and prints one `CHECK OK` per assertion:
 
-| | |
+| Result | Detail |
 | --- | --- |
 | Checks | **16 of 16 pass** (8 for `MEDIUMTEXT`, 8 for `TEXT`) |
 | Covered | `CREATE TABLE IF NOT EXISTS` is valid and repeatable, three rows inserted with the UPDATE-then-INSERT upsert, a second save updates instead of duplicating, the stored payload reads back identical, a 70,000-character payload is accepted, `DELETE` and `SELECT uuid` behave as expected, and `VARCHAR(16)` rejects longer player names (which is why the class truncates them) |
