@@ -30,7 +30,7 @@ $fence = [string]::new([char]96, 3)
 
 function LeerBloque($lineas, $desde) {
     $i = $desde
-    while ($i -lt $lineas.Count -and $lineas[$i].Trim() -ne $fence) { $i++ }
+    while ($i -lt $lineas.Count -and -not $lineas[$i].Trim().StartsWith($fence)) { $i++ }
     if ($i -ge $lineas.Count) { return "" }
     $i++
     $bloque = New-Object System.Collections.Generic.List[string]
@@ -83,15 +83,15 @@ if (-not (Test-Path $notas)) {
     Aviso "No existe docs/SPIGOTMC_UPDATE_$version.md: escribe el titulo y la descripcion de esta version."
     exit 0
 }
-$lineas = Get-Content $notas
+$lineas = [System.IO.File]::ReadAllLines($notas, [System.Text.Encoding]::UTF8)
 $iTitulo = [array]::IndexOf($lineas, '## Title')
 $iDesc = [array]::IndexOf($lineas, '## Description (BBCode, paste as-is)')
 if ($iTitulo -lt 0 -or $iDesc -lt 0) { throw "No se encontraron '## Title' o '## Description' en $notas" }
 $titulo = LeerBloque $lineas $iTitulo
 $descripcion = LeerBloque $lineas $iDesc
 if (-not $titulo -or -not $descripcion) { throw "El titulo o la descripcion estan vacios en $notas" }
-$titulo | Set-Content (Join-Path $dist "TITULO.txt") -Encoding UTF8
-$descripcion | Set-Content (Join-Path $dist "DESCRIPCION.bbcode") -Encoding UTF8
+[System.IO.File]::WriteAllText((Join-Path $dist "TITULO.txt"), $titulo, (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText((Join-Path $dist "DESCRIPCION.bbcode"), $descripcion, (New-Object System.Text.UTF8Encoding($false)))
 Bien "dist/TITULO.txt"
 Bien "dist/DESCRIPCION.bbcode"
 
