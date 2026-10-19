@@ -50,6 +50,15 @@
 - **Self-updating configuration files**: on upgrade, new options are appended to the right section with their comments, and nothing you configured is overwritten.
 - **`/rewards validate`**: checks every file and tells you exactly what is wrong and where.
 - **YAML or MySQL (JDBC) storage**, with `/rewards migrate confirm` to copy the data between them.
+- **Conditions on any entry**: `probabilidad` (chance), `mundo` (only in that world) and `una-vez`
+  (only the first time for that player).
+- **Public API and events** for other plugins (`JPRewardsAPI`, `RewardClaimEvent` — cancelable — and
+  `RewardDeliveredEvent`), plus **named extra rewards** in `recompensas/extra.yml` that any plugin or
+  command block can grant with `/rewards trigger <player> <id>`. See [docs/API.md](docs/API.md).
+- **Delivery history** in `historial.log` (the last five deliveries show up in `/rewards data`) and
+  **`/rewards backup`** to zip the player data.
+- **MySQL cache invalidation**: with several servers sharing the database, the cache checks the
+  `actualizado` column and reloads the data if another server changed it.
 - **Optional PlaceholderAPI hook** and **optional new-version notice**.
 - **Two bundled languages** (`es`, `en`) plus any language you add yourself.
 - Runs on **Spigot, Paper, Purpur** and forks, on old (Java 8) and modern servers with the same jar.
@@ -61,6 +70,7 @@
 | [docs/](docs/README.md) | Index of every guide and reference. |
 | [Commands and permissions](docs/COMMANDS.md) | Every subcommand, alias, argument, permission and example. |
 | [Placeholders](docs/PLACEHOLDERS.md) | Menu, message and reward placeholders, plus the PlaceholderAPI expansion. |
+| [API for plugins](docs/API.md) | Java API, events and named extra rewards (bosses, votes, quests). |
 | [FAQ](docs/FAQ.md) | Languages, MySQL, upgrading from 1.x, duplicate claims, full inventories. |
 | [Configuration guide](docs/CONFIGURACION.es.md) | Step-by-step guide to the YAML files (Spanish). |
 | [Verification log](docs/VERIFICATION.md) | What was tested, on which servers, with the artifact hash. |

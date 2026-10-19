@@ -79,6 +79,16 @@ public final class Entrega {
         if (jugador == null || recompensa == null) {
             return resultado;
         }
+        String nombreFinal = nombreVisible == null ? recompensa.nombrePara(jugador) : nombreVisible;
+        String[] tipoYclave = tipoYClave(recompensa.id());
+
+        // La API publica puede cancelar la entrega antes de que ocurra nada.
+        me.jp.jprewards.api.event.RewardClaimEvent anuncio = new me.jp.jprewards.api.event.RewardClaimEvent(
+                jugador, recompensa.id(), tipoYclave[0], tipoYclave[1], nombreFinal);
+        Bukkit.getPluginManager().callEvent(anuncio);
+        if (anuncio.isCancelled()) {
+            return resultado;
+        }
         Recompensa.Variante variante = recompensa.variantePara(jugador);
 
         Map<String, String> ph = new HashMap<String, String>();
@@ -129,6 +139,12 @@ public final class Entrega {
         // 4) Efectos y mensajes (el aviso de inventario va una sola vez)
         avisarInventario(jugador, resultado);
         plugin.efectos().celebrar(jugador, variante.efectos(), ph.get("premio"), ph);
+
+        // 5) Historial de entregas (auditoria) y aviso para otros plugins
+        registrarHistorial(jugador, recompensa.id(), nombreFinal, resultado);
+        Bukkit.getPluginManager().callEvent(new me.jp.jprewards.api.event.RewardDeliveredEvent(
+                jugador, recompensa.id(), tipoYclave[0], tipoYclave[1], nombreFinal,
+                resultado.comandos, resultado.items, resultado.experiencia));
         return resultado;
     }
 
@@ -162,6 +178,51 @@ public final class Entrega {
             plugin.mensajes().enviar(jugador, "general.inventario-soltado",
                     Mensajes.ph("cantidad", String.valueOf(resultado.soltados())));
         }
+    }
+
+    /**
+     * Deja una linea por entrega en plugins/JPRewards/historial.log. Sirve para
+     * saber quien recibio que y cuando sin llenar la consola. Se escribe en
+     * segundo plano: entregar no espera al disco.
+     */
+    private void registrarHistorial(Player jugador, String id, String nombre, final Resultado resultado) {
+        final String linea = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .format(new java.util.Date()) + " | " + jugador.getName() + " | " + id + " | " + nombre
+                + " | comandos=" + resultado.comandos + " items=" + resultado.items
+                + " xp=" + resultado.experiencia + "\n";
+        final java.io.File archivo = new java.io.File(plugin.getDataFolder(), "historial.log");
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    java.nio.file.Files.write(archivo.toPath(),
+                            linea.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                            java.nio.file.StandardOpenOption.CREATE,
+                            java.nio.file.StandardOpenOption.APPEND);
+                } catch (java.io.IOException ignorado) {
+                    // El historial es informativo: si no se puede escribir, se sigue.
+                }
+            }
+        });
+    }
+
+    /**
+     * Deriva el ciclo y la clave a partir del id interno ('dia-3' -> daily/3,
+     * 'hito-hito-15' -> monthly/hito-15, 'racha-racha-7' -> streaks/racha-7).
+     * Todo lo demas es un premio suelto ('extra').
+     */
+    private static String[] tipoYClave(String id) {
+        String limpio = id == null ? "" : id;
+        if (limpio.startsWith("dia-")) {
+            return new String[]{"daily", limpio.substring(4)};
+        }
+        if (limpio.startsWith("hito-")) {
+            return new String[]{"monthly", limpio.substring(5)};
+        }
+        if (limpio.startsWith("racha-")) {
+            return new String[]{"streaks", limpio.substring(6)};
+        }
+        return new String[]{"extra", limpio};
     }
 
     /** Entrega los items que quedaron pendientes (al entrar al servidor). */

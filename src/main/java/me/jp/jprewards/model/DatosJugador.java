@@ -21,6 +21,7 @@ import java.util.UUID;
  *   mesClave / diasMes / hitosReclamados             -> mes actual
  *   hitosHistoricos                                   -> hitos de toda la vida
  *   bonusReclamados / rachaBonusClave                 -> bonus de racha
+ *   unicos                                            -> premios de una sola vez
  *   pendientes                                        -> items sin entregar
  */
 public final class DatosJugador {
@@ -48,6 +49,8 @@ public final class DatosJugador {
 
     private long primerReclamo;
     private long ultimoReclamo;
+
+    private final Set<String> unicos = new LinkedHashSet<String>();
 
     private final List<ItemStack> pendientes = new ArrayList<ItemStack>();
 
@@ -239,6 +242,24 @@ public final class DatosJugador {
         return copia;
     }
 
+    // ---- Recompensas de una sola vez ---------------------------------
+
+    /** true si el jugador ya recibio esa recompensa marcada como 'una-vez'. */
+    public boolean yaRecibio(String id) {
+        return id != null && unicos.contains(id);
+    }
+
+    /** Anota que el jugador ya recibio esa recompensa. */
+    public void marcarRecibido(String id) {
+        if (id != null && unicos.add(id)) {
+            sucio = true;
+        }
+    }
+
+    public Set<String> unicos() {
+        return unicos;
+    }
+
     // ---- Estado ------------------------------------------------------
 
     public boolean sucio() {
@@ -303,6 +324,7 @@ public final class DatosJugador {
             rachaBonusClave = 0;
         }
         if ("todo".equals(tipo)) {
+            unicos.clear();
             total = 0;
             mejorRacha = 0;
             totalSemanal = 0;
@@ -319,7 +341,8 @@ public final class DatosJugador {
 
     public void cargarEstado(String nombre, long ultimoDia, int racha, int mejorRacha, int total, long ultimaSemana,
             int rachaSemanal, int mejorRachaSemanal, int totalSemanal, int mesClave, int diasMes, Set<String> hitos,
-            int hitosHistoricos, Set<String> bonus, int rachaBonusClave, long primerReclamo, long ultimoReclamo) {
+            int hitosHistoricos, Set<String> bonus, int rachaBonusClave, long primerReclamo, long ultimoReclamo,
+            Set<String> unicosRecibidos) {
         this.nombre = nombre == null ? "" : nombre;
         this.ultimoDia = ultimoDia;
         this.racha = racha;
@@ -343,6 +366,10 @@ public final class DatosJugador {
         this.rachaBonusClave = rachaBonusClave;
         this.primerReclamo = primerReclamo;
         this.ultimoReclamo = ultimoReclamo;
+        this.unicos.clear();
+        if (unicosRecibidos != null) {
+            this.unicos.addAll(unicosRecibidos);
+        }
         sucio = false;
     }
 

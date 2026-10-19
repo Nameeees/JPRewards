@@ -175,6 +175,39 @@ public final class AlmacenSql implements Almacen {
     }
 
     @Override
+    public synchronized boolean soportaVersiones() {
+        return true;
+    }
+
+    /**
+     * 'actualizado' de la fila del jugador. Es lo que permite a la cache darse
+     * cuenta de que otro servidor ha guardado datos mas nuevos.
+     */
+    @Override
+    public synchronized long version(UUID uuid) {
+        try {
+            if (conexion == null || conexion.isClosed()) {
+                conectar();
+            }
+            java.sql.PreparedStatement sentencia = conexion.prepareStatement(
+                    "SELECT actualizado FROM " + ajustes.tablaJugadores() + " WHERE uuid = ?");
+            try {
+                sentencia.setString(1, uuid.toString());
+                java.sql.ResultSet filas = sentencia.executeQuery();
+                try {
+                    return filas.next() ? filas.getLong(1) : 0L;
+                } finally {
+                    filas.close();
+                }
+            } finally {
+                sentencia.close();
+            }
+        } catch (Throwable error) {
+            return 0L;
+        }
+    }
+
+    @Override
     public synchronized void guardarTexto(UUID uuid, String nombre, String texto) {
         guardarLote(java.util.Collections.singletonMap(uuid, new String[]{nombre, texto}));
     }

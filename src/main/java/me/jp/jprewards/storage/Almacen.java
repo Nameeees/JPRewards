@@ -44,6 +44,20 @@ public interface Almacen {
     /** Borra los datos de un jugador (no se usa salvo peticion del admin). */
     void eliminar(UUID uuid);
 
+    /**
+     * Marca de version de los datos de un jugador. La usa la cache para darse
+     * cuenta de que otro servidor (u otra instancia) los ha cambiado. Los
+     * almacenes que no la soportan devuelven 0.
+     */
+    default long version(java.util.UUID uuid) {
+        return 0L;
+    }
+
+    /** true si el almacen puede decir si los datos cambiaron por fuera. */
+    default boolean soportaVersiones() {
+        return false;
+    }
+
     /** Texto para /rewards info: donde se esta guardando (sin contrasenas). */
     String describir();
 

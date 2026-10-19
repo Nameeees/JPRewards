@@ -37,6 +37,8 @@ public final class RecompensaManager {
 
     private final Map<Integer, Recompensa> ciclo = new LinkedHashMap<Integer, Recompensa>();
     private final Map<Integer, Recompensa> cicloSemanal = new LinkedHashMap<Integer, Recompensa>();
+    /** Premios sueltos de recompensas/extra.yml (los da la API o /rewards trigger). */
+    private final Map<String, Recompensa> extras = new LinkedHashMap<String, Recompensa>();
     private final List<Hito> hitos = new ArrayList<Hito>();
     private final List<BonusRacha> bonus = new ArrayList<BonusRacha>();
     private final java.util.Set<java.util.UUID> reclamando = new java.util.HashSet<java.util.UUID>();
@@ -85,11 +87,118 @@ public final class RecompensaManager {
 
         hitos.addAll(cargador.cargarHitos(plugin.ajustes().archivoMensuales()));
         bonus.addAll(cargador.cargarBonus(plugin.ajustes().archivoRachas()));
+        cargarExtras();
+    }
+
+    /**
+     * Lee recompensas/extra.yml: premios con nombre que no pertenecen a ningun
+     * ciclo y se entregan cuando los pide la API o /rewards trigger. Asi se
+     * pueden dar recompensas desde eventos de otros plugins.
+     */
+    private void cargarExtras() {
+        extras.clear();
+        Map<String, Recompensa> leidos = cargador.cargarExtras("recompensas/extra.yml");
+        extras.putAll(leidos);
+        if (!extras.isEmpty()) {
+            plugin.getLogger().info("Extra rewards loaded from recompensas/extra.yml: " + extras.size()
+                    + " (use /rewards trigger or the API).");
+        }
+    }
+
+    /** Ids de los premios sueltos definidos. */
+    public List<String> extrasDisponibles() {
+        return new ArrayList<String>(extras.keySet());
+    }
+
+    /** Un premio suelto por id (null si no existe). */
+    public Recompensa extra(String id) {
+        return id == null ? null : extras.get(id.trim());
+    }
+
+    /** Entrega un premio suelto (recompensas/extra.yml). */
+    public boolean regalarExtra(Player jugador, String id) {
+        Recompensa recompensa = extra(id);
+        if (recompensa == null) {
+            return false;
+        }
+        DatosJugador datos = datos(jugador);
+        Verdict verdicto = condiciones(jugador, recompensa, datos);
+        if (verdicto == Verdict.BLOQUEAR) {
+            plugin.mensajes().enviar(jugador, "general.mundo-bloqueado", Mensajes.ph("mundo", recompensa.mundo()));
+            plugin.sonidos().error(jugador);
+            return false;
+        }
+        boolean entregado = entregarSiProcede(jugador, recompensa, recompensa.nombrePara(jugador), verdicto, datos, false);
+        plugin.datos().guardar(datos);
+        return entregado;
+    }
+
+    /** Claves del ciclo diario (1..N). */
+    public List<Integer> diasDelCicloLista() {
+        return new ArrayList<Integer>(ciclo.keySet());
+    }
+
+    /** Claves del ciclo semanal (1..N). */
+    public List<Integer> semanasDelCicloLista() {
+        return new ArrayList<Integer>(cicloSemanal.keySet());
     }
 
     // ------------------------------------------------------------------
     // Datos del jugador
     // ------------------------------------------------------------------
+
+    /** Que hacer con una recompensa cuyas condiciones no dejan entregarla. */
+    private enum Verdict {
+        ENTREGAR, SALTAR, BLOQUEAR
+    }
+
+    private static final java.util.Random AZAR = new java.util.Random();
+
+    /**
+     * Evalua 'mundo', 'una-vez' y 'probabilidad'. BLOQUEAR no consume el
+     * reclamo (el jugador puede intentarlo en otro mundo); SALTAR si lo
+     * consume, pero no entrega nada (asi no se puede reintentar hasta sacarlo).
+     */
+    private Verdict condiciones(Player jugador, Recompensa recompensa, DatosJugador datos) {
+        if (recompensa == null) {
+            return Verdict.ENTREGAR;
+        }
+        if (!recompensa.mundo().isEmpty()
+                && (jugador.getWorld() == null || !recompensa.mundo().equalsIgnoreCase(jugador.getWorld().getName()))) {
+            return Verdict.BLOQUEAR;
+        }
+        if (recompensa.unaVez() && datos.yaRecibio(recompensa.id())) {
+            return Verdict.SALTAR;
+        }
+        if (recompensa.probabilidad() >= 0.0 && AZAR.nextDouble() >= recompensa.probabilidad()) {
+            return Verdict.SALTAR;
+        }
+        return Verdict.ENTREGAR;
+    }
+
+    /**
+     * Entrega si las condiciones lo permiten. Devuelve true si se entrego.
+     * Si no, avisa al jugador (si no es un reclamo silencioso).
+     */
+    private boolean entregarSiProcede(Player jugador, Recompensa recompensa, String nombre, Verdict verdicto,
+            DatosJugador datos, boolean silencioso) {
+        if (verdicto == Verdict.ENTREGAR) {
+            entrega.entregar(jugador, recompensa, nombre);
+            if (recompensa.unaVez()) {
+                datos.marcarRecibido(recompensa.id());
+            }
+            return true;
+        }
+        if (!silencioso) {
+            if (verdicto == Verdict.SALTAR) {
+                String clave = recompensa.unaVez() && datos.yaRecibio(recompensa.id())
+                        ? "general.ya-unico" : "general.sin-suerte";
+                plugin.mensajes().enviar(jugador, clave);
+                plugin.sonidos().error(jugador);
+            }
+        }
+        return false;
+    }
 
     /**
      * Evita que un mismo jugador tenga dos reclamos a la vez (por ejemplo si un
@@ -356,6 +465,16 @@ public final class RecompensaManager {
             return false;
         }
 
+        Verdict verdicto = condiciones(jugador, recompensa, datos);
+        if (verdicto == Verdict.BLOQUEAR) {
+            if (!silencioso) {
+                plugin.mensajes().enviar(jugador, "general.mundo-bloqueado",
+                        Mensajes.ph("mundo", recompensa.mundo()));
+                plugin.sonidos().error(jugador);
+            }
+            return false;
+        }
+
         // Racha y bonus
         boolean consecutivo = datos.ultimoDia() > 0 && (claveHoy - datos.ultimoDia()) == 1;
         if (consecutivo || !plugin.ajustes().perderRachaAlFaltar()) {
@@ -378,10 +497,10 @@ public final class RecompensaManager {
         datos.marcarReclamo(System.currentTimeMillis());
 
         String nombre = recompensa.nombrePara(jugador);
-        entrega.entregar(jugador, recompensa, nombre);
+        boolean entregado = entregarSiProcede(jugador, recompensa, nombre, verdicto, datos, silencioso);
         plugin.datos().guardar(datos);
 
-        if (!silencioso) {
+        if (!silencioso && entregado) {
             plugin.sonidos().exito(jugador);
             plugin.mensajes().enviar(jugador, "diaria.reclamada", Mensajes.ph("dia", String.valueOf(dia), "racha",
                     String.valueOf(datos.racha()), "premio", nombre));
@@ -451,6 +570,16 @@ public final class RecompensaManager {
             return false;
         }
 
+        Verdict verdictoSemanal = condiciones(jugador, recompensa, datos);
+        if (verdictoSemanal == Verdict.BLOQUEAR) {
+            if (!silencioso) {
+                plugin.mensajes().enviar(jugador, "general.mundo-bloqueado",
+                        Mensajes.ph("mundo", recompensa.mundo()));
+                plugin.sonidos().error(jugador);
+            }
+            return false;
+        }
+
         boolean consecutiva = datos.ultimaSemana() > 0 && (claveAhora - datos.ultimaSemana()) == 1;
         if (consecutiva || !plugin.ajustes().perderRachaSemanal()) {
             datos.rachaSemanal(datos.rachaSemanal() + 1);
@@ -471,10 +600,10 @@ public final class RecompensaManager {
         datos.marcarReclamo(System.currentTimeMillis());
 
         String nombre = recompensa.nombrePara(jugador);
-        entrega.entregar(jugador, recompensa, nombre);
+        boolean entregadoSemanal = entregarSiProcede(jugador, recompensa, nombre, verdictoSemanal, datos, silencioso);
         plugin.datos().guardar(datos);
 
-        if (!silencioso) {
+        if (!silencioso && entregadoSemanal) {
             plugin.sonidos().exito(jugador);
             plugin.mensajes().enviar(jugador, "semanal.reclamada", Mensajes.ph("semana", String.valueOf(semana),
                     "racha_semanal", String.valueOf(datos.rachaSemanal()), "premio", nombre));
@@ -553,15 +682,25 @@ public final class RecompensaManager {
             return false;
         }
 
+        Verdict verdictoHito = condiciones(jugador, hito.recompensa(), datos);
+        if (verdictoHito == Verdict.BLOQUEAR) {
+            if (!silencioso) {
+                plugin.mensajes().enviar(jugador, "general.mundo-bloqueado",
+                        Mensajes.ph("mundo", hito.recompensa().mundo()));
+                plugin.sonidos().error(jugador);
+            }
+            return false;
+        }
+
         datos.hitosReclamados().add(hito.id());
         datos.hitosHistoricos(datos.hitosHistoricos() + 1);
         datos.marcarReclamo(System.currentTimeMillis());
 
         String nombre = hito.recompensa().nombrePara(jugador);
-        entrega.entregar(jugador, hito.recompensa(), nombre);
+        boolean entregadoHito = entregarSiProcede(jugador, hito.recompensa(), nombre, verdictoHito, datos, silencioso);
         plugin.datos().guardar(datos);
 
-        if (!silencioso) {
+        if (!silencioso && entregadoHito) {
             plugin.sonidos().exito(jugador);
             plugin.mensajes().enviar(jugador, "mensual.hito-reclamado", Mensajes.ph("dias",
                     String.valueOf(hito.diasRequeridos()), "premio", nombre));
@@ -631,15 +770,25 @@ public final class RecompensaManager {
             return false;
         }
 
+        Verdict verdictoBonus = condiciones(jugador, bono.recompensa(), datos);
+        if (verdictoBonus == Verdict.BLOQUEAR) {
+            if (!silencioso) {
+                plugin.mensajes().enviar(jugador, "general.mundo-bloqueado",
+                        Mensajes.ph("mundo", bono.recompensa().mundo()));
+                plugin.sonidos().error(jugador);
+            }
+            return false;
+        }
+
         datos.bonusReclamados().add(bono.id());
         datos.rachaBonusClave(racha);
         datos.marcarReclamo(System.currentTimeMillis());
 
         String nombre = bono.recompensa().nombrePara(jugador);
-        entrega.entregar(jugador, bono.recompensa(), nombre);
+        boolean entregadoBonus = entregarSiProcede(jugador, bono.recompensa(), nombre, verdictoBonus, datos, silencioso);
         plugin.datos().guardar(datos);
 
-        if (!silencioso) {
+        if (!silencioso && entregadoBonus) {
             plugin.sonidos().exito(jugador);
             plugin.mensajes().enviar(jugador, "rachas.bonus-reclamado",
                     Mensajes.ph("racha_minima", String.valueOf(bono.rachaMinima()), "premio", nombre));

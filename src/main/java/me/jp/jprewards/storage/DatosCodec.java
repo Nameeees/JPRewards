@@ -62,6 +62,9 @@ public final class DatosCodec {
         yml.set("hitos-reclamados", new ArrayList<String>(datos.hitosReclamados()));
         yml.set("hitos-historicos", Integer.valueOf(datos.hitosHistoricos()));
         yml.set("bonus-reclamados", new ArrayList<String>(datos.bonusReclamados()));
+        if (!datos.unicos().isEmpty()) {
+            yml.set("unicos", new ArrayList<String>(datos.unicos()));
+        }
         yml.set("racha-bonus", Integer.valueOf(datos.rachaBonusClave()));
         yml.set("primer-reclamo", Long.valueOf(datos.primerReclamo()));
         yml.set("ultimo-reclamo", Long.valueOf(datos.ultimoReclamo()));
@@ -85,6 +88,7 @@ public final class DatosCodec {
         }
         Set<String> hitos = new LinkedHashSet<String>(yml.getStringList("hitos-reclamados"));
         Set<String> bonus = new LinkedHashSet<String>(yml.getStringList("bonus-reclamados"));
+        Set<String> unicos = new LinkedHashSet<String>(yml.getStringList("unicos"));
         datos.cargarEstado(
                 yml.getString("nombre", ""),
                 yml.getLong("ultimo-dia", 0L),
@@ -102,7 +106,8 @@ public final class DatosCodec {
                 bonus,
                 yml.getInt("racha-bonus", 0),
                 yml.getLong("primer-reclamo", 0L),
-                yml.getLong("ultimo-reclamo", 0L));
+                yml.getLong("ultimo-reclamo", 0L),
+                unicos);
         datos.cargarPendientes(leerPendientes(yml));
         return datos;
     }

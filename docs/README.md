@@ -7,6 +7,7 @@ Guides, references and the verification log of the plugin. The main page is
 | --- | --- | --- |
 | [Commands and permissions](COMMANDS.md) | English | Every subcommand, alias, argument, permission and example. |
 | [Placeholders](PLACEHOLDERS.md) | English | Placeholders for menus, messages and rewards, plus the PlaceholderAPI expansion. |
+| [API for plugins](API.md) | English | Java API, events and named rewards for bosses, votes or quests. |
 | [FAQ](FAQ.md) | English | The questions that come up most: languages, MySQL, 1.x upgrades, duplicates, full inventories. |
 | [Configuration guide](CONFIGURACION.es.md) | Spanish | Step-by-step guide to `config.yml`, `menus.yml` and `recompensas/*.yml`. |
 | [Verification log](VERIFICATION.md) | English | What was tested, on which servers, and the hash of the release artifact. |

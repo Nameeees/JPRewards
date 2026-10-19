@@ -39,6 +39,14 @@ import java.util.List;
  */
 public final class JPRewards extends JavaPlugin {
 
+    /** Instancia activa (la usa la API publica). */
+    private static JPRewards instancia;
+
+    /** Instancia activa del plugin, o null si esta apagado. */
+    public static JPRewards getInstancia() {
+        return instancia;
+    }
+
     private Archivos archivos;
     private Ajustes ajustes;
     private Mensajes mensajes;
@@ -55,6 +63,7 @@ public final class JPRewards extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instancia = this;
         try {
             arrancar();
         } catch (Throwable error) {
@@ -213,6 +222,7 @@ public final class JPRewards extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        instancia = null;
         if (datos != null) {
             int perfiles = datos.enMemoria();
             datos.cerrar();

@@ -47,7 +47,7 @@ public final class Validador {
             "puesto", "errores", "avisos", "copiados", "omitidos", "origen", "destino", "error", "hito",
             "proximo", "racha_necesaria", "tipo", "ruta", "cargados", "autoguardado", "tipo_almacenamiento",
             "dias_requeridos", "premio_diaria", "premio_semanal", "faltan_dias", "jugador_uuid",
-            "idioma", "campo", "campos", "destinos"));
+            "idioma", "campo", "campos", "destinos", "claves", "archivo", "linea"));
 
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{([a-zA-Z0-9_]+)\\}");
 

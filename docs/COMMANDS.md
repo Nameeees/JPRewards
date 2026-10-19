@@ -46,6 +46,8 @@ All of them need `jprewards.admin` unless the table says otherwise.
 | `/rewards test <type> [key]` | `simulate` | `jprewards.admin.manage` | Dry run: prints what would be delivered, without delivering it. |
 | `/rewards reset <player\|*> [type]` | | `jprewards.admin.manage` | Resets data. Types: `daily`, `weekly`, `monthly`, `streaks`, `all` (default). |
 | `/rewards set <player> <field> <value>` | | `jprewards.admin.manage` | Sets a counter. Fields: `streak`, `best-streak`, `total`, `weekly-streak`, `weekly-total`, `month-days`, `milestones`. |
+| `/rewards trigger <player> <id>` | `extra` | `jprewards.admin.manage` | Delivers a named reward from `recompensas/extra.yml` (the bridge for other plugins). |
+| `/rewards backup` | | `jprewards.admin` | Zips the data folder into `backups/`. |
 | `/rewards migrate [confirm]` | | `jprewards.admin.migrate` | Copies all the data between YAML and the database. |
 
 Examples:
@@ -59,6 +61,25 @@ Examples:
 /rewards reset * daily           resets the daily data of every player
 /rewards set Notch streak 6
 /rewards migrate confirm
+```
+
+## Conditions on a reward
+
+Any entry (in the four cycle files and in `recompensas/extra.yml`) accepts three optional conditions:
+
+| Key | What it does |
+| --- | --- |
+| `probabilidad: 0.25` | Delivered only 25 % of the time. Accepts `0.25`, `25` or `'25%'`. If it fails, the claim is consumed and the player sees the "bad luck" message. |
+| `mundo: world_nether` | Only claimable in that world. If the player is elsewhere the claim is **not** consumed. |
+| `una-vez: true` | Delivered only the first time in the life of that player (kept in their data). |
+
+```yaml
+dias:
+  '7':
+    dar: ['crates give {jugador} vip 1']
+    probabilidad: 50
+    mundo: world_nether
+    una-vez: true
 ```
 
 ## Permissions

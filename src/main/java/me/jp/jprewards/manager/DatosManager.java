@@ -39,6 +39,10 @@ public final class DatosManager {
     private final JPRewards plugin;
     private final Map<UUID, DatosJugador> cache = new ConcurrentHashMap<UUID, DatosJugador>();
     private final Map<UUID, String[]> cola = new LinkedHashMap<UUID, String[]>();
+    /** Version conocida y ultima comprobacion (solo si el almacen la soporta). */
+    private final Map<UUID, Long> versiones = new ConcurrentHashMap<UUID, Long>();
+    private final Map<UUID, Long> comprobado = new ConcurrentHashMap<UUID, Long>();
+    private static final long COMPROBAR_CADA_MS = 2500L;
     private final AtomicBoolean vaciando = new AtomicBoolean(false);
 
     private Almacen almacen;
@@ -137,10 +141,49 @@ public final class DatosManager {
                 datos.nombre(nombre);
             }
             cache.put(uuid, datos);
+            recordarVersion(uuid);
         } else if (nombre != null && !nombre.isEmpty()) {
             datos.nombre(nombre);
         }
+        refrescarSiCambio(uuid, datos);
         return datos;
+    }
+
+    /**
+     * Si el almacen soporta versiones (MySQL) y otro servidor guardo datos mas
+     * nuevos, se recargan aqui. Asi dos servidores no se pisan al reclamar el
+     * mismo jugador. Se comprueba como mucho cada 2,5 s y solo si no hay
+     * cambios sin guardar.
+     */
+    private void refrescarSiCambio(UUID uuid, DatosJugador datos) {
+        if (almacen == null || !almacen.soportaVersiones() || datos.sucio()) {
+            return;
+        }
+        long ahora = System.currentTimeMillis();
+        Long ultima = comprobado.get(uuid);
+        if (ultima != null && (ahora - ultima.longValue()) < COMPROBAR_CADA_MS) {
+            return;
+        }
+        comprobado.put(uuid, Long.valueOf(ahora));
+        long remota = almacen.version(uuid);
+        Long conocida = versiones.get(uuid);
+        if (remota > (conocida == null ? 0L : conocida.longValue())) {
+            try {
+                DatosJugador frescos = almacen.cargar(uuid, datos.nombre());
+                cache.put(uuid, frescos);
+                versiones.put(uuid, Long.valueOf(remota));
+            } catch (ErrorAlmacen error) {
+                plugin.getLogger().warning("Could not refresh the data of " + uuid + ": " + error.getMessage());
+            }
+        }
+    }
+
+    /** Recuerda la version con la que se cargo a un jugador. */
+    private void recordarVersion(UUID uuid) {
+        if (almacen != null && almacen.soportaVersiones()) {
+            versiones.put(uuid, Long.valueOf(almacen.version(uuid)));
+            comprobado.put(uuid, Long.valueOf(System.currentTimeMillis()));
+        }
     }
 
     /** Datos de un jugador por nombre (solo si ya jugo en el servidor). */

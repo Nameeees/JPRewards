@@ -35,7 +35,8 @@ public final class Chequeos {
             "recompensas/mensuales.yml",
             "recompensas/mensuales_es.yml",
             "recompensas/rachas.yml",
-            "recompensas/rachas_es.yml"
+            "recompensas/rachas_es.yml",
+            "recompensas/extra.yml"
     };
 
     /** Secciones que debe definir messages_es.yml. */
@@ -426,6 +427,54 @@ public final class Chequeos {
             registro.info("[harness] no se pudo comprobar la forma corta: " + Registro.describir(error));
         }
 
+        // Condiciones por recompensa: probabilidad, mundo y una-vez.
+        try {
+            java.io.File carpeta = new java.io.File(jprewards().getDataFolder(), "recompensas");
+            carpeta.mkdirs();
+            java.io.File prueba = new java.io.File(carpeta, "prueba-condiciones.yml");
+            String contenido = ""
+                    + "config-version: 2" + "\n"
+                    + "dias:" + "\n"
+                    + "  '1':" + "\n"
+                    + "    dar: 'eco give {jugador} 100'" + "\n"
+                    + "    probabilidad: 25" + "\n"
+                    + "    mundo: world_nether" + "\n"
+                    + "    una-vez: true" + "\n"
+                    + "  '2':" + "\n"
+                    + "    dar: 'eco give {jugador} 200'" + "\n"
+                    + "    probabilidad: 0.5" + "\n";
+            java.nio.file.Files.write(prueba.toPath(),
+                    contenido.getBytes(java.nio.charset.Charset.forName("UTF-8")));
+
+            Class<?> cargadorClase = Class.forName("me.jp.jprewards.manager.Cargador", true, cargador());
+            Class<?> pluginClase = Class.forName("me.jp.jprewards.JPRewards", true, cargador());
+            Class<?> recompensaClase = Class.forName("me.jp.jprewards.model.Recompensa", true, cargador());
+            Object cargador1 = cargadorClase.getConstructor(pluginClase).newInstance(jprewards());
+            java.lang.reflect.Method cargarCiclo = cargadorClase.getMethod("cargarCiclo",
+                    String.class, String.class, String.class);
+            java.util.Map<?, ?> ciclo = (java.util.Map<?, ?>) cargarCiclo.invoke(cargador1,
+                    "recompensas/prueba-condiciones.yml", "dias", "dia");
+            Object uno = ciclo.get(Integer.valueOf(1));
+            Object dos = ciclo.get(Integer.valueOf(2));
+            java.lang.reflect.Method probabilidad = recompensaClase.getMethod("probabilidad");
+            java.lang.reflect.Method mundo = recompensaClase.getMethod("mundo");
+            java.lang.reflect.Method unaVez = recompensaClase.getMethod("unaVez");
+            double probUno = ((Double) probabilidad.invoke(uno)).doubleValue();
+            String mundoUno = (String) mundo.invoke(uno);
+            boolean unicoUno = ((Boolean) unaVez.invoke(uno)).booleanValue();
+            double probDos = ((Double) probabilidad.invoke(dos)).doubleValue();
+            if (Math.abs(probUno - 0.25) < 0.001 && "world_nether".equals(mundoUno) && unicoUno
+                    && Math.abs(probDos - 0.5) < 0.001) {
+                registro.ok("condiciones: probabilidad (25 y 0.5), mundo y una-vez se leen bien");
+            } else {
+                registro.fallo("condiciones: prob1=" + probUno + " mundo=" + mundoUno + " unico=" + unicoUno
+                        + " prob2=" + probDos);
+            }
+            prueba.delete();
+        } catch (Throwable error) {
+            registro.info("[harness] no se pudieron comprobar las condiciones: " + Registro.describir(error));
+        }
+
         // No debe existir ningun permiso que permita reclamar de nuevo.
         try {
             boolean existe = false;
@@ -441,6 +490,35 @@ public final class Chequeos {
             }
         } catch (Throwable error) {
             registro.info("[harness] no se pudieron leer los permisos: " + Registro.describir(error));
+        }
+
+        // API publica y premios sueltos (puente para otros plugins).
+        try {
+            Class<?> apiClase = Class.forName("me.jp.jprewards.api.JPRewardsAPI", true, cargador());
+            Object api = apiClase.getMethod("get").invoke(null);
+            boolean encendida = api != null && ((Boolean) apiClase.getMethod("enabled").invoke(api)).booleanValue();
+            Class.forName("me.jp.jprewards.api.event.RewardClaimEvent", true, cargador());
+            Class.forName("me.jp.jprewards.api.event.RewardDeliveredEvent", true, cargador());
+
+            java.io.File carpeta = new java.io.File(jprewards().getDataFolder(), "recompensas");
+            carpeta.mkdirs();
+            java.io.File extra = new java.io.File(carpeta, "extra.yml");
+            java.nio.file.Files.write(extra.toPath(), (""
+                    + "config-version: 2\n"
+                    + "premios:\n"
+                    + "  prueba-api: 'eco give {jugador} 123'\n").getBytes(
+                    java.nio.charset.Charset.forName("UTF-8")));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rewards reload rewards");
+            java.util.List<?> claves = (java.util.List<?>) apiClase.getMethod("extraKeys").invoke(api);
+            if (encendida && claves.contains("prueba-api")) {
+                registro.ok("API publica activa y premio suelto cargado desde recompensas/extra.yml");
+            } else {
+                registro.fallo("API: activa=" + encendida + " extras=" + claves);
+            }
+            extra.delete();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rewards reload rewards");
+        } catch (Throwable error) {
+            registro.info("[harness] no se pudo comprobar la API: " + Registro.describir(error));
         }
 
         if (activo()) {

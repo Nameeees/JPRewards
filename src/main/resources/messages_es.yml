@@ -36,6 +36,9 @@ general:
   inventario-lleno: '&eTu inventario esta lleno: &f{cantidad} &epremio(s) se guardaron y los recibiras al volver a entrar.'
   inventario-soltado: '&eTu inventario esta lleno: &f{cantidad} &epremio(s) cayeron al suelo a tus pies.'
   bloqueado: '&cTodavia no puedes reclamar esto.'
+  mundo-bloqueado: '&cEsta recompensa solo se puede reclamar en &f{mundo}&c.'
+  sin-suerte: '&7Mala suerte: esta vez la recompensa ha salido vacia.'
+  ya-unico: '&7Ya recibiste esta recompensa; es de una sola vez.'
   pendientes-recibidos: '&aRecibiste &f{cantidad} &apremio(s) que habian quedado pendientes.'
   nada-para-reclamar: '&7No tienes ninguna recompensa lista para reclamar ahora mismo.'
   reclamar-todo: '&aReclamaste &f{cantidad} &arecompensa(s) de una vez. &7Vuelve manana para la siguiente.'
@@ -64,6 +67,8 @@ comando:
     - '&7» &f/rewards test <daily|weekly|monthly|streaks> [key] &8- &7muestra que se entregaria, sin entregarlo.'
     - '&7» &f/rewards reset <player|*> [daily|weekly|monthly|streaks|all] &8- &7reinicia datos.'
     - '&7» &f/rewards set <player> <field> <value> &8- &7fija contadores.'
+    - '&7» &f/rewards trigger <player> <id> &8- &7entrega un premio suelto (puente para la API).'
+    - '&7» &f/rewards backup &8- &7comprime la carpeta de datos en backups/.'
     - '&7» &f/rewards migrate confirm &8- &7copia los datos entre YAML y MySQL.'
   ayuda-pie: '&8Tip: &7todas las opciones estan comentadas en &fconfig.yml&7, &fmenus.yml &7y &frecompensas/&7, y &f/rewards validate &7las revisa por ti.'
   desconocido: '&cNo conozco el subcomando &f{entrada}&c. Usa &f/rewards help&c.'
@@ -95,7 +100,13 @@ comando:
 
   # ---- Datos de un jugador ----
   datos-uso: '&7Usa: &f/rewards data <player>&7.'
+  trigger-uso: '&7Usa: &f/rewards trigger <player> <id>&7. Disponibles: &f{claves}&7.'
+  trigger-hecho: '&aEntregado el premio suelto &f{clave} &aa &f{jugador}&a.'
+  trigger-desconocido: '&cNo existe el premio suelto &f{clave}&c. Definidos en recompensas/extra.yml: &f{claves}&c.'
   datos-titulo: '&8&m--------&r &d&l{jugador} &8&m--------'
+  backup-hecho: '&aCopia guardada en &f{archivo} &a(&f{cantidad} &aarchivo(s)).'
+  backup-vacio: '&7No hay carpeta de datos que copiar (MySQL, archivo unico o ningun jugador todavia).'
+  datos-historial-linea: '&8» &7{linea}'
   datos-lineas:
     - '&7» UUID: &f{uuid}'
     - '&7» Diaria: racha &f{racha} &7(mejor &f{mejor}&7) · total &f{total} &7· le toca el dia &f{proximo}'

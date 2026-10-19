@@ -123,14 +123,42 @@ public final class Recompensa {
     private final List<Variante> rangos;
     private final ConfigurationSection seccion;
 
+    // Condiciones de la entrada (opcionales).
+    private final double probabilidad;
+    private final String mundo;
+    private final boolean unaVez;
+
     private Recompensa(String id, String permiso, String nombrePorDefecto, Variante base, List<Variante> rangos,
-            ConfigurationSection seccion) {
+            ConfigurationSection seccion, double probabilidad, String mundo, boolean unaVez) {
         this.id = id;
         this.permiso = permiso == null ? "" : permiso.trim();
         this.nombrePorDefecto = nombrePorDefecto;
         this.base = base;
         this.rangos = rangos;
         this.seccion = seccion;
+        this.probabilidad = probabilidad;
+        this.mundo = mundo == null ? "" : mundo.trim();
+        this.unaVez = unaVez;
+    }
+
+    /** Probabilidad de que se entregue (1 = siempre, -1 = sin condicion). */
+    public double probabilidad() {
+        return probabilidad;
+    }
+
+    /** Mundo en el que se puede reclamar ('' = cualquiera). */
+    public String mundo() {
+        return mundo;
+    }
+
+    /** true si solo se entrega la primera vez en la vida del jugador. */
+    public boolean unaVez() {
+        return unaVez;
+    }
+
+    /** true si la entrada tiene alguna condicion especial. */
+    public boolean tieneCondiciones() {
+        return probabilidad >= 0 || !mundo.isEmpty() || unaVez;
     }
 
     /** Lee una recompensa (y sus variantes de rango) desde YAML. */
@@ -161,7 +189,34 @@ public final class Recompensa {
                 rangos.add(variante);
             }
         }
-        return new Recompensa(id, seccion.getString("permiso", ""), nombrePorDefecto, base, rangos, seccion);
+        return new Recompensa(id, seccion.getString("permiso", ""), nombrePorDefecto, base, rangos, seccion,
+                leerProbabilidad(seccion), seccion.getString("mundo", ""), seccion.getBoolean("una-vez", false));
+    }
+
+    /**
+     * Lee 'probabilidad'. Acepta 0.25, 25 o '25%'. Devuelve -1 cuando no hay
+     * condicion (siempre se entrega).
+     */
+    private static double leerProbabilidad(ConfigurationSection seccion) {
+        Object valor = seccion.get("probabilidad");
+        if (valor == null) {
+            return -1.0;
+        }
+        double numero;
+        if (valor instanceof Number) {
+            numero = ((Number) valor).doubleValue();
+        } else {
+            String texto = String.valueOf(valor).trim().replace("%", "").replace(",", ".");
+            try {
+                numero = Double.parseDouble(texto);
+            } catch (NumberFormatException error) {
+                return -1.0;
+            }
+        }
+        if (numero > 1.0) {
+            numero = numero / 100.0;
+        }
+        return Math.max(0.0, Math.min(1.0, numero));
     }
 
     private static Variante leerVariante(ConfigurationSection seccion) {

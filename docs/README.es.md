@@ -7,6 +7,7 @@ Guias, referencias y el registro de verificacion del plugin. La pagina principal
 | --- | --- | --- |
 | [Comandos y permisos](COMMANDS.md) | Ingles | Todos los subcomandos, alias, argumentos, permisos y ejemplos. |
 | [Placeholders](PLACEHOLDERS.md) | Ingles | Placeholders de menus, mensajes y recompensas, y la expansion de PlaceholderAPI. |
+| [API para plugins](API.md) | Ingles | API de Java, eventos y premios con nombre para jefes, votos o misiones. |
 | [Preguntas frecuentes](FAQ.md) | Ingles | Idiomas, MySQL, actualizar desde la 1.x, reclamar dos veces, inventario lleno. |
 | [Guia de configuracion](CONFIGURACION.es.md) | Espanol | Guia paso a paso de `config.yml`, `menus.yml` y `recompensas/*.yml`. |
 | [Registro de verificacion](VERIFICATION.md) | Ingles | Que se probo, en que servidores, y el hash del artefacto publicado. |

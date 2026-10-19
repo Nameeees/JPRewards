@@ -48,6 +48,9 @@ public final class Archivos {
      * usar y se activan cambiando el archivo correspondiente en config.yml
      * (menus.archivo, diaria.archivo...). Se crean para que pasar el plugin a
      * espanol sea cambiar cuatro lineas, no traducir trece archivos.
+     *
+     * 'recompensas/extra.yml' son los premios sueltos (los entrega la API o
+     * /rewards trigger), no un preset: viene vacio y es opcional.
      */
     private static final String[] GESTIONADOS = {
             "config.yml",
@@ -62,7 +65,8 @@ public final class Archivos {
             "recompensas/mensuales.yml",
             "recompensas/mensuales_es.yml",
             "recompensas/rachas.yml",
-            "recompensas/rachas_es.yml"
+            "recompensas/rachas_es.yml",
+            "recompensas/extra.yml"
     };
 
     /** Los mismos archivos, para el resumen de inicio. */

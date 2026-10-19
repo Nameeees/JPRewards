@@ -163,6 +163,34 @@ public final class Cargador {
         return true;
     }
 
+    /**
+     * Lee premios sueltos con nombre (recompensas/extra.yml, seccion 'premios').
+     * Se entregan con la API o con /rewards trigger; no tocan ningun contador.
+     */
+    public Map<String, Recompensa> cargarExtras(String archivo) {
+        Map<String, Recompensa> extras = new LinkedHashMap<String, Recompensa>();
+        FileConfiguration config = plugin.archivos().cargar(archivo);
+        if (config == null) {
+            return extras;
+        }
+        ConfigurationSection premios = config.getConfigurationSection("premios");
+        if (premios == null) {
+            return extras;
+        }
+        Map<String, Recompensa> packs = leerPacks(config, archivo);
+        for (String id : premios.getKeys(false)) {
+            ConfigurationSection entrada = leerEntrada(packs, premios, id, archivo + " -> premios." + id);
+            if (entrada == null) {
+                continue;
+            }
+            Recompensa recompensa = Recompensa.leer(id, entrada, id);
+            if (recompensa != null) {
+                extras.put(id, recompensa);
+            }
+        }
+        return extras;
+    }
+
     /** Lee la seccion opcional 'definir': packs de premios reutilizables. */
     private Map<String, Recompensa> leerPacks(FileConfiguration config, String archivo) {
         Map<String, Recompensa> packs = new LinkedHashMap<String, Recompensa>();

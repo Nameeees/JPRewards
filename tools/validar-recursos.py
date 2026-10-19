@@ -214,7 +214,7 @@ conocidos = {
     "modulo", "item", "actual", "entrada", "archivos", "texto", "tipos", "campos", "clave", "valor",
     "puesto", "errores", "avisos", "copiados", "omitidos", "origen", "destino", "error", "hito", "proximo",
     "racha_necesaria", "tipo", "ruta", "cargados", "autoguardado", "tipo_almacenamiento",
-    "idioma", "campo", "destinos",
+    "idioma", "campo", "destinos", "claves", "archivo", "linea",
 }
 for nombre, datos in archivos.items():
     if nombre == "config.yml":

@@ -1,0 +1,33 @@
+# ============================================================================
+#  JPRewards - recompensas/extra.yml  (optional)
+# ----------------------------------------------------------------------------
+#  EXTRA REWARDS: rewards with a name that do NOT belong to any cycle. They are
+#  delivered on demand, by the API or by the command:
+#
+#    /rewards trigger <player> <id>          (permission: jprewards.admin.manage)
+#
+#  This is how another plugin (or a command block) can give a reward from its
+#  own events: a boss kill, a vote, a quest, a crate...
+#
+#  From Java, with the API:
+#
+#    JPRewardsAPI api = JPRewardsAPI.get();
+#    if (api != null) { api.giveExtra(player, "boss-kill"); }
+#
+#  The format is the same as the other reward files: short form, packs and the
+#  full form all work. Only 'premios' is needed.
+#
+#    definir:
+#      vip: 'crates give {jugador} vip 1'
+#
+#    premios:
+#      boss-kill: 'eco give {jugador} 5000'
+#      vip-gift: {usar: vip, extra: 'give {jugador} diamond 5'}
+#
+#  An entry with no delivery (empty) is ignored with a warning.
+# ============================================================================
+
+config-version: 2
+
+# No extra rewards by default: uncomment to create one.
+premios: {}

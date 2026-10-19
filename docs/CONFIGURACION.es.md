@@ -109,6 +109,32 @@ dias:
 - Lo que entrega se ejecuta desde consola con `{jugador}`, `{uuid}`, `{mundo}`
   y `{premio}`.
 
+### Condiciones: probabilidad, mundo y una sola vez
+
+Cualquier entrada (en los cuatro ciclos y en `recompensas/extra.yml`) admite tres
+condiciones opcionales:
+
+```yaml
+dias:
+  '7':
+    dar: ['crates give {jugador} vip 1']
+    probabilidad: 50        # 0.5, 50 o '50%': solo sale la mitad de las veces
+    mundo: world_nether     # solo se puede reclamar en ese mundo
+    una-vez: true           # solo la primera vez en la vida del jugador
+```
+
+- Si el jugador **no está en el mundo**, el reclamo no se consume: puede volver.
+- Si falla la **probabilidad** o ya recibió un premio **de una sola vez**, el
+  reclamo sí se consume y ve el aviso correspondiente (así no se puede reintentar
+  hasta que salga).
+
+### Premios sueltos (para otros plugins)
+
+`recompensas/extra.yml` define premios con nombre que no son de ningún ciclo. Se
+entregan con `/rewards trigger <jugador> <id>` o desde la API (ver
+[`docs/API.md`](API.md)). Son la forma de dar una recompensa al matar un jefe, al
+votar o al completar una misión.
+
 ### Reutilizar el mismo premio en varios días
 
 Si el día 5 y el 6 dan lo mismo, no lo copies: definelo una vez.

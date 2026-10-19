@@ -66,7 +66,8 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
      * aceptando como alias, asi que ningun servidor que ya los use se rompe.
      */
     private static final List<String> SUBCOMANDOS = Arrays.asList("help", "daily", "weekly", "monthly", "streaks",
-            "info", "claim", "top", "status", "validate", "reload", "data", "give", "test", "reset", "set", "migrate");
+            "info", "claim", "top", "status", "validate", "reload", "data", "give", "test", "reset", "set",
+            "migrate", "trigger", "backup");
 
     private final JPRewards plugin;
 
@@ -148,6 +149,12 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
         }
         if ("migrate".equals(sub)) {
             return migrar(emisor, args);
+        }
+        if ("trigger".equals(sub) || "extra".equals(sub)) {
+            return disparar(emisor, args);
+        }
+        if ("backup".equals(sub)) {
+            return copiaSeguridad(emisor);
         }
 
         plugin.mensajes().enviar(emisor, "comando.desconocido", Mensajes.ph("entrada", args[0]));
@@ -379,7 +386,33 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
         ph.put("semana", String.valueOf(plugin.recompensas().proximaSemana(datos)));
         plugin.mensajes().enviar(emisor, "comando.datos-titulo", ph);
         plugin.mensajes().enviarLineas(emisor, "comando.datos-lineas", ph);
+        for (String linea : ultimasEntregas(nombre(objetivo), 5)) {
+            emisor.sendMessage(plugin.mensajes().texto("comando.datos-historial-linea", Mensajes.ph("linea", linea), null));
+        }
         return true;
+    }
+
+    /** Ultimas lineas del historial de ese jugador (para /rewards data). */
+    private java.util.List<String> ultimasEntregas(String jugador, int cuantas) {
+        java.util.List<String> encontradas = new java.util.ArrayList<String>();
+        java.io.File archivo = new java.io.File(plugin.getDataFolder(), "historial.log");
+        if (!archivo.isFile()) {
+            return encontradas;
+        }
+        try {
+            for (String linea : java.nio.file.Files.readAllLines(archivo.toPath(),
+                    java.nio.charset.StandardCharsets.UTF_8)) {
+                if (linea.contains(" | " + jugador + " | ")) {
+                    encontradas.add(linea);
+                }
+            }
+        } catch (java.io.IOException ignorado) {
+            return encontradas;
+        }
+        if (encontradas.size() > cuantas) {
+            return encontradas.subList(encontradas.size() - cuantas, encontradas.size());
+        }
+        return encontradas;
     }
 
     private boolean dar(CommandSender emisor, String[] args) {
@@ -409,6 +442,94 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
         }
         plugin.mensajes().enviar(emisor, "comando.dar-hecho", Mensajes.ph("jugador", destino.getName(), "tipo", tipo,
                 "clave", clave.isEmpty() ? "1" : clave));
+        return true;
+    }
+
+    /**
+     * /rewards backup: comprime la carpeta de datos en backups/ para poder
+     * guardar una copia antes de tocar algo. No toca la base de datos (para eso
+     * esta el backup del propio MySQL).
+     */
+    private boolean copiaSeguridad(CommandSender emisor) {
+        if (!esAdmin(emisor, "jprewards.admin")) {
+            return true;
+        }
+        java.io.File carpeta = new java.io.File(plugin.getDataFolder(), "datos");
+        java.io.File[] archivos = carpeta.isDirectory() ? carpeta.listFiles() : null;
+        if (archivos == null || archivos.length == 0) {
+            plugin.mensajes().enviar(emisor, "comando.backup-vacio");
+            return true;
+        }
+        java.io.File salida = new java.io.File(plugin.getDataFolder(), "backups");
+        salida.mkdirs();
+        String nombre = "datos-" + new java.text.SimpleDateFormat("yyyyMMdd-HHmmss")
+                .format(new java.util.Date()) + ".zip";
+        java.io.File destino = new java.io.File(salida, nombre);
+        int copiados = 0;
+        try {
+            java.util.zip.ZipOutputStream zip = new java.util.zip.ZipOutputStream(
+                    new java.io.FileOutputStream(destino));
+            try {
+                byte[] buffer = new byte[8192];
+                for (java.io.File archivo : archivos) {
+                    if (!archivo.isFile()) {
+                        continue;
+                    }
+                    zip.putNextEntry(new java.util.zip.ZipEntry(archivo.getName()));
+                    java.io.FileInputStream entrada = new java.io.FileInputStream(archivo);
+                    try {
+                        int leidos;
+                        while ((leidos = entrada.read(buffer)) > 0) {
+                            zip.write(buffer, 0, leidos);
+                        }
+                    } finally {
+                        entrada.close();
+                    }
+                    zip.closeEntry();
+                    copiados++;
+                }
+            } finally {
+                zip.close();
+            }
+        } catch (java.io.IOException error) {
+            plugin.mensajes().enviar(emisor, "general.error");
+            plugin.getLogger().warning("Could not write the backup: " + error.getMessage());
+            return true;
+        }
+        plugin.mensajes().enviar(emisor, "comando.backup-hecho",
+                Mensajes.ph("archivo", "backups/" + nombre, "cantidad", String.valueOf(copiados)));
+        return true;
+    }
+
+    /**
+     * /rewards trigger <jugador> <id>: entrega un premio suelto de
+     * recompensas/extra.yml. Es la puerta que usan otros plugins (o un comando
+     * desde consola) para dar una recompensa fuera de los cuatro ciclos.
+     */
+    private boolean disparar(CommandSender emisor, String[] args) {
+        if (!esAdmin(emisor, "jprewards.admin.manage")) {
+            return true;
+        }
+        if (args.length < 2) {
+            plugin.mensajes().enviar(emisor, "comando.trigger-uso",
+                    Mensajes.ph("claves", plugin.recompensas().extrasDisponibles().isEmpty()
+                            ? "(recompensas/extra.yml)" : String.join(", ", plugin.recompensas().extrasDisponibles())));
+            return true;
+        }
+        String id = args.length >= 3 ? args[2] : args[1];
+        Player destino = args.length >= 3 ? Bukkit.getPlayerExact(args[1]) : (emisor instanceof Player ? (Player) emisor : null);
+        if (destino == null) {
+            plugin.mensajes().enviar(emisor, "general.jugador-desconectado", Mensajes.ph("jugador", args[1]));
+            return true;
+        }
+        if (!plugin.recompensas().regalarExtra(destino, id)) {
+            plugin.mensajes().enviar(emisor, "comando.trigger-desconocido",
+                    Mensajes.ph("clave", id, "claves", plugin.recompensas().extrasDisponibles().isEmpty()
+                            ? "(recompensas/extra.yml)" : String.join(", ", plugin.recompensas().extrasDisponibles())));
+            return true;
+        }
+        plugin.mensajes().enviar(emisor, "comando.trigger-hecho",
+                Mensajes.ph("jugador", destino.getName(), "clave", id));
         return true;
     }
 
@@ -682,6 +803,16 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
                 }
                 return sugerencias;
             }
+            if ("trigger".equals(sub) || "extra".equals(sub)) {
+                if (emisor.hasPermission("jprewards.admin.manage")) {
+                    for (Player jugador : Bukkit.getOnlinePlayers()) {
+                        if (jugador.getName().toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT))) {
+                            sugerencias.add(jugador.getName());
+                        }
+                    }
+                }
+                return sugerencias;
+            }
             if ("migrate".equals(sub) && emisor.hasPermission("jprewards.admin.migrate")) {
                 if ("confirm".startsWith(args[1].toLowerCase(Locale.ROOT))) {
                     sugerencias.add("confirm");
@@ -704,6 +835,14 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
                 for (String campo : CAMPOS) {
                     if (campo.startsWith(valor)) {
                         sugerencias.add(campo);
+                    }
+                }
+                return sugerencias;
+            }
+            if ("trigger".equals(sub) || "extra".equals(sub)) {
+                for (String id : plugin.recompensas().extrasDisponibles()) {
+                    if (id.startsWith(valor)) {
+                        sugerencias.add(id);
                     }
                 }
                 return sugerencias;
