@@ -1,14 +1,38 @@
 # ============================================================================
-#  JPRewards - recompensas/semanales.yml
+#  JPRewards - recompensas/semanales_es.yml  (preset en espanol)
 # ----------------------------------------------------------------------------
-#  Ciclo de la recompensa SEMANAL. La clave es el numero de bloque (1..N).
-#  Se reclama UNA vez por semana: la semana empieza el dia configurado en
-#  config.yml -> semanal.dia-inicio, a la hora de reinicio.hora.
-#  Weekly reward cycle: one claim per week, starting on semanal.dia-inicio.
-
-#  Los premios semanales conviene que sean claramente mejores que los
-#  diarios: son el motivo para entrar cada semana.
-#  Mismos campos que diarias.yml (lore, comandos, items, efectos, rangos...).
+#  Ciclo SEMANAL. La clave es el numero de bloque de semana (1..N); se puede
+#  reclamar UNA vez por semana (config.yml -> semanal.dia-inicio y reinicio.hora).
+#  Los premios semanales deben sentirse mejores que los diarios. Este archivo es
+#  el preset en espanol: para usarlo, apunta config.yml -> semanal.archivo aqui.
+#
+#  COMO ANADIR UNA RECOMPENSA (forma corta, una linea por premio)
+#    semanas:
+#      '1': 'eco give {jugador} 100'                  # un comando de consola
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # comando + item directo
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
+#
+#    En una lista, lo que sea un material (con cantidad opcional) se entrega
+#    como item y el resto se ejecuta como comando. El icono y el lore son
+#    opcionales: el menu genera la vista previa del premio solo.
+#
+#  PACKS REUTILIZABLES (definir una vez, usar muchas veces)
+#    definir:
+#      vip: 'crates give {jugador} vip 1'
+#    semanas:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FORMA COMPLETA (todo opcional menos lo que entrega)
+#    icono: DIAMOND                  o icono: {material|textura|textura-jugador}
+#    nombre: '...'                   nombre visible en mensajes y titulos
+#    dar / comandos: [...]           comandos de consola con {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         items directos (forma corta o completa)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          texto del menu / lineas extra al reclamar
+#    efectos: {...}                  sonido, particula, fuegos, titulo, broadcast
+#    rangos: {...}                   variantes por rango (gana la primera que tenga)
+#    permiso: '...'                  la entrada es solo para ese permiso
 # ============================================================================
 
 config-version: 2

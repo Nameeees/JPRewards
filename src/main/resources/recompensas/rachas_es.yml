@@ -1,18 +1,38 @@
 # ============================================================================
-#  JPRewards - recompensas/rachas.yml
+#  JPRewards - recompensas/rachas_es.yml  (preset en espanol)
 # ----------------------------------------------------------------------------
-#  BONUS POR RACHA: se desbloquean al alcanzar N dias (o semanas) SEGUIDOS.
-#  Se reclaman UNA vez por racha; si el jugador pierde la racha, vuelven a
-#  estar disponibles.
-#  STREAK BONUSES: unlocked by reaching N days (or weeks) in a row. They can
-#  be claimed once per streak; losing the streak makes them available again.
-
-#  CAMPOS / FIELDS
-#    tipo: diaria | semanal   sobre que racha se cuenta (por defecto diaria)
-#    racha-minima: N          dias o semanas seguidos necesarios
-#    (el resto de campos son los mismos que en diarias.yml)
-
-#  Este modulo se puede desactivar en config.yml -> modulos.rachas.
+#  BONUS DE RACHA: se desbloquean al llegar a N dias (o semanas) SEGUIDOS y se
+#  reclaman una vez por racha. Cada bonus necesita 'racha-minima' y, si aplica,
+#  'tipo: diaria | semanal'. Este archivo es el preset en espanol: para usarlo,
+#  apunta config.yml -> rachas.archivo aqui.
+#
+#  COMO ANADIR UNA RECOMPENSA (forma corta, una linea por premio)
+#    bonus:
+#      '1': 'eco give {jugador} 100'                  # un comando de consola
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # comando + item directo
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
+#
+#    En una lista, lo que sea un material (con cantidad opcional) se entrega
+#    como item y el resto se ejecuta como comando. El icono y el lore son
+#    opcionales: el menu genera la vista previa del premio solo.
+#
+#  PACKS REUTILIZABLES (definir una vez, usar muchas veces)
+#    definir:
+#      vip: 'crates give {jugador} vip 1'
+#    bonus:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FORMA COMPLETA (todo opcional menos lo que entrega)
+#    icono: DIAMOND                  o icono: {material|textura|textura-jugador}
+#    nombre: '...'                   nombre visible en mensajes y titulos
+#    dar / comandos: [...]           comandos de consola con {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         items directos (forma corta o completa)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          texto del menu / lineas extra al reclamar
+#    efectos: {...}                  sonido, particula, fuegos, titulo, broadcast
+#    rangos: {...}                   variantes por rango (gana la primera que tenga)
+#    permiso: '...'                  la entrada es solo para ese permiso
 # ============================================================================
 
 config-version: 2

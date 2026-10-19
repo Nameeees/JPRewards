@@ -1,25 +1,38 @@
 # ============================================================================
-#  JPRewards - recompensas/diarias.yml
+#  JPRewards - recompensas/diarias_es.yml  (preset en espanol)
 # ----------------------------------------------------------------------------
 #  Ciclo de la recompensa DIARIA. La clave de cada entrada es el numero de
 #  dia del ciclo (1..N). N se ajusta solo; si quieres fijarlo, usa
-#  config.yml -> diaria.dias-del-ciclo.
-#  Daily reward cycle: the key is the day number (1..N).
-
-#  CAMPOS / FIELDS
-#    icono.textura / icono.material   cabeza o material del menu
-#    permiso: ''                      entrada exclusiva de un permiso
-#    nombre: '...'                    nombre visible en mensajes y titulos
-#    lore: [...]                      COMO SE VE (usa {preview} en menus.yml)
-#    comandos: [...]                  LO QUE ENTREGA, por consola
-#    items: [...]                     LO QUE ENTREGA, como items directos
-#    experiencia / niveles            XP directa (config: entrega.experiencia-directa)
-#    mensajes: [...]                  lineas extra al reclamar
-#    efectos: {...}                   sonido, particula, fuegos, titulo, broadcast
-#    rangos: {...}                    variantes por rango (gana la primera que tenga)
-
-#  Los comandos se ejecutan desde CONSOLA con {jugador}, {uuid}, {mundo} y {premio}.
-#  Ejemplos: eco give {jugador} 100 | give {jugador} diamond 2 | xp add {jugador} 50 points
+#  config.yml -> diaria.dias-del-ciclo. Este archivo es el preset en espanol:
+#  para usarlo, apunta config.yml -> diaria.archivo aqui.
+#
+#  COMO ANADIR UNA RECOMPENSA (forma corta, una linea por premio)
+#    dias:
+#      '1': 'eco give {jugador} 100'                  # un comando de consola
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # comando + item directo
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
+#
+#    En una lista, lo que sea un material (con cantidad opcional) se entrega
+#    como item y el resto se ejecuta como comando. El icono y el lore son
+#    opcionales: el menu genera la vista previa del premio solo.
+#
+#  PACKS REUTILIZABLES (definir una vez, usar muchas veces)
+#    definir:
+#      vip: 'crates give {jugador} vip 1'
+#    dias:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FORMA COMPLETA (todo opcional menos lo que entrega)
+#    icono: DIAMOND                  o icono: {material|textura|textura-jugador}
+#    nombre: '...'                   nombre visible en mensajes y titulos
+#    dar / comandos: [...]           comandos de consola con {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         items directos (forma corta o completa)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          texto del menu / lineas extra al reclamar
+#    efectos: {...}                  sonido, particula, fuegos, titulo, broadcast
+#    rangos: {...}                   variantes por rango (gana la primera que tenga)
+#    permiso: '...'                  la entrada es solo para ese permiso
 # ============================================================================
 
 config-version: 2

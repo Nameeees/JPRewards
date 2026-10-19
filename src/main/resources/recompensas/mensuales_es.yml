@@ -1,16 +1,38 @@
 # ============================================================================
-#  JPRewards - recompensas/mensuales.yml
+#  JPRewards - recompensas/mensuales_es.yml  (preset en espanol)
 # ----------------------------------------------------------------------------
-#  HITOS DEL MES: se desbloquean acumulando dias con la diaria reclamada
-#  DENTRO del mes actual. Al cambiar de mes el progreso y los hitos
-#  reclamados se reinician solos (lo historico se conserva en /top hitos).
-#  Monthly milestones: unlocked by claiming the daily reward within the month.
-
-#  La clave de cada hito es su id (aparece en el menu y en las acciones).
-#  'dias-requeridos' es lo unico obligatorio ademas del premio.
-#  Mismos campos que diarias.yml (lore, comandos, items, efectos, rangos...).
-
-#  Febrero tiene 28 dias: manten los hitos alcanzables en cualquier mes.
+#  HITOS DEL MES: se desbloquean reclamando la diaria los dias suficientes
+#  dentro del mismo mes; el progreso se resetea solo al cambiar de mes.
+#  Cada hito necesita 'dias-requeridos'. Este archivo es el preset en espanol:
+#  para usarlo, apunta config.yml -> mensual.archivo aqui.
+#
+#  COMO ANADIR UNA RECOMPENSA (forma corta, una linea por premio)
+#    hitos:
+#      '1': 'eco give {jugador} 100'                  # un comando de consola
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # comando + item directo
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
+#
+#    En una lista, lo que sea un material (con cantidad opcional) se entrega
+#    como item y el resto se ejecuta como comando. El icono y el lore son
+#    opcionales: el menu genera la vista previa del premio solo.
+#
+#  PACKS REUTILIZABLES (definir una vez, usar muchas veces)
+#    definir:
+#      vip: 'crates give {jugador} vip 1'
+#    hitos:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FORMA COMPLETA (todo opcional menos lo que entrega)
+#    icono: DIAMOND                  o icono: {material|textura|textura-jugador}
+#    nombre: '...'                   nombre visible en mensajes y titulos
+#    dar / comandos: [...]           comandos de consola con {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         items directos (forma corta o completa)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          texto del menu / lineas extra al reclamar
+#    efectos: {...}                  sonido, particula, fuegos, titulo, broadcast
+#    rangos: {...}                   variantes por rango (gana la primera que tenga)
+#    permiso: '...'                  la entrada es solo para ese permiso
 # ============================================================================
 
 config-version: 2
