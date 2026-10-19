@@ -13,6 +13,7 @@ Guias, referencias y el registro de verificacion del plugin. La pagina principal
 | [Registro de verificacion](VERIFICATION.md) | Ingles | Que se probo, en que servidores, y el hash del artefacto publicado. |
 | [Checklist de QA](QA_CHECKLIST.md) | Ingles | La lista que se repasa antes de publicar una version. |
 | [Pack de SpigotMC](SPIGOTMC_PAGE.md) | Ingles | La descripcion del recurso, el orden de las imagenes y las notas de actualizacion. |
+| [Update de SpigotMC 2.1.0](SPIGOTMC_UPDATE_2.1.0.md) | Ingles | Titulo y descripcion listos para pegar en la proxima actualizacion. |
 | [Arte generado por codigo](assets/README.md) | Ingles | Como se genera cada imagen. |
 | [Plantilla de pagina](TEMPLATE.md) | Ingles | Como escribir una pagina nueva en esta carpeta. |
 

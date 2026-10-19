@@ -31,7 +31,7 @@ def guardar(imagen, destino):
 
 
 # ------------------------------------------------------------------ BRAND
-FOOTLINE = "JPRewards  \u00b7  v2.0.0  \u00b7  MIT  \u00b7  Spigot & Paper"
+FOOTLINE = "JPRewards  \u00b7  v2.1.0  \u00b7  MIT  \u00b7  Spigot & Paper"
 SERIES = "1.8 \u2192 latest"
 
 OUT = os.path.dirname(os.path.abspath(__file__))
@@ -108,6 +108,14 @@ TEMAS = {
         "bg_abajo": (26, 20, 52),
         "patron": "orbitas",
         "diseno": "versiones",
+    },
+    "integrations": {
+        "acento": (190, 24, 93),           # rosa profundo (la puerta a otros plugins)
+        "secundario": (250, 204, 21),
+        "bg_arriba": (14, 10, 22),
+        "bg_abajo": (34, 18, 46),
+        "patron": "destellos",
+        "diseno": "codigo",
     },
 }
 
@@ -544,13 +552,15 @@ def diseno_consola(imagen, filas, tema, dibujo):
         x = 116 + i * 26
         dibujo.ellipse([x, 254, x + 14, 268], fill=color)
     dibujo.text((196, 251), "rewards  \u2014  console", font=font(SEMI, 20), fill=MUTED)
+    alto_fila = max(38, min(55, (640 - 312) // max(1, len(filas))))
+    tamano_comando = 22 if alto_fila >= 50 else 20
     for i, (comando, descripcion) in enumerate(filas):
-        y = 314 + i * 55
-        dibujo.text((118, y - 4), ">", font=font(BOLD, 26), fill=acento)
-        dibujo.text((148, y), comando, font=font(SEMI, 22), fill=TEXT)
-        lineas = envolver(descripcion, font(REGULAR, 18), 630, dibujo)[:2]
+        y = 310 + i * alto_fila
+        dibujo.text((118, y - 4), ">", font=font(BOLD, 24), fill=acento)
+        dibujo.text((148, y), comando, font=font(SEMI, tamano_comando), fill=TEXT)
+        lineas = envolver(descripcion, font(REGULAR, 17), 630, dibujo)[:2]
         for j, linea in enumerate(lineas):
-            dibujo.text((520, y + 3 + j * 21), linea, font=font(REGULAR, 18), fill=MUTED)
+            dibujo.text((520, y + 2 + j * 20), linea, font=font(REGULAR, 17), fill=MUTED)
 
 
 def diseno_tabla(imagen, filas, tema, dibujo):
@@ -639,6 +649,43 @@ def diseno_informe(imagen, lineas, tema, dibujo):
         dibujo.text((166, y), texto, font=font(REGULAR, 18), fill=MUTED)
 
 
+def diseno_codigo(imagen, cuerpo, tema, dibujo):
+    """Panel de codigo a la izquierda y lista de puntos a la derecha."""
+    acento, secundario = tema["acento"], tema["secundario"]
+    codigo, puntos = cuerpo
+    izq = [86, 236, 700, 656]
+    der = [724, 236, W - 86, 656]
+    for panel in (izq, der):
+        dibujo.rounded_rectangle(panel, radius=18, fill=mezclar(CARD, acento, 0.07),
+                                 outline=mezclar(CARD_BORDER, acento, 0.45), width=1)
+    # barra de titulo del panel de codigo
+    dibujo.rounded_rectangle([izq[0], izq[1], izq[2], izq[1] + 46], radius=18, fill=mezclar(CARD, acento, 0.16))
+    dibujo.rectangle([izq[0], izq[1] + 32, izq[2], izq[1] + 46], fill=mezclar(CARD, acento, 0.16))
+    for i, color in enumerate((acento, suavizar(acento, 0.35), secundario)):
+        x = izq[0] + 20 + i * 22
+        dibujo.ellipse([x, izq[1] + 17, x + 12, izq[1] + 29], fill=color)
+    dibujo.text((izq[0] + 100, izq[1] + 13), "MyPlugin.java", font=font(SEMI, 17), fill=MUTED)
+    for i, (texto, tipo) in enumerate(codigo):
+        y = izq[1] + 62 + i * 26
+        if tipo == "comentario":
+            color = DIM
+        elif tipo == "clave":
+            color = suavizar(acento, 0.55)
+        elif tipo == "texto":
+            color = suavizar(secundario, 0.35)
+        else:
+            color = MUTED
+        dibujo.text((izq[0] + 26, y), texto, font=font(REGULAR, 15), fill=color)
+    # lista de puntos
+    dibujo.text((der[0] + 26, der[1] + 22), "How to use it", font=font(SEMI, 21), fill=suavizar(acento, 0.5))
+    for i, (titulo, texto) in enumerate(puntos):
+        y = der[1] + 62 + i * 72
+        dibujo.ellipse([der[0] + 28, y + 6, der[0] + 40, y + 18], fill=acento)
+        dibujo.text((der[0] + 54, y), titulo, font=font(SEMI, 18), fill=TEXT)
+        for j, linea in enumerate(envolver(texto, font(REGULAR, 15), der[2] - der[0] - 90, dibujo)[:2]):
+            dibujo.text((der[0] + 54, y + 24 + j * 18), linea, font=font(REGULAR, 15), fill=MUTED)
+
+
 def diseno_versiones(imagen, cuerpo, tema, dibujo):
     acento = tema["acento"]
     versiones, tarjetas = cuerpo
@@ -664,6 +711,7 @@ def diseno_versiones(imagen, cuerpo, tema, dibujo):
 
 DISENOS = {
     "rejilla": diseno_rejilla,
+    "codigo": diseno_codigo,
     "consola": diseno_consola,
     "tabla": diseno_tabla,
     "linea": diseno_linea,
@@ -675,12 +723,12 @@ DISENOS = {
 # ------------------------------------------------------------------ contenido
 IMAGENES = {
     "features": ("What you get", "Four reward tracks your players can see and claim in a head menu.", [
-        ("calendar", "Four reward tracks", "Daily and weekly cycles, monthly milestones and streak bonuses, each one switchable."),
-        ("gift", "Items, XP and commands", "Direct items (heads, enchantments, model data), experience or console commands."),
+        ("calendar", "Four reward tracks", "Daily, weekly, monthly and streak rewards, each one switchable on its own."),
+        ("gift", "Rewards in one line", "A single command, a list of commands and items, or a full entry: your choice."),
+        ("star", "Packs and conditions", "Define a reward once, reuse it everywhere; add chance, world or one-time only."),
         ("bolt", "Effects and broadcasts", "Sound, particles, fireworks, titles, action bar and server-wide announcements."),
-        ("star", "Rank variants", "The same entry gives and shows a different reward per permission, with its own head."),
+        ("key", "API and extra rewards", "Java API, cancelable events and named rewards for bosses, votes or quests."),
         ("book", "Head menus, paginated", "Textured heads, per-state items, reward previews and automatic pagination."),
-        ("flag", "English + Spanish", "Ships in English, with complete Spanish presets for chat, menus and rewards."),
     ]),
     "commands": ("Commands", "Everything players need, plus the admin tools that make configuring painless.", [
         ("/rewards", "Opens the main menu. Aliases: jprewards, rec, reward."),
@@ -688,6 +736,8 @@ IMAGENES = {
         ("/rewards top [streak|total]", "Server leaderboard by streak, total, weeks, milestones or bonuses."),
         ("/rewards validate", "Checks every file and names the exact file and key that is wrong."),
         ("/rewards test <track> [key]", "Dry run: prints what a reward would deliver, without delivering it."),
+        ("/rewards trigger <player> <id>", "Extra reward from recompensas/extra.yml (API bridge)."),
+        ("/rewards backup", "Zips the player data into backups/."),
         ("/rewards reload [all|menus]", "Hot reload of config, messages, menus, rewards or everything at once."),
     ]),
     "permissions": ("Permissions", "Sensible defaults: players get the basics, operators get the rest.", [
@@ -713,6 +763,7 @@ IMAGENES = {
             ("messages_en.yml", "English chat lines"),
             ("messages_es.yml", "Spanish preset"),
             ("recompensas/", "daily, weekly, monthly, streaks"),
+            ("extra.yml", "rewards given on demand"),
             ("datos/", "one file per player"),
         ],
         [
@@ -738,6 +789,30 @@ IMAGENES = {
         ("ok", "the messages file - every key of the base language is present."),
         ("ok", "Storage - YAML (one file per player) in plugins/JPRewards/datos."),
     ]),
+    "integrations": ("Integrations", "Named rewards, a Java API and events any plugin can hook into.", (
+        [
+            ("JPRewardsAPI api = JPRewardsAPI.get();", "normal"),
+            ("if (api != null) {", "normal"),
+            ("    api.giveExtra(player,", "clave"),
+            ("        \u0022boss-kill\u0022);", "texto"),
+            ("}", "normal"),
+            ("", "normal"),
+            ("// before delivery", "comentario"),
+            ("@EventHandler", "clave"),
+            ("public void onClaim(", "normal"),
+            ("        RewardClaimEvent e) {", "normal"),
+            ("    if (e.getTipo().equals(", "normal"),
+            ("            \u0022daily\u0022)) e.setCancelled(true);", "texto"),
+            ("}", "normal"),
+        ],
+        [
+            ("Named extra rewards", "recompensas/extra.yml gives any plugin, command block or script a reward id to deliver."),
+            ("Cancel before it happens", "RewardClaimEvent fires before delivery: cancel it to block a reward."),
+            ("React after it happens", "RewardDeliveredEvent tells you what was delivered, to whom and how much."),
+            ("No hard dependency", "Check JPRewardsAPI.get(); without the plugin everything else keeps working."),
+            ("PlaceholderAPI too", "%jprewards_...% for scoreboards, tabs and holograms."),
+        ],
+    )),
     "compatibility": ("Compatibility", "One jar from 1.8 to the latest version, with nothing to install.", (
         [
             ("1.8", "Java 8"),

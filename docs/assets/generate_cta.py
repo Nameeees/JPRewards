@@ -24,7 +24,7 @@ ICONOS = os.path.join(OUT, "icons")
 W, H = 1280, 260
 
 BRAND = "JPRewards"
-VERSION = "v2.0.0"
+VERSION = "v2.1.0"
 
 TEXT = (240, 236, 252)
 MUTED = (172, 168, 196)

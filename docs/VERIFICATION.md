@@ -1,6 +1,24 @@
-# Verification record — JPRewards 2.0.0
+# Verification record — JPRewards
 
-This file records what was actually executed for the 2.0.0 release, on which
+This file records what was actually executed for each release, on which
+software, and with which result.
+
+## 2.1.0 (current)
+
+- Date: 2026-10-19
+- Release artifact: `JPRewards-2.1.0.jar`, 276,689 bytes
+  SHA-256 `87d85a3f96737dbdbc3fd3f1a7f2e06bd852333d5eaa7e1bd3c90faca278cc57`
+- Harness: **32 of 32 checks pass** on Paper 1.8.8 (JDK 8) and Spigot 1.21.1
+  (Java 21); logs `testing/logs/paper-1.8.8-20261019-195722.log` and
+  `testing/logs/spigot-1.21.1-20261019-195722.log`.
+- New since 2.0.0, verified automatically: rewards in one line, reusable packs
+  (`definir`/`usar`/`extra`), conditions (chance, world, one-time only),
+  `recompensas/extra.yml` with the public API, and the extra-reward command.
+- Resource validator: 0 errors, 0 warnings. Documentation links: 0 broken.
+
+## 2.0.0
+
+This section records what was actually executed for the 2.0.0 release, on which
 software, and with which result. Every claim made on the SpigotMC page should be
 backed by one of the checks below, by an integration check from
 [QA_CHECKLIST.md](QA_CHECKLIST.md), or by a run of the harness described here.

@@ -34,7 +34,7 @@ def guardar(imagen, destino):
 BRAND = "JPRewards"
 TAGLINE = "Rewards that bring players back every day"
 HIGHLIGHTS = "One jar  \u00b7  No dependencies  \u00b7  English + Spanish  \u00b7  YAML or MySQL"
-FOOTLINE = "v2.0.0  \u00b7  Minecraft 1.8 \u2192 latest  \u00b7  MIT  \u00b7  Spigot & Paper"
+FOOTLINE = "v2.1.0  \u00b7  Minecraft 1.8 \u2192 latest  \u00b7  MIT  \u00b7  Spigot & Paper"
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 os.makedirs(OUT, exist_ok=True)

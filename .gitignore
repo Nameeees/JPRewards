@@ -16,6 +16,13 @@ testing/logs/*
 testing/bot/node_modules/
 testing/bot/package-lock.json
 
+# Paquetes de publicacion y automatizacion de SpigotMC
+dist/
+tools/spigot-auto/node_modules/
+tools/spigot-auto/.env
+tools/spigot-auto/.sesion.json
+tools/spigot-auto/capturas/
+
 # IDE
 .idea/
 *.iml

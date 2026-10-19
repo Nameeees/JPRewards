@@ -6,7 +6,7 @@ editor, no stock art — so the whole set can be rebuilt or rebranded at any tim
 | Script | Output |
 | --- | --- |
 | `generate_banner_icon.py` | `banner.png` (1280×420), `icon.png` (512×512) |
-| `generate_infographics.py` | `features`, `commands`, `permissions`, `setup`, `configuration`, `diagnostics`, `compatibility` (1280×720) |
+| `generate_infographics.py` | `features`, `commands`, `permissions`, `setup`, `configuration`, `diagnostics`, `integrations`, `compatibility` (1280×720) |
 | `generate_cta.py` | `documentation.png`, `discord.png` (1280×260) |
 
 Each script starts with a `BRAND` block holding the plugin name, the tagline and the palette; for a
@@ -26,6 +26,7 @@ so the seven images look like one family without looking like the same poster se
 | `configuration` | magenta `#C026D3` | file tree beside a YAML panel | YAML indent guides |
 | `diagnostics` | orchid `#E879F9` | validation report (OK / ! / x) | radar rings |
 | `compatibility` | indigo violet `#7C3AED` | version timeline over three cards | orbits |
+| `integrations` | deep rose `#BE185D` | code panel beside a bullet list | sparkles |
 
 Adding a composition is one function in `DISENOS`, adding a motif is one function in `PATRONES`, and
 changing a colour is one value. The gold of the reward star stays as the secondary accent.

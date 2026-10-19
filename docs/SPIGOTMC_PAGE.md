@@ -1,6 +1,6 @@
 # SpigotMC submission pack
 
-Everything needed to publish **JPRewards 2.0.0** as a **free** resource on SpigotMC. Copy the
+Everything needed to publish **JPRewards 2.1.0** as a **free** resource on SpigotMC. Copy the
 BBCode block into the resource description field and fill the form with the values below.
 
 ---
@@ -12,11 +12,11 @@ BBCode block into the resource description field and fill the form with the valu
 | Resource name | `JPRewards` |
 | Tagline | `Daily, weekly, monthly and streak rewards with head menus for 1.8 → latest. One jar, no dependencies.` |
 | Category | `Gameplay` → `Mechanics` (alternative: `Tools and Utilities`) |
-| Version | `2.0.0` |
+| Version | `2.1.0` |
 | Native Minecraft version | The latest stable release at the moment you publish (update it on every Minecraft release) |
 | Supported Minecraft versions | `1.8` through the latest (select the full range) |
 | Price | Free |
-| External download | No — upload `JPRewards-2.0.0.jar` directly |
+| External download | No — upload `JPRewards-2.1.0.jar` directly |
 | License | MIT (source included; the jar is not obfuscated) |
 | Source / issues | Fill in with your repository or discussion thread. There is no public repository configured in the project yet |
 | Support | The resource discussion thread (and your Discord, if you have one) |
@@ -37,7 +37,7 @@ Two values in the project must be updated **before** uploading the jar:
 
 Every image is **generated from code** in [docs/assets/](assets/) (see [its README](assets/README.md)):
 no external editor and no stock art, so the whole set can be re-rendered after a version bump with
-one command per script. The eleven files are ready to upload as they are:
+one command per script. The twelve files are ready to upload as they are:
 
 | File | Size | Where to use it |
 | --- | --- | --- |
@@ -50,6 +50,7 @@ one command per script. The eleven files are ready to upload as they are:
 | [assets/configuration.png](assets/configuration.png) | 1280×720 | "Configuration" section |
 | [assets/diagnostics.png](assets/diagnostics.png) | 1280×720 | "Diagnostics" section |
 | [assets/compatibility.png](assets/compatibility.png) | 1280×720 | "Compatibility" section |
+| [assets/integrations.png](assets/integrations.png) | 1280×720 | "Integrations" section (API, events, extra rewards) |
 | [assets/documentation.png](assets/documentation.png) | 1280×260 | Footer CTA (optional) |
 | [assets/discord.png](assets/discord.png) | 1280×260 | Footer CTA (optional) |
 
@@ -275,7 +276,7 @@ With [B]PlaceholderAPI[/B] installed (optional): [B]%jprewards_dia%[/B], [B]%jpr
 
 [SIZE=5][B]Installation[/B][/SIZE]
 [LIST=1]
-[*]Drop [B]JPRewards-2.0.0.jar[/B] into the server's [B]plugins/[/B] folder.
+[*]Drop [B]JPRewards-2.1.0.jar[/B] into the server's [B]plugins/[/B] folder.
 [*]Start the server. It creates config.yml, messages_es.yml, messages_en.yml, menus.yml and the recompensas/ folder (existing files are never overwritten).
 [*]Run [B]/rewards validate[/B] to check that everything is fine.
 [*]Adjust the YAML files and run [B]/rewards reload[/B].
@@ -359,6 +360,13 @@ MIT. You may use, modify and redistribute the plugin, including on commercial se
 - Publish the same text on the release page of your repository and keep `CHANGELOG.md` in sync.
 
 ## 6. Publishing an update
+
+Two scripts automate most of this, see [tools/spigot-auto/README.md](../tools/spigot-auto/README.md):
+
+| Script | What it does |
+| --- | --- |
+| `tools/publicar-spigot.ps1 -ResourceId <id>` | Builds, validates, writes `dist/JPRewards-<version>.jar` + `TITULO.txt` + `DESCRIPCION.bbcode`, copies the description to the clipboard and opens the resource page. Two clicks left. |
+| `tools/spigot-auto/subir.js` | Fills the update form in a real browser (Edge through Playwright) and submits it. SpigotMC has no API, so this is the only full automation; it can break when their HTML changes. |
 
 Every release after the first one is published from **Resource → Post an update**, which asks for a
 version, an update title and a message. The message accepts BBCode and is what users see in their

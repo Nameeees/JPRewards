@@ -1,0 +1,14 @@
+{
+  "name": "jprewards-spigot-auto",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sube una actualizacion de JPRewards a SpigotMC con el navegador (no hay API oficial).",
+  "main": "subir.js",
+  "scripts": {
+    "iniciar": "node subir.js",
+    "prueba": "node subir.js --dry-run"
+  },
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

@@ -13,6 +13,7 @@ Guides, references and the verification log of the plugin. The main page is
 | [Verification log](VERIFICATION.md) | English | What was tested, on which servers, and the hash of the release artifact. |
 | [QA checklist](QA_CHECKLIST.md) | English | The list used before publishing a release. |
 | [SpigotMC pack](SPIGOTMC_PAGE.md) | English | The resource description, the image order and the update notes. |
+| [SpigotMC update 2.1.0](SPIGOTMC_UPDATE_2.1.0.md) | English | Title and description ready to paste for the next update. |
 | [Artwork pipeline](assets/README.md) | English | How every image is generated from code. |
 | [Page template](TEMPLATE.md) | English | How to write a new page in this folder. |
 
