@@ -4,11 +4,36 @@
 #  WEEKLY reward cycle. The key is the week block number (1..N).
 #  It can be claimed ONCE per week: the week starts on the day configured in
 #  config.yml -> semanal.dia-inicio, at reinicio.hora.
+#  Weekly rewards should clearly be better than the daily ones.
 #  A Spanish copy ships as semanales_es.yml.
 #
-#  Weekly rewards should feel clearly better than the daily ones: they are the
-#  reason to come back every week. Same fields as diarias.yml
-#  (lore, comandos, items, efectos, rangos...).
+#  HOW TO ADD A REWARD (short form, one line each)
+#    semanas:
+#      '1': 'eco give {jugador} 100'                  # one console command
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # command + direct item
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
+#
+#    In a list, anything that is a material (optionally with an amount) is
+#    delivered as an item and the rest is run as a console command. The icon
+#    and the lore are optional: the menu preview is generated for you.
+#
+#  REUSABLE PACKS (define once, use many times)
+#    definir:
+#      vip: 'crate key vip {jugador}'
+#    semanas:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FULL FORM (everything is optional except the reward itself)
+#    icono: DIAMOND                  or icono: {material|textura|textura-jugador}
+#    nombre: '...'                   shown in messages and titles
+#    dar / comandos: [...]           console commands with {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         direct items (short form or full form)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          extra chat lines / menu text
+#    efectos: {...}                  sound, particle, fireworks, title, broadcast
+#    rangos: {...}                   per-rank variants (the first match wins)
+#    permiso: '...'                  the entry is only for that permission
 # ============================================================================
 
 config-version: 2

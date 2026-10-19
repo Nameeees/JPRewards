@@ -2,15 +2,38 @@
 #  JPRewards - recompensas/mensuales.yml  (English)
 # ----------------------------------------------------------------------------
 #  MONTHLY MILESTONES: unlocked by claiming the daily reward on enough days
-#  WITHIN the current month. When the month changes, the progress and the
-#  claimed milestones reset by themselves (history is kept for /top hitos).
+#  WITHIN the current month. Progress resets by itself when the month changes.
+#  Each milestone needs 'dias-requeridos'; its key is its id (used in menus).
+#  February has 28 days: keep the milestones reachable in any month.
 #  A Spanish copy ships as mensuales_es.yml.
 #
-#  The key of each milestone is its id (used in the menu and in the actions).
-#  'dias-requeridos' is the only required field besides the reward itself.
-#  Same fields as diarias.yml (lore, comandos, items, efectos, rangos...).
+#  HOW TO ADD A REWARD (short form, one line each)
+#    hitos:
+#      '1': 'eco give {jugador} 100'                  # one console command
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # command + direct item
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
 #
-#  February has 28 days: keep the milestones reachable in any month.
+#    In a list, anything that is a material (optionally with an amount) is
+#    delivered as an item and the rest is run as a console command. The icon
+#    and the lore are optional: the menu preview is generated for you.
+#
+#  REUSABLE PACKS (define once, use many times)
+#    definir:
+#      vip: 'crate key vip {jugador}'
+#    hitos:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FULL FORM (everything is optional except the reward itself)
+#    icono: DIAMOND                  or icono: {material|textura|textura-jugador}
+#    nombre: '...'                   shown in messages and titles
+#    dar / comandos: [...]           console commands with {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         direct items (short form or full form)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          extra chat lines / menu text
+#    efectos: {...}                  sound, particle, fireworks, title, broadcast
+#    rangos: {...}                   per-rank variants (the first match wins)
+#    permiso: '...'                  the entry is only for that permission
 # ============================================================================
 
 config-version: 2

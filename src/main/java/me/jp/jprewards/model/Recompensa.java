@@ -165,32 +165,69 @@ public final class Recompensa {
     }
 
     private static Variante leerVariante(ConfigurationSection seccion) {
-        ItemPremio icono = null;
-        ConfigurationSection seccionIcono = seccion.getConfigurationSection("icono");
-        if (seccionIcono != null) {
-            String material = seccionIcono.getString("material", "");
-            String textura = seccionIcono.getString("textura", "");
-            String jugador = seccionIcono.getString("textura-jugador", "");
-            if (!material.isEmpty() || !textura.isEmpty() || !jugador.isEmpty()) {
-                icono = ItemPremio.leerUno(seccionIcono);
-            }
-        }
-
-        List<String> lore = new ArrayList<String>();
-        for (String linea : seccion.getStringList("lore")) {
-            lore.add(String.valueOf(linea));
-        }
+        ItemPremio icono = leerIcono(seccion);
+        List<String> lore = listaDeTextos(seccion, "lore");
 
         List<String> comandos = new ArrayList<String>();
-        for (String comando : seccion.getStringList("comandos")) {
-            if (comando != null && !comando.trim().isEmpty()) {
-                comandos.add(comando.trim());
+        for (String clave : new String[]{"comandos", "dar", "give"}) {
+            for (String comando : listaDeTextos(seccion, clave)) {
+                if (!comando.trim().isEmpty()) {
+                    comandos.add(comando.trim());
+                }
             }
         }
 
         return new Variante(seccion.getString("permiso", ""), seccion.getString("nombre", null), icono, lore, comandos,
                 ItemPremio.leer(seccion, "items"), Math.max(0, seccion.getInt("experiencia", 0)),
                 Math.max(0, seccion.getInt("niveles", 0)), EfectosPremio.leer(seccion));
+    }
+
+    /**
+     * Lee el icono de una entrada. Acepta la forma corta ('icono: DIAMOND') y la
+     * completa ('icono: {material: ...}' o con textura).
+     */
+    private static ItemPremio leerIcono(ConfigurationSection seccion) {
+        ConfigurationSection seccionIcono = seccion.getConfigurationSection("icono");
+        if (seccionIcono != null) {
+            String material = seccionIcono.getString("material", "");
+            String textura = seccionIcono.getString("textura", "");
+            String jugador = seccionIcono.getString("textura-jugador", "");
+            return material.isEmpty() && textura.isEmpty() && jugador.isEmpty()
+                    ? null : ItemPremio.leerUno(seccionIcono);
+        }
+        List<String> simple = listaDeTextos(seccion, "icono");
+        if (simple.isEmpty()) {
+            return null;
+        }
+        org.bukkit.configuration.MemoryConfiguration memoria = new org.bukkit.configuration.MemoryConfiguration();
+        memoria.set("material", simple.get(0).trim());
+        return ItemPremio.leerUno(memoria);
+    }
+
+    /**
+     * Lee una lista de textos aceptando tambien un valor suelto:
+     * 'lore: una linea' es lo mismo que 'lore: [una linea]'. Es lo que permite
+     * escribir un premio en una sola linea.
+     */
+    public static List<String> listaDeTextos(ConfigurationSection seccion, String clave) {
+        List<String> textos = new ArrayList<String>();
+        Object valor = seccion == null ? null : seccion.get(clave);
+        if (valor == null) {
+            return textos;
+        }
+        if (valor instanceof List) {
+            for (Object elemento : (List<?>) valor) {
+                if (elemento != null) {
+                    textos.add(String.valueOf(elemento));
+                }
+            }
+            return textos;
+        }
+        if (valor instanceof ConfigurationSection || valor instanceof java.util.Map) {
+            return textos;
+        }
+        textos.add(String.valueOf(valor));
+        return textos;
     }
 
     public String id() {

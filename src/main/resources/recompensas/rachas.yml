@@ -2,16 +2,37 @@
 #  JPRewards - recompensas/rachas.yml  (English)
 # ----------------------------------------------------------------------------
 #  STREAK BONUSES: unlocked by reaching N days (or weeks) IN A ROW.
-#  They can be claimed once per streak; if the player loses the streak they
-#  become available again.
+#  Claimable once per streak; if the streak is lost they become available again.
+#  Each bonus needs 'racha-minima' and optionally 'tipo: diaria | semanal'.
 #  A Spanish copy ships as rachas_es.yml.
 #
-#  FIELDS
-#    tipo: diaria | semanal   which streak counts (daily by default)
-#    racha-minima: N          days or weeks in a row required
-#    (every other field is the same as in diarias.yml)
+#  HOW TO ADD A REWARD (short form, one line each)
+#    bonus:
+#      '1': 'eco give {jugador} 100'                  # one console command
+#      '2': ['eco give {jugador} 200', 'BREAD 4']     # command + direct item
+#      '3': {usar: vip, extra: 'give {jugador} diamond 1'}
 #
-#  This module can be switched off in config.yml -> modulos.rachas.
+#    In a list, anything that is a material (optionally with an amount) is
+#    delivered as an item and the rest is run as a console command. The icon
+#    and the lore are optional: the menu preview is generated for you.
+#
+#  REUSABLE PACKS (define once, use many times)
+#    definir:
+#      vip: 'crate key vip {jugador}'
+#    bonus:
+#      '5': {usar: vip}
+#      '6': {usar: vip, extra: 'eco give {jugador} 1000'}
+#
+#  FULL FORM (everything is optional except the reward itself)
+#    icono: DIAMOND                  or icono: {material|textura|textura-jugador}
+#    nombre: '...'                   shown in messages and titles
+#    dar / comandos: [...]           console commands with {jugador}, {uuid}, {mundo}, {premio}
+#    items: ['BREAD 4', ...]         direct items (short form or full form)
+#    experiencia / niveles: N
+#    lore / mensajes: [...]          extra chat lines / menu text
+#    efectos: {...}                  sound, particle, fireworks, title, broadcast
+#    rangos: {...}                   per-rank variants (the first match wins)
+#    permiso: '...'                  the entry is only for that permission
 # ============================================================================
 
 config-version: 2

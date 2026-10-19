@@ -379,6 +379,53 @@ public final class Chequeos {
             registro.info("[harness] no se pudo comprobar la guardia del reclamo diario: " + Registro.describir(error));
         }
 
+        // Forma corta de recompensas: un premio por linea + packs reutilizables.
+        try {
+            java.io.File carpeta = new java.io.File(jprewards().getDataFolder(), "recompensas");
+            carpeta.mkdirs();
+            java.io.File prueba = new java.io.File(carpeta, "prueba-compacta.yml");
+            String contenido = ""
+                    + "config-version: 2" + "\n"
+                    + "definir:" + "\n"
+                    + "  vip: 'crate key vip {jugador}'" + "\n"
+                    + "dias:" + "\n"
+                    + "  '1': 'eco give {jugador} 100'" + "\n"
+                    + "  '2': ['eco give {jugador} 200', 'BREAD 4']" + "\n"
+                    + "  '3':" + "\n"
+                    + "    usar: vip" + "\n"
+                    + "    extra: 'give {jugador} diamond 1'" + "\n";
+            java.nio.file.Files.write(prueba.toPath(),
+                    contenido.getBytes(java.nio.charset.Charset.forName("UTF-8")));
+
+            Class<?> cargadorClase = Class.forName("me.jp.jprewards.manager.Cargador", true, cargador());
+            Class<?> pluginClase = Class.forName("me.jp.jprewards.JPRewards", true, cargador());
+            Class<?> recompensaClase = Class.forName("me.jp.jprewards.model.Recompensa", true, cargador());
+            Class<?> varianteClase = Class.forName("me.jp.jprewards.model.Recompensa$Variante", true, cargador());
+            Object cargador1 = cargadorClase.getConstructor(pluginClase).newInstance(jprewards());
+            java.lang.reflect.Method cargarCiclo = cargadorClase.getMethod("cargarCiclo",
+                    String.class, String.class, String.class);
+            java.util.Map<?, ?> ciclo = (java.util.Map<?, ?>) cargarCiclo.invoke(cargador1,
+                    "recompensas/prueba-compacta.yml", "dias", "dia");
+
+            java.lang.reflect.Method varianteBase = recompensaClase.getMethod("varianteBase");
+            java.lang.reflect.Method comandos = varianteClase.getMethod("comandos");
+            java.lang.reflect.Method items = varianteClase.getMethod("items");
+            int comandosUno = ((java.util.List<?>) comandos.invoke(varianteBase.invoke(ciclo.get(Integer.valueOf(1))))).size();
+            int comandosDos = ((java.util.List<?>) comandos.invoke(varianteBase.invoke(ciclo.get(Integer.valueOf(2))))).size();
+            int itemsDos = ((java.util.List<?>) items.invoke(varianteBase.invoke(ciclo.get(Integer.valueOf(2))))).size();
+            int comandosTres = ((java.util.List<?>) comandos.invoke(varianteBase.invoke(ciclo.get(Integer.valueOf(3))))).size();
+
+            if (ciclo.size() == 3 && comandosUno == 1 && comandosDos == 1 && itemsDos == 1 && comandosTres == 2) {
+                registro.ok("recompensas de una linea: comando suelto, comando+item y pack con 'extra'");
+            } else {
+                registro.fallo("forma corta: dias=" + ciclo.size() + " c1=" + comandosUno + " c2=" + comandosDos
+                        + " i2=" + itemsDos + " c3=" + comandosTres);
+            }
+            prueba.delete();
+        } catch (Throwable error) {
+            registro.info("[harness] no se pudo comprobar la forma corta: " + Registro.describir(error));
+        }
+
         // No debe existir ningun permiso que permita reclamar de nuevo.
         try {
             boolean existe = false;

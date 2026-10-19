@@ -317,17 +317,38 @@ almacenamiento:
 
 ## Reward entries
 
-Every entry of `recompensas/*.yml` accepts the same fields:
+**Short form: one line per reward.** The fields below are optional; an entry can be a
+single command, a list of commands and items, or reuse a pack:
+
+```yaml
+dias:
+  '1': 'eco give {jugador} 100'                       # one console command
+  '2': ['eco give {jugador} 200', 'BREAD 4']          # command + direct item
+  '3': {usar: vip, extra: 'give {jugador} diamond 1'} # reuse a pack + one extra command
+
+# Define a reward once and use it in as many entries as you want:
+definir:
+  vip: 'crates give {jugador} vip 1'
+```
+
+In a list, anything that is a material (optionally with an amount) is delivered as an
+item and the rest is run as a console command. The icon and the lore are optional: the
+menu preview is generated from what the entry delivers. The same `definir`/`usar`/`extra`
+works in `diarias.yml`, `semanales.yml`, `mensuales.yml` and `rachas.yml`.
+
+**Full form.** Every entry of `recompensas/*.yml` accepts the same fields:
 
 | Field | Description |
 | --- | --- |
 | `icono.textura` | Menu head (base64 value from minecraft-heads.com). |
+| `icono` | Material instead of a head, in one line: `icono: CHEST`. |
 | `icono.material` | Material instead of a head (`CHEST`, `PAPER`…). |
+| `usar` / `extra` | Reuse a pack defined under `definir:` and add extra commands on top. |
 | `icono.textura-jugador` | Head of a player, by name. |
 | `nombre` | Visible name in messages, titles and broadcasts (`{premio}`). |
 | `permiso` | If set, only players with that permission can claim the entry. |
 | `lore` | How the reward looks wherever you put `{preview}` in `menus.yml`. It is only visual, and it accepts the same `{placeholders}` as the menus: the bundled files use `{moneda}`, the currency name from `config.yml`. |
-| `comandos` | Console commands. Placeholders: `{jugador}`, `{uuid}`, `{mundo}`, `{premio}`. |
+| `comandos` / `dar` / `give` | Console commands. Placeholders: `{jugador}`, `{uuid}`, `{mundo}`, `{premio}`. |
 | `items` | Items delivered directly. Short form `'MATERIAL cantidad'` or the full form. |
 | `experiencia` / `niveles` | Direct XP (points) and levels. |
 | `mensajes` | Extra chat lines sent when claiming. |

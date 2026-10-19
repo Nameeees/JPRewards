@@ -3,6 +3,28 @@
 Todas las versiones publicadas, de la mas nueva a la mas vieja.
 Formato: version, fecha y que cambio (anadido / cambiado / arreglado).
 
+## 2.1.0 - en desarrollo
+
+### Anadido
+
+- **Recompensas en una linea.** Cada entrada de `recompensas/*.yml` puede ser un
+  comando suelto o una lista de comandos y materiales:
+  `'1': 'eco give {jugador} 100'` o
+  `'2': ['eco give {jugador} 200', 'BREAD 4']`. En las listas, lo que es un
+  material (con cantidad opcional) se entrega como item y el resto se ejecuta
+  como comando.
+- **Packs reutilizables**: `definir:` crea premios con nombre y `usar:` los
+  reutiliza en varias entradas, con `extra:` para anadir comandos encima. Sirve
+  en diarias, semanales, hitos y rachas.
+- **`dar` y `give` como alias de `comandos`**, e **`icono: MATERIAL`** en una
+  linea (antes habia que escribir la seccion `icono:` entera).
+- **Lore e icono opcionales**: si no los pones, el menu genera la vista previa
+  del premio y usa el icono del boton.
+- Las cabeceras de los cuatro archivos de recompensas se reescribieron: empiezan
+  por la forma corta y debajo esta la forma completa.
+- Comprobacion nueva en el harness (30 en total): parsea un archivo con la forma
+  corta y un pack, y verifica comandos, items y `extra`.
+
 ## 2.0.0 - 2026-10-18
 
 Reescritura completa. La version 2.0.0 se puede instalar encima de la 1.x:

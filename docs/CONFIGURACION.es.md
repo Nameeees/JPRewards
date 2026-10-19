@@ -63,26 +63,71 @@ Consecuencias útiles de `reinicio.hora`:
 
 ## 3. Editar los premios
 
-Cada entrada de `recompensas/diarias.yml` es un día. Lo mínimo es:
+Cada entrada de `recompensas/diarias.yml` es un día, y **puedes escribirla en una
+sola línea**:
 
 ```yaml
 dias:
-  '1':
-    lore:
-      - '&7▪ &f100 &7monedas'
-    comandos:
-      - 'eco give {jugador} 100'
+  '1': 'eco give {jugador} 100'
+  '2': ['eco give {jugador} 200', 'BREAD 4']
 ```
 
-- La clave (`'1'`) es el número de día. Las comillas evitan que YAML lo lea
-  como número raro.
+- Si el valor es **un comando**, se ejecuta desde consola.
+- Si es una **lista**, cada elemento que sea un material (`DIAMOND`, `BREAD 4`)
+  se entrega como item y el resto se ejecuta como comando.
+- El **icono y el lore son opcionales**: el menú genera la vista previa del premio
+  solo. Si quieres personalizarlos, se hace con la forma completa.
+
+La forma completa, cuando quieras controlar todo (todos los campos son opcionales
+menos lo que entrega):
+
+```yaml
+dias:
+  '3':
+    icono: DIAMOND                  # o una textura, o {material: ...}
+    nombre: '&dDía 3'
+    dar: ['eco give {jugador} 150'] # 'dar', 'comandos' o 'give' son lo mismo
+    items: ['IRON_INGOT 8']
+    experiencia: 20
+    lore: ['&7▪ &f150 &7{moneda}']
+    efectos:
+      sonido: LEVEL_UP
+      particula: HAPPY_VILLAGER
+    permiso: ''                     # la entrada es solo para ese permiso
+    rangos:
+      vip:
+        permiso: group.vip
+        dar: ['eco give {jugador} 300']
+```
+
+- La clave (`'1'`) es el número de día. Las comillas evitan que YAML lo lea como
+  número raro.
 - `lore` es **solo visual**: se muestra donde pongas `{preview}` en
   `menus.yml`. Admite los mismos placeholders que los menús: si escribes
   `&7▪ &f500 &7{moneda}`, el nombre de la moneda sale de
-  `config.yml -> economia.moneda` y el mismo archivo sirve para cualquier
-  idioma o servidor.
-- `comandos` es **lo que entrega**, ejecutado desde consola con
-  `{jugador}`, `{uuid}`, `{mundo}` y `{premio}`.
+  `config.yml -> economia.moneda` y el mismo archivo sirve para cualquier idioma.
+- Lo que entrega se ejecuta desde consola con `{jugador}`, `{uuid}`, `{mundo}`
+  y `{premio}`.
+
+### Reutilizar el mismo premio en varios días
+
+Si el día 5 y el 6 dan lo mismo, no lo copies: definelo una vez.
+
+```yaml
+definir:
+  pack-vip:
+    dar: ['crates give {jugador} vip 1']
+    icono: TRIPWIRE_HOOK
+    lore: ['&dLlave VIP']
+
+dias:
+  '5': {usar: pack-vip}
+  '6': {usar: pack-vip, extra: 'eco give {jugador} 1000'}
+```
+
+`usar` parte del pack y encima aplica lo que escribas en la entrada; `extra` añade
+comandos sin repetir el resto. Funciona igual en `semanales.yml`, `mensuales.yml` y
+`rachas.yml`.
 
 Ejemplos de comandos según tu servidor:
 
