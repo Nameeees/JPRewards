@@ -18,7 +18,7 @@ title: Documentation
       <li>YAML or MySQL</li>
       <li>PlaceholderAPI</li>
       <li>English + Spanish</li>
-      <li>29 automated checks</li>
+      <li>32 automated checks</li>
     </ul>
   </div>
 </div>
@@ -41,6 +41,10 @@ title: Documentation
   <div class="tarjeta">
     <h3><a href="{{ '/CONFIGURACION.es.html' | relative_url }}">Guía de configuración</a></h3>
     <p>Paso a paso de <code>config.yml</code>, <code>menus.yml</code> y <code>recompensas/*.yml</code> (en español).</p>
+  </div>
+  <div class="tarjeta">
+    <h3><a href="{{ '/API.html' | relative_url }}">API for plugins</a></h3>
+    <p>Java API, cancelable events and named extra rewards for bosses, votes or quests.</p>
   </div>
   <div class="tarjeta">
     <h3><a href="{{ '/VERIFICATION.html' | relative_url }}">Verification</a></h3>
@@ -67,6 +71,7 @@ title: Documentation
 <div class="rejilla">
   <img src="assets/features.png" alt="What you get">
   <img src="assets/commands.png" alt="Commands">
+  <img src="assets/integrations.png" alt="Integrations">
 </div>
 
 Every image on this site is generated from code by the scripts in
@@ -78,6 +83,7 @@ the documentation never drift apart.
 | Page | Language | What it covers |
 | --- | --- | --- |
 | [Commands and permissions]({{ '/COMMANDS.html' | relative_url }}) | English | Subcommands, aliases, arguments, permissions, examples. |
+| [API for plugins]({{ '/API.html' | relative_url }}) | English | Java API, events and named extra rewards. |
 | [Placeholders]({{ '/PLACEHOLDERS.html' | relative_url }}) | English | Texts, menus, rewards and the PlaceholderAPI expansion. |
 | [FAQ]({{ '/FAQ.html' | relative_url }}) | English | The questions that come up most. |
 | [Configuration guide]({{ '/CONFIGURACION.es.html' | relative_url }}) | Spanish | Step-by-step guide to the YAML files. |
