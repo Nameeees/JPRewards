@@ -281,6 +281,10 @@ the resource page). They are listed here so nothing ships by accident:
 - [x] **Artwork generated and committed** in `docs/assets/`: banner (1280×420), icon (512×512),
       seven infographics (1280×720) and two CTA banners (1280×260). Regenerating the three scripts
       produces byte-identical files, and the footer version matches the released 2.0.0.
+- [x] **Menus abiertos con un cliente real** (1.8.9 contra Paper 1.8.8): el hub, diario, semanal,
+      mensual, rachas e info se abren sin excepciones. Esta prueba encontro el `NullPointerException`
+      de `Menu` al calcular las paginas antes de crear el inventario, ya arreglado; las capturas
+      resultantes estan en `docs/assets/capturas/` y en los banners `real-*.png`.
 - [ ] `docs/SPIGOTMC_PAGE.md` checklist completed (form values, links, free resource) and the
       eleven images uploaded in the order listed in its section 2.
 - [x] `testing/README.md` result table updated with the final harness run (29/29 on both servers).

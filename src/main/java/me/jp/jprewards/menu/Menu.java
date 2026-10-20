@@ -80,6 +80,14 @@ public abstract class Menu implements InventoryHolder {
         return 1;
     }
 
+    /**
+     * Tamaño del cofre. No usa 'inventario' a proposito: el constructor calcula
+     * 'paginas()' antes de crear el inventario y esa cuenta necesita el tamaño.
+     */
+    protected int tamano() {
+        return plugin.menus().filas(menuId) * 9;
+    }
+
     // ------------------------------------------------------------------
     // Contenido
     // ------------------------------------------------------------------
@@ -352,7 +360,7 @@ public abstract class Menu implements InventoryHolder {
         }
         int restantes = cantidad;
         int slot = fila * 9 + columna;
-        while (restantes > 0 && slot < inventario.getSize() - 9) {
+        while (restantes > 0 && slot < tamano() - 9) {
             if (slot % 9 == 0 || slot % 9 == 8) {
                 slot++;
                 continue;

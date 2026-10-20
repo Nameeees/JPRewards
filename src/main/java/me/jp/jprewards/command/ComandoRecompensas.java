@@ -80,7 +80,13 @@ public final class ComandoRecompensas implements CommandExecutor, TabCompleter {
         try {
             return ejecutar(emisor, etiqueta, args);
         } catch (Throwable error) {
+            // Con la traza completa: sin ella no hay forma de arreglar el fallo.
             plugin.getLogger().severe("Error running /" + etiqueta + ": " + error);
+            java.io.StringWriter traza = new java.io.StringWriter();
+            error.printStackTrace(new java.io.PrintWriter(traza));
+            for (String linea : traza.toString().split("\n")) {
+                plugin.getLogger().severe("  " + linea.trim());
+            }
             plugin.mensajes().enviar(emisor, "general.error");
             return true;
         }

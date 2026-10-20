@@ -62,7 +62,8 @@ versión**, sin NMS, sin dependencias y sin código ofuscado.
   distintas según el permiso que tenga el jugador.
 - **Todo configurable por YAML**, con comentarios en español e inglés.
 - **Auto-actualización de los archivos**: al actualizar el plugin, las opciones
-  nuevas se agregan solas con sus comentarios y sin pisar nada tuyo.
+  nuevas se agregan solas con sus comentarios y sin pisar nada tuyo; los
+  archivos que ya están al día no se reescriben nunca (ni al recargar).
 - **/rewards validate**: revisa todos los archivos y te dice exactamente qué
   está mal y dónde.
 - **Almacenamiento en YAML o MySQL** (JDBC), con migración en los dos sentidos.
@@ -365,11 +366,21 @@ dentro de los textos del plugin.
 
 Al actualizar el plugin, los archivos se actualizan solos:
 
-1. Se guarda una copia `<archivo>.bak`.
-2. Se agregan las opciones nuevas **en su sección**, con sus comentarios y
-   marcadas como `# --- NUEVO en esta version`.
-3. Tus valores nunca se pisan.
-4. `config-version` sube solo (no lo bajes a mano).
+1. Solo se ejecuta el auto-merge si el `config-version` de tu archivo es
+   **menor** que el del plugin. Un archivo que ya está al día no se reescribe
+   nunca: `/rewards reload` solo lo vuelve a leer, así que las opciones (o los
+   textos y premios de ejemplo) que borraste a propósito no reaparecen.
+2. Se guarda una copia `<archivo>.bak`.
+3. Se agregan las opciones nuevas **en su sección**, con sus comentarios y
+   marcadas como `# --- NEW in this version: <ruta> (revisa esta opcion)`.
+4. Tus valores nunca se pisan, y **las listas no se tocan jamás**: el lore, los
+   comandos, las líneas de estado y similares son tuyos y no se tratan como
+   opciones.
+5. El resultado se valida antes de guardarlo; si no fuera YAML válido, el
+   archivo queda intacto y la consola dice qué opción no se pudo agregar.
+6. `config-version` sube solo (no lo bajes a mano). Si un archivo llega roto,
+   se aparta como `<archivo>.invalido` y se restaura sola la última copia `.bak`
+   válida.
 
 ## Compilar desde el código
 

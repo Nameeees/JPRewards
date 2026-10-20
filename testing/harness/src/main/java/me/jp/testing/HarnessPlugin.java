@@ -79,7 +79,10 @@ public final class HarnessPlugin extends JavaPlugin {
             ChequeosDatos datos = new ChequeosDatos(chequeos, registro);
             datos.codecIdaYVuelta();
             datos.almacenYamlIdaYVuelta();
-            new ChequeosConfig(chequeos, registro, getLogger()).fusionConfiguracion();
+            ChequeosConfig configuracion = new ChequeosConfig(chequeos, registro, getLogger());
+            configuracion.fusionConfiguracion();
+            configuracion.fusionNoReescribeAlDia();
+            configuracion.fusionRespetaListas();
             chequeos.mensajes();
         } catch (Throwable error) {
             registro.fallo("el harness no pudo completar las comprobaciones: " + Registro.describir(error));

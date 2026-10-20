@@ -119,6 +119,8 @@ Comprobaciones:
 | 6 | `DatosCodec`: ida y vuelta de un `DatosJugador` conocido (racha 12, total 40, diasMes 9, 1 hito, 1 bonus, 2 items pendientes) |
 | 7 | `AlmacenYaml`: guardar y recargar ese jugador en una carpeta temporal |
 | 8 | Fusion de config: se respeta el valor del usuario, aparecen las secciones nuevas y el YAML sigue valido |
+| 8b | Un archivo con `config-version` al dia no se reescribe ni crea `.bak` al recargar |
+| 8c | Fusionar en un archivo con listas personalizadas (items con `:` y misma sangria que su clave) no toca las listas y el YAML sigue valido |
 | 9 | Tarea repetida 3 s: el scheduler responde, el plugin sigue activo y no hay errores en el log |
 | 10 | `messages_es.yml` define `prefijo` y las secciones `general`, `comando`, `diaria`, `semanal`, `mensual`, `rachas`, `recompensa`, `titulos` |
 

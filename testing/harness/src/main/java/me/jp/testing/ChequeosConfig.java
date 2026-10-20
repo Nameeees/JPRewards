@@ -155,8 +155,148 @@ public final class ChequeosConfig {
         }
     }
 
-    /** Primera ruta escalar del YAML (por ejemplo reinicio.hora), o null. */
-    private static String buscarEscalar(ConfigurationSection seccion, String prefijo, Object[] valor) {
+    /**
+     * Comprobacion 8b: un archivo que ya esta en la version actual no se
+     * reescribe al recargar (ni crea .bak). Es el defecto que rompia
+     * configuraciones personalizadas: /rewards reload volvia a inyectar
+     * opciones que el servidor habia borrado a proposito.
+     */
+    public void fusionNoReescribeAlDia() {
+        if (!base.activo()) {
+            registro.saltado("fusion al dia: JPRewards no esta cargado y activo");
+            return;
+        }
+        Class<?> claseArchivos = Reflexion.clase(base.cargador(), "me.jp.jprewards.config.Archivos");
+        Method actualizar = Reflexion.metodo(claseArchivos, "actualizar", String.class, int.class);
+        if (claseArchivos == null || actualizar == null) {
+            registro.saltado("fusion al dia: no existe me.jp.jprewards.config.Archivos.actualizar(String, int)");
+            return;
+        }
+        File carpeta = new File(base.jprewards().getDataFolder(), "harness-merge-al-dia");
+        try {
+            ChequeosDatos.borrar(carpeta);
+            if (!carpeta.isDirectory() && !carpeta.mkdirs()) {
+                registro.fallo("fusion al dia: no se pudo crear la carpeta temporal " + carpeta.getPath());
+                return;
+            }
+            String texto = "config-version: 2\n\n# archivo personalizado del harness\nidioma: harness-al-dia\n";
+            File destino = new File(carpeta, "config.yml");
+            Files.write(destino.toPath(), texto.getBytes(StandardCharsets.UTF_8));
+            Object archivos = Reflexion.nuevo(claseArchivos,
+                    new Class<?>[] { File.class, Logger.class },
+                    new Object[] { carpeta, log });
+            Reflexion.invocar(actualizar, archivos, "config.yml", Integer.valueOf(2));
+
+            List<String> problemas = new ArrayList<String>();
+            if (!texto.equals(YamlUtil.leerTexto(destino))) {
+                problemas.add("el archivo cambio aunque ya estaba al dia");
+            }
+            if (new File(carpeta, "config.yml.bak").isFile()) {
+                problemas.add("creo un .bak innecesario");
+            }
+            try {
+                YamlConfiguration cargado = YamlConfiguration.loadConfiguration(destino);
+                if (!"harness-al-dia".equals(cargado.getString("idioma"))) {
+                    problemas.add("no se lee el valor del usuario");
+                }
+            } catch (Throwable error) {
+                problemas.add("el YAML resultante no se puede leer (" + Registro.describir(error) + ")");
+            }
+            if (problemas.isEmpty()) {
+                registro.ok("fusion al dia: un archivo con config-version=2 no se reescribe ni crea .bak al recargar");
+            } else {
+                registro.fallo("fusion al dia: " + problemas);
+            }
+        } catch (Throwable error) {
+            registro.fallo("fusion al dia: " + Registro.describir(error));
+        } finally {
+            ChequeosDatos.borrar(carpeta);
+        }
+    }
+
+    /**
+     * Comprobacion 8c: fusionar en un archivo con listas personalizadas (items
+     * con ':' y con la misma sangria que su clave) no rompe el YAML ni toca
+     * esas listas; las opciones nuevas de mapping si se agregan.
+     */
+    public void fusionRespetaListas() {
+        if (!base.activo()) {
+            registro.saltado("fusion con listas: JPRewards no esta cargado y activo");
+            return;
+        }
+        Class<?> claseArchivos = Reflexion.clase(base.cargador(), "me.jp.jprewards.config.Archivos");
+        Method actualizar = Reflexion.metodo(claseArchivos, "actualizar", String.class, int.class);
+        if (claseArchivos == null || actualizar == null) {
+            registro.saltado("fusion con listas: no existe me.jp.jprewards.config.Archivos.actualizar(String, int)");
+            return;
+        }
+        File carpeta = new File(base.jprewards().getDataFolder(), "harness-merge-listas");
+        try {
+            ChequeosDatos.borrar(carpeta);
+            if (!carpeta.isDirectory() && !carpeta.mkdirs()) {
+                registro.fallo("fusion con listas: no se pudo crear la carpeta temporal " + carpeta.getPath());
+                return;
+            }
+            String texto = "config-version: 1\n"
+                    + "\n"
+                    + "# mensajes personalizados del harness: listas con ':' y con la misma sangria\n"
+                    + "prefijo: '&7[harness] &f'\n"
+                    + "\n"
+                    + "comando:\n"
+                    + "  ayuda-encabezado: 'cabecera: personalizada'\n"
+                    + "  ayuda-lineas:\n"
+                    + "  - 'uno: con dos puntos'\n"
+                    + "  - 'dos: y mas'\n";
+            File destino = new File(carpeta, "messages_es.yml");
+            Files.write(destino.toPath(), texto.getBytes(StandardCharsets.UTF_8));
+            Object archivos = Reflexion.nuevo(claseArchivos,
+                    new Class<?>[] { File.class, Logger.class },
+                    new Object[] { carpeta, log });
+            Reflexion.invocar(actualizar, archivos, "messages_es.yml", Integer.valueOf(2));
+
+            List<String> problemas = new ArrayList<String>();
+            try {
+                YamlConfiguration despues = YamlConfiguration.loadConfiguration(destino);
+                if (!"cabecera: personalizada".equals(despues.getString("comando.ayuda-encabezado"))) {
+                    problemas.add("se perdio el valor personalizado de comando.ayuda-encabezado");
+                }
+                List<String> lineas = despues.getStringList("comando.ayuda-lineas");
+                List<String> esperadas = new ArrayList<String>();
+                esperadas.add("uno: con dos puntos");
+                esperadas.add("dos: y mas");
+                if (!esperadas.equals(lineas)) {
+                    problemas.add("la lista personalizada cambio: " + lineas);
+                }
+                if (despues.getInt("config-version") != 2) {
+                    problemas.add("config-version=" + despues.getInt("config-version") + " (se esperaba 2)");
+                }
+                if (!despues.isSet("comando.estado-lineas")) {
+                    problemas.add("no se agrego la opcion nueva comando.estado-lineas");
+                }
+            } catch (Throwable error) {
+                problemas.add("el YAML resultante no se puede leer (" + Registro.describir(error) + ")");
+            }
+            List<String> duplicadas = YamlUtil.clavesDuplicadas(destino);
+            if (!duplicadas.isEmpty()) {
+                problemas.add("claves duplicadas: " + duplicadas);
+            }
+            if (!new File(carpeta, "messages_es.yml.bak").isFile()) {
+                problemas.add("no se guardo la copia .bak");
+            }
+            if (problemas.isEmpty()) {
+                registro.ok("fusion con listas: las listas personalizadas con ':' quedan intactas, "
+                        + "las opciones nuevas se agregan y el YAML sigue valido");
+            } else {
+                registro.fallo("fusion con listas: " + problemas);
+            }
+        } catch (Throwable error) {
+            registro.fallo("fusion con listas: " + Registro.describir(error));
+        } finally {
+            ChequeosDatos.borrar(carpeta);
+        }
+    }
+
+    /** Primera ruta escalar del YAML (por ejemplo reinicio.hora), o null. */    private static String buscarEscalar(ConfigurationSection seccion, String prefijo, Object[] valor) {
         for (String clave : seccion.getKeys(false)) {
             String ruta = prefijo.isEmpty() ? clave : prefijo + "." + clave;
             if (seccion.isConfigurationSection(clave)) {

@@ -71,10 +71,12 @@ Documentation: [URL]https://nameeees.github.io/JPRewards/API.html[/URL]
 [LIST]
 [*]Replace the jar and restart. Your configuration, your menus and your player data are kept.
 [*]New options are added automatically, inside their section, with a [COLOR=#a020f0].bak[/COLOR] copy.
+[*]The auto-merge only runs when your file has an older [COLOR=#a020f0]config-version[/COLOR]; a file that is already up to date is never rewritten, so [COLOR=#a020f0]/rewards reload[/COLOR] cannot re-inject options or example rewards you deleted on purpose.
+[*]Lists ([COLOR=#a020f0]lore[/COLOR], [COLOR=#a020f0]comandos[/COLOR], status lines...) are never modified by the merge, and the merged file is validated before it is saved.
 [*]Everything that worked before keeps working: nothing was renamed or removed.
 [/LIST]
 
-Tested on Paper 1.8.8 (Java 8) and Spigot 1.21.1 (Java 21): 32 automated checks, 0 failures.
+Tested on Paper 1.8.8 (Java 8) and Spigot 1.21.1 (Java 21): 34 automated checks, 0 failures.
 ```
 
 ## Files

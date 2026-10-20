@@ -37,7 +37,7 @@ Two values in the project must be updated **before** uploading the jar:
 
 Every image is **generated from code** in [docs/assets/](assets/) (see [its README](assets/README.md)):
 no external editor and no stock art, so the whole set can be re-rendered after a version bump with
-one command per script. The twelve files are ready to upload as they are:
+one command per script. **The six `real-*.png` are genuine captures** taken from a real Minecraft 1.8.9 client connected to a test server (see §7); the rest is generated artwork. Everything is ready to upload as it is:
 
 | File | Size | Where to use it |
 | --- | --- | --- |
@@ -53,6 +53,12 @@ one command per script. The twelve files are ready to upload as they are:
 | [assets/integrations.png](assets/integrations.png) | 1280×720 | "Integrations" section (API, events, extra rewards) |
 | [assets/documentation.png](assets/documentation.png) | 1280×260 | Footer CTA (optional) |
 | [assets/discord.png](assets/discord.png) | 1280×260 | Footer CTA (optional) |
+| [assets/real-hub.png](assets/real-hub.png) | 1280×720 | **Real in-game capture** of the main menu |
+| [assets/real-diario.png](assets/real-diario.png) | 1280×720 | **Real in-game capture** of the daily cycle |
+| [assets/real-mensual.png](assets/real-mensual.png) | 1280×720 | **Real in-game capture** of the milestones |
+| [assets/real-rachas.png](assets/real-rachas.png) | 1280×720 | **Real in-game capture** of the streak bonuses |
+| [assets/real-semanal.png](assets/real-semanal.png) | 1280×720 | **Real in-game capture** of the weekly cycle |
+| [assets/real-info.png](assets/real-info.png) | 1280×720 | **Real in-game capture** of the info menu |
 
 Regenerate everything (the footer prints the version, so do it after a release):
 
@@ -352,6 +358,20 @@ MIT. You may use, modify and redistribute the plugin, including on commercial se
 - [ ] No server IP, advertisement or unrelated link is in the description.
 - [ ] The jar is not obfuscated (it is not), contains no DRM and bundles no third-party library.
 - [ ] After publishing, note the resource id (`actualizaciones.id-recurso`) in the description or in the next update.
+
+## 4b. Real in-game screenshots
+
+The `real-*.png` banners are **not mockups**: they are captured from a real client.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\capturar-juego.ps1   # captura los menus
+python docs/assets/componer-capturas.py                            # los monta en 1280x720
+```
+
+The first script starts the 1.8.8 test server with JPRewards, launches the 1.8.9 client installed on the
+machine (it connects by itself), asks a tiny helper plugin to open each menu as the player and captures
+the window. The second one crops the game window and puts it on the brand background. It needs a
+Minecraft client installed and a desktop session, which is why it is not part of the CI.
 
 ## 5. After publishing
 

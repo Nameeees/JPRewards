@@ -5,6 +5,17 @@ Formato: version, fecha y que cambio (anadido / cambiado / arreglado).
 
 ## 2.1.0 - en desarrollo
 
+### Arreglado
+
+- **Los menus con paginacion no se abrian**: el constructor de `Menu` calculaba
+  las paginas antes de crear el inventario, asi que `/rewards daily`, `weekly`,
+  `monthly` y `streaks` lanzaban `NullPointerException` (el menu principal, que no
+  pagina, si funcionaba). Detectado probando con un **cliente real de Minecraft**
+  1.8.9 contra el servidor; el harness no lo veia porque nunca abria menus.
+  Ahora el tamaño del cofre se calcula sin depender del inventario ya creado.
+- **Traza completa en la consola** cuando un comando falla: antes solo salia el
+  nombre de la excepcion, sin la linea que lo causaba.
+
 ### Anadido
 
 - **Recompensas en una linea.** Cada entrada de `recompensas/*.yml` puede ser un
@@ -28,33 +39,3 @@ Formato: version, fecha y que cambio (anadido / cambiado / arreglado).
 - **Eventos**: `RewardClaimEvent` (cancelable, antes de entregar) y
   `RewardDeliveredEvent` (despues, con lo entregado). Documentados en
   `docs/API.md`.
-- **Premios sueltos** en `recompensas/extra.yml` + comando
-  `/rewards trigger <jugador> <id>`: la forma de dar recompensas desde eventos
-  de otros plugins (jefes, votos, misiones) sin tocar los cuatro ciclos.
-- **Historial de entregas**: una linea por entrega en `historial.log` y las
-  ultimas cinco en `/rewards data <jugador>`.
-- **Copia de seguridad**: `/rewards backup` comprime la carpeta de datos en
-  `backups/`.
-- **MySQL en red**: la cache comprueba la columna `actualizado` cada 2,5 s y
-  recarga los datos si otro servidor los ha cambiado, para que dos servidores no
-  se pisen al reclamar el mismo jugador.
-- Comprobaciones del harness: **32** (antes 29).
-
-## 2.0.0 - 2026-10-18
-
-Reescritura completa. La version 2.0.0 se puede instalar encima de la 1.x:
-los datos de los jugadores y los archivos de configuracion se conservan, y las
-opciones nuevas se agregan solas con sus comentarios.
-
-### Anadido
-
-- **Bonus por racha** (modulo nuevo): recompensas al alcanzar N dias o
-  semanas seguidas, reclamables una vez por racha (`recompensas/rachas.yml`).
-- **Entrega por items directos** ademas de por comandos: `items:` con
-  material, cantidad, nombre, lore, encantamientos, item-flags,
-  custom-model-data (1.14+) e irrompibilidad; acepta cabezas con textura o de
-  un jugador. Tambien hay una forma corta: `- 'DIAMOND 3'`.
-- **Experiencia directa** (`experiencia:` y `niveles:`) sin pasar por comandos.
-- **Efectos por recompensa**: sonido (con volumen y tono), particulas, fuegos
-  artificiales, titulo de pantalla, action bar, mensajes extra y anuncio a todo
-  el servidor.

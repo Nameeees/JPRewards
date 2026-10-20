@@ -66,6 +66,15 @@ title: Documentation
 /rewards help          # the commands your permissions allow
 ```
 
+## Real in-game captures
+
+These are **actual screenshots** from a Minecraft 1.8.9 client connected to a test server — not mockups:
+
+<div class="rejilla">
+  <img src="assets/real-hub.png" alt="Main menu">
+  <img src="assets/real-diario.png" alt="Daily cycle">
+</div>
+
 ## What it looks like
 
 <div class="rejilla">

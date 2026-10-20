@@ -404,8 +404,14 @@ public final class Validador {
         if (faltantes.isEmpty()) {
             resultado.correcto(archivo + " has every option of this version.");
         } else {
-            resultado.aviso(archivo + " is missing " + faltantes.size() + " new option(s) (they are added"
-                    + " automatically when you reload with /rewards reload): " + resumir(faltantes));
+            int version = usuario.getInt("config-version", 0);
+            String cuando = version < Archivos.CONFIG_VERSION
+                    ? " (they are added automatically on the next start or /rewards reload because the file is"
+                            + " at config-version " + version + ")"
+                    : " (the file is already at config-version " + version + ", so the auto-merge no longer"
+                            + " rewrites it: set the option by hand if you want the new default)";
+            resultado.aviso(archivo + " is missing " + faltantes.size() + " option(s) of this version"
+                    + cuando + ": " + resumir(faltantes));
         }
     }
 

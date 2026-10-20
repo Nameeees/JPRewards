@@ -6,14 +6,19 @@ software, and with which result.
 ## 2.1.0 (current)
 
 - Date: 2026-10-19
-- Release artifact: `JPRewards-2.1.0.jar`, 276,689 bytes
-  SHA-256 `87d85a3f96737dbdbc3fd3f1a7f2e06bd852333d5eaa7e1bd3c90faca278cc57`
-- Harness: **32 of 32 checks pass** on Paper 1.8.8 (JDK 8) and Spigot 1.21.1
-  (Java 21); logs `testing/logs/paper-1.8.8-20261019-195722.log` and
-  `testing/logs/spigot-1.21.1-20261019-195722.log`.
+- Release artifact: `JPRewards-2.1.0.jar`, 278,878 bytes
+  SHA-256 `2dd4457d8a96b028504d0c8720612bbff4a79351dca3cef232a0d3ce7f49cfad`
+- Harness: **34 of 34 checks pass** on Paper 1.8.8 (JDK 8) and Spigot 1.21.1
+  (Java 21); logs `testing/logs/paper-1.8.8-20261019-211546.log` and
+  `testing/logs/spigot-1.21.1-20261019-211546.log`.
 - New since 2.0.0, verified automatically: rewards in one line, reusable packs
   (`definir`/`usar`/`extra`), conditions (chance, world, one-time only),
   `recompensas/extra.yml` with the public API, and the extra-reward command.
+- Config auto-merge, verified automatically: an up-to-date file is not
+  rewritten and no `.bak` is created on `/rewards reload`; merging into a
+  customised file with colon-containing list items (the shape that used to
+  produce invalid YAML) keeps the lists intact, adds the new options and leaves
+  valid YAML.
 - Resource validator: 0 errors, 0 warnings. Documentation links: 0 broken.
 
 ## 2.0.0

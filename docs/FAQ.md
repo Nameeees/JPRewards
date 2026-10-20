@@ -25,9 +25,13 @@ the bundled English file, so a partial translation never breaks anything.
 
 ### I updated the plugin and my configuration still has the old options.
 
-It should not happen: on start, every managed file receives the new options **inside their section**,
-with their comments, marked `# --- NEW in this version`, after a `.bak` copy. If something looks
-off, run `/rewards validate`: it names the file and the key.
+The auto-merge runs only when your file has an **older `config-version`** than
+the plugin: on start (or `/rewards reload`) the new options are inserted
+**inside their section**, with their comments, marked `# --- NEW in this
+version`, after a `.bak` copy. A file that is already up to date is never
+rewritten, so options you deleted on purpose do not come back; run
+`/rewards validate` to see what is missing — it names the file and the key.
+Lists (`lore:`, `comandos:`, `avisos:`…) are never modified by the merge.
 
 ### How do I move from YAML files to MySQL?
 

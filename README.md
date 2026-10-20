@@ -450,10 +450,12 @@ If the configured type is not the one the plugin is running (for example `mysql`
 
 Updating the plugin does not mean redoing your configuration:
 
-1. Before touching a file, `<archivo>.bak` is written next to it.
-2. Options that exist in the new version and not in yours are inserted **in their section**, with their comments, marked as `# --- NUEVO en esta version: <ruta> (revisa esta opcion) ---`.
-3. Your values are never overwritten.
-4. `config-version` is raised by the plugin; do not lower it by hand.
+1. The auto-merge only runs when your file has an **older `config-version`** than the plugin. A file that is already up to date is never rewritten: `/rewards reload` only re-reads it, so options (or example texts/rewards) you deleted on purpose do not come back.
+2. Before touching a file, `<archivo>.bak` is written next to it.
+3. Options that exist in the new version and not in yours are inserted **in their section**, with their comments, marked as `# --- NEW in this version: <path> (check this option) ---`.
+4. Your values are never overwritten, and **lists are never modified**: lore lines, commands, status lines and similar entries belong to you and are not treated as options.
+5. The merged result is validated before saving. If it would not be valid YAML, the file is left untouched and the console tells you which option could not be added.
+6. `config-version` is raised by the plugin; do not lower it by hand. If a file ever arrives broken, it is saved as `<archivo>.invalido` and the last valid `.bak` copy is restored automatically.
 
 If you had a 1.x `messages.yml`, it is renamed to `messages_es.yml` (same content). Missing message keys fall back to the texts bundled in the jar, so a partial translation never leaves a hole; `/rewards validate` lists the missing and the obsolete keys.
 
@@ -467,7 +469,7 @@ If you had a 1.x `messages.yml`, it is renamed to `messages_es.yml` (same conten
 ## Compatibility and known limits
 
 - The same jar runs from Minecraft **1.8 to the latest version**. It is built against the Spigot 1.8.8 API and everything that changed between versions (renamed materials, sounds and enchantments, particles, titles, the action bar, `setCustomModelData`, `setUnbreakable`) is resolved at runtime. The plugin has no NMS dependency and does not touch server internals except for one thing: screen titles on 1.8–1.10 are sent by reflecting on the title packet, and even that degrades gracefully — a failure is reported once in the console and the feature falls back (or is skipped) instead of breaking the plugin.
-- **Tested with the bundled harness on Paper 1.8.8 (JDK 8) and Spigot 1.21.1 (Java 21): all 29 automated checks pass on both.** [docs/VERIFICATION.md](docs/VERIFICATION.md) records the logs, the jar hash and the exact build; versions in between use the same API surface, and what the automated run does not cover is listed in [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md).
+- **Tested with the bundled harness on Paper 1.8.8 (JDK 8) and Spigot 1.21.1 (Java 21): all 34 automated checks pass on both.** [docs/VERIFICATION.md](docs/VERIFICATION.md) records the logs, the jar hash and the exact build; versions in between use the same API surface, and what the automated run does not cover is listed in [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md).
 - **Java 8 bytecode**: a 1.8 server running Java 8 loads the same file as a modern server running Java 21+.
 - **PlaceholderAPI is optional.** Without it nothing breaks.
 - **Network**: the plugin makes no outbound connection at all except the optional update check (`actualizaciones.activado: false` by default, which only fetches the resource version number from the public SpigotMC API). No bStats, no metrics, no data leaving your server.

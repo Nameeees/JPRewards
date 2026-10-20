@@ -8,6 +8,8 @@ editor, no stock art — so the whole set can be rebuilt or rebranded at any tim
 | `generate_banner_icon.py` | `banner.png` (1280×420), `icon.png` (512×512) |
 | `generate_infographics.py` | `features`, `commands`, `permissions`, `setup`, `configuration`, `diagnostics`, `integrations`, `compatibility` (1280×720) |
 | `generate_cta.py` | `documentation.png`, `discord.png` (1280×260) |
+| `componer-capturas.py` | `real-*.png` (1280×720) from the **real in-game captures** in `capturas/` |
+| [`../tools/capturar-juego.ps1`](../tools/capturar-juego.ps1) | drives a real Minecraft client and captures each menu (needs a client and a desktop) |
 
 Each script starts with a `BRAND` block holding the plugin name, the tagline and the palette; for a
 new plugin, edit that block first.
@@ -45,6 +47,10 @@ Windows — change the `BOLD`, `SEMI` and `REGULAR` paths at the top of each scr
 The palette comes from the plugin's own menus (`&d` / `&5`): fuchsia **#D946EF** on a dark
 purple-navy background, with gold **#FACC15** for the reward star. Output is deterministic: the same
 text produces byte-identical PNGs, so a diff in git means the artwork really changed.
+
+The `real-*.png` banners are built from **genuine captures** taken from a real Minecraft 1.8.9 client
+connected to a test server (`capturas/` keeps the raw PNGs), not from mockups. The rest of the artwork is
+generated from code, so it can be rebuilt or rebranded at any time.
 
 The generated files are committed so the SpigotMC page and the README work straight from the
 repository; `docs/SPIGOTMC_PAGE.md` lists which file goes in which part of the resource page.
