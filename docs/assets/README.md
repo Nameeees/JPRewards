@@ -9,7 +9,7 @@ editor, no stock art — so the whole set can be rebuilt or rebranded at any tim
 | `generate_infographics.py` | `features`, `commands`, `permissions`, `setup`, `configuration`, `diagnostics`, `integrations`, `compatibility` (1280×720) |
 | `generate_cta.py` | `documentation.png`, `discord.png` (1280×260) |
 | `componer-capturas.py` | `real-*.png` (1280×720) from the **real in-game captures** in `capturas/` |
-| [`../tools/capturar-juego.ps1`](../tools/capturar-juego.ps1) | drives a real Minecraft client and captures each menu (needs a client and a desktop) |
+| [`tools/capturar-juego.ps1`](../../tools/capturar-juego.ps1) | drives a real Minecraft client and captures each menu (needs a client and a desktop) |
 
 Each script starts with a `BRAND` block holding the plugin name, the tagline and the palette; for a
 new plugin, edit that block first.
